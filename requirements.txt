@@ -1,0 +1,268 @@
+# =====================================================
+# Core Python & Numerical Computing (Finance Grade)
+# =====================================================
+numpy
+scipy
+pandas
+polars
+pyarrow
+numba
+joblib
+tqdm
+rich
+loguru
+python-dotenv
+pyyaml
+typing-extensions
+
+# =====================================================
+# Financial Data Sources & Market APIs
+# =====================================================
+yfinance
+alpha-vantage
+polygon-api-client
+fredapi
+quandl
+investpy
+ccxt
+ib-insync
+alpaca-trade-api
+binance
+coinbase
+websockets
+
+# =====================================================
+# Visualization & Financial EDA
+# =====================================================
+matplotlib
+seaborn
+plotly
+bokeh
+altair
+mplfinance
+missingno
+ydata-profiling
+sweetviz
+dtale
+
+# =====================================================
+# Statistics, Econometrics & Financial Mathematics
+# =====================================================
+statsmodels
+arch
+linearmodels
+pmdarima
+scikit-learn
+imbalanced-learn
+category-encoders
+feature-engine
+tslearn
+tsfresh
+pykalman
+cvxpy
+
+# =====================================================
+# Classical ML (Widely Used in Finance)
+# =====================================================
+xgboost
+lightgbm
+catboost
+mlxtend
+optuna
+hyperopt
+bayesian-optimization
+
+# =====================================================
+# Deep Learning (Quant & Time-Series Ready)
+# =====================================================
+torch
+torchvision
+torchaudio
+tensorflow
+keras
+jax
+jaxlib
+flax
+pytorch-lightning
+torchmetrics
+
+# =====================================================
+# Time Series Forecasting (Finance Specialized)
+# =====================================================
+prophet
+neuralforecast
+statsforecast
+gluonts
+darts
+sktime
+
+# =====================================================
+# Hugging Face & Transformers (Finance NLP)
+# =====================================================
+transformers
+datasets
+tokenizers
+accelerate
+peft
+trl
+sentence-transformers
+huggingface-hub
+evaluate
+bitsandbytes
+safetensors
+
+# =====================================================
+# NLP for Financial Text (Reports, News, Filings)
+# =====================================================
+nltk
+spacy
+gensim
+sentencepiece
+regex
+textblob
+langdetect
+wordcloud
+finbert-embedding
+sec-edgar-downloader
+newspaper3k
+
+# =====================================================
+# Risk Modeling, Portfolio & Quant Libraries
+# =====================================================
+pyportfolioopt
+riskfolio-lib
+quantstats
+#empyrical
+#pyfolio
+bt
+backtrader
+vectorbt
+zipline-reloaded
+
+# =====================================================
+# Optimization & Strategy Research
+# =====================================================
+cvxopt
+optuna
+simpy
+networkx
+
+# =====================================================
+# Explainability & Model Risk Management
+# =====================================================
+shap
+lime
+eli5
+alibi
+captum
+
+# =====================================================
+# Experiment Tracking & MLOps (Finance Grade)
+# =====================================================
+mlflow
+wandb
+neptune
+tensorboard
+clearml
+dvc
+dvc-s3
+dvc-gs
+
+# =====================================================
+# API Development & Financial Services
+# =====================================================
+fastapi
+uvicorn
+gunicorn
+starlette
+pydantic
+pydantic-settings
+httpx
+requests
+aiohttp
+orjson
+
+# =====================================================
+# Model Serving & Deployment
+# =====================================================
+onnx
+onnxruntime
+bentoml
+ray
+ray[serve]
+torchserve
+tensorflow-serving-api
+
+# =====================================================
+# Databases & Financial Data Storage
+# =====================================================
+sqlalchemy
+psycopg2-binary
+pymysql
+duckdb
+sqlite-utils
+redis
+pymongo
+influxdb-client
+
+# =====================================================
+# Distributed & Large-Scale Finance Computing
+# =====================================================
+dask
+dask-ml
+pyspark
+ray
+
+# =====================================================
+# Hugging Face Spaces & Dashboards
+# =====================================================
+gradio
+streamlit
+streamlit-aggrid
+fastapi-utils
+
+# =====================================================
+# Notebooks & Development Environment
+# =====================================================
+jupyter
+jupyterlab
+ipykernel
+notebook
+ipywidgets
+nbformat
+black
+isort
+flake8
+mypy
+pre-commit
+
+# =====================================================
+# Security, Auth & Compliance
+# =====================================================
+python-jose
+passlib
+bcrypt
+cryptography
+
+# =====================================================
+# Web Scraping & Alternative Data
+# =====================================================
+beautifulsoup4
+lxml
+scrapy
+selenium
+playwright
+
+# =====================================================
+# Testing & Reliability
+# =====================================================
+pytest
+pytest-cov
+hypothesis
+
+# =====================================================
+# Performance & Hardware Acceleration
+# =====================================================
+faiss-cpu
+#faiss-gpu--?python version something upgrade/degrade
+cupy-cuda12x

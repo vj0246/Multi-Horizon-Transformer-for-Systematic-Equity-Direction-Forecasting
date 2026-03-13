@@ -1,0 +1,26 @@
+import numpy as np
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+def train_and_evaluate(X_train, y_train, X_test, y_test):
+
+    train_mean = y_train.mean()
+    y_train_centered = y_train - train_mean
+
+    model = XGBRegressor(
+        n_estimators=600,
+        max_depth=5,
+        learning_rate=0.03,
+        random_state=42
+    )
+
+    model.fit(X_train, y_train_centered)
+
+    y_pred_centered = model.predict(X_test)
+    y_pred = y_pred_centered + train_mean
+
+    mae = mean_absolute_error(y_test, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    corr = np.corrcoef(y_test, y_pred)[0, 1]
+
+    return model, y_pred, mae, rmse, corr
