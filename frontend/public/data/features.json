@@ -1,0 +1,18 @@
+[
+  "close",
+  "high",
+  "low",
+  "open",
+  "volume",
+  "daily_ret",
+  "roll_mean_ret_5",
+  "roll_mean_ret_10",
+  "roll_mean_ret_20",
+  "roll_vol_5",
+  "roll_vol_10",
+  "roll_vol_20",
+  "momentum_10",
+  "log_volume",
+  "vol_roll_mean_5",
+  "ma_diff_10"
+]

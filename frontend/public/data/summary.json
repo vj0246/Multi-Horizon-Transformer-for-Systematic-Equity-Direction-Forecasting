@@ -1,0 +1,33 @@
+{
+  "ticker": "^NSEI",
+  "date_start": "2007-10-16",
+  "date_end": "2026-02-20",
+  "n_trading_days": 4502,
+  "n_samples": 4422,
+  "split": {
+    "train": 3095,
+    "val": 663,
+    "test": 664
+  },
+  "n_features": 16,
+  "horizons": 20,
+  "lookback": 60,
+  "mean_auc": 0.5301747156495475,
+  "mean_ic": 0.07464800371117138,
+  "primary_horizon": 20,
+  "strategy_sharpe_net": 0.3641442308124293,
+  "strategy_total_return": 0.07844408026513428,
+  "strategy_max_drawdown": -0.08812724140834316,
+  "transaction_cost_bps": 5,
+  "slippage_bps": 2,
+  "total_cost_bps": 7.0,
+  "use_sentiment": false,
+  "model": {
+    "d_model": 64,
+    "num_heads": 4,
+    "ff_dim": 128,
+    "num_layers": 2,
+    "dropout": 0.1
+  },
+  "walk_forward_mean_sharpe": 0.17095991158038518
+}
