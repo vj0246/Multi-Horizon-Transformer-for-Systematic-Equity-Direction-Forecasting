@@ -12,15 +12,31 @@
   "n_features": 16,
   "horizons": 20,
   "lookback": 60,
-  "mean_auc": 0.5301747156495475,
-  "mean_ic": 0.07464800371117138,
+  "mean_auc": 0.52897747311705,
+  "mean_ic": 0.04973683286049509,
   "primary_horizon": 20,
-  "strategy_sharpe_net": 0.3641442308124293,
-  "strategy_total_return": 0.07844408026513428,
-  "strategy_max_drawdown": -0.08812724140834316,
-  "transaction_cost_bps": 5,
-  "slippage_bps": 2,
-  "total_cost_bps": 7.0,
+  "strategy_sharpe_net": -0.4681745837589212,
+  "strategy_total_return": -0.11418141888272548,
+  "strategy_max_drawdown": -0.11649213417837749,
+  "cost_model": "india",
+  "cost_breakdown": {
+    "instrument": "futures",
+    "brokerage_bps": 0.6,
+    "exchange_txn_bps": 0.38,
+    "sebi_bps": 0.02,
+    "stt_bps": 2.0,
+    "stamp_duty_bps": 2.0,
+    "gst_bps": 0.1764,
+    "slippage_bps": 6.0,
+    "roundtrip_bps": 11.1764,
+    "per_side_bps": 5.5882
+  },
+  "roundtrip_cost_bps": 11.1764,
+  "per_side_cost_bps": 5.5882,
+  "instrument": "futures",
+  "buy_hold_sharpe": 1.3370203781908145,
+  "buy_hold_total_return": 0.3974410919618734,
+  "strategy_excess_return": -0.5116225108445989,
   "use_sentiment": false,
   "model": {
     "d_model": 64,
@@ -29,5 +45,5 @@
     "num_layers": 2,
     "dropout": 0.1
   },
-  "walk_forward_mean_sharpe": 0.17095991158038518
+  "walk_forward_mean_sharpe": 0.35021365949494243
 }
