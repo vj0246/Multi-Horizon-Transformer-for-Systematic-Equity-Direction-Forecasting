@@ -31,9 +31,21 @@ def load_config() -> dict:
         return yaml.safe_load(f)
 
 
+_DETERMINISM_SET = False
+
+
 def set_seeds(seed: int) -> None:
+    global _DETERMINISM_SET
+    os.environ.setdefault("PYTHONHASHSEED", str(seed))
     np.random.seed(seed)
     tf.random.set_seed(seed)
+    # Make results reproducible across runs so published numbers are stable.
+    if not _DETERMINISM_SET:
+        try:
+            tf.config.experimental.enable_op_determinism()
+        except Exception:
+            pass
+        _DETERMINISM_SET = True
 
 
 def fwd_log_return(close: np.ndarray, idx: np.ndarray, h: int) -> np.ndarray:
@@ -189,6 +201,9 @@ def main():
         mode: M.strategy_report(sig_m, fwd_m, idx_m, cfg, mode=mode)
         for mode in ("sign", "quantile", "long")
     }
+    # Passive buy-and-hold Nifty benchmark over the same non-overlapping periods.
+    _, fwd_no_bh = M.non_overlapping(idx_m, sig_m, fwd_m, holding)
+    strategies["buy_and_hold"] = M.buy_and_hold_report(fwd_no_bh, cfg)
 
     # ---- threshold sweep (test, prob-based long-only) ----
     # Thresholds are drawn from the actual probability distribution (40th..95th
@@ -208,7 +223,6 @@ def main():
 
     # ---- decile attribution + yearly sharpe ----
     decile = M.decile_attribution(p, fwd_m)
-    q = strategies["quantile"]
     sig_no, ret_no = M.non_overlapping(idx_m, sig_m, fwd_m, holding)
     pos_no = np.where(sig_no >= np.percentile(sig_m, cfg["backtest"]["quantile_upper"]), 1.0,
                       np.where(sig_no <= np.percentile(sig_m, cfg["backtest"]["quantile_lower"]), -1.0, 0.0))
@@ -234,6 +248,13 @@ def main():
         "val_auc": [float(x) for x in hist_history.get("val_auc", [])],
     }
 
+    # ---- cost breakdown + buy-and-hold comparison ----
+    from Source.Backtest.costs import india_cost_breakdown
+    cost_model = cfg["backtest"].get("cost_model", "flat")
+    cost_breakdown = india_cost_breakdown(cfg) if cost_model == "india" else None
+    bh = strategies["buy_and_hold"]
+    q = strategies["quantile"]
+
     # ---- summary ----
     aucs = [h["auc"] for h in horizons_json if not np.isnan(h["auc"])]
     ics = [h["ic"] for h in horizons_json if not np.isnan(h["ic"])]
@@ -250,12 +271,17 @@ def main():
         "mean_auc": float(np.mean(aucs)) if aucs else None,
         "mean_ic": float(np.mean(ics)) if ics else None,
         "primary_horizon": ph,
-        "strategy_sharpe_net": strategies["quantile"]["sharpe_net"],
-        "strategy_total_return": strategies["quantile"]["total_return"],
-        "strategy_max_drawdown": strategies["quantile"]["max_drawdown"],
-        "transaction_cost_bps": cfg["backtest"]["transaction_cost_bps"],
-        "slippage_bps": cfg["backtest"].get("slippage_bps", 0),
-        "total_cost_bps": M.total_cost_bps(cfg),
+        "strategy_sharpe_net": q["sharpe_net"],
+        "strategy_total_return": q["total_return"],
+        "strategy_max_drawdown": q["max_drawdown"],
+        "cost_model": cost_model,
+        "cost_breakdown": cost_breakdown,               # itemized India round-trip (or null)
+        "roundtrip_cost_bps": cost_breakdown["roundtrip_bps"] if cost_breakdown else 2 * M.total_cost_bps(cfg),
+        "per_side_cost_bps": M.total_cost_bps(cfg),
+        "instrument": cfg["backtest"].get("india", {}).get("instrument") if cost_model == "india" else None,
+        "buy_hold_sharpe": bh["sharpe_net"],
+        "buy_hold_total_return": bh["total_return"],
+        "strategy_excess_return": q["total_return"] - bh["total_return"],
         "use_sentiment": cfg["features"].get("use_sentiment", False),
         "model": cfg["model"],
         "walk_forward_mean_sharpe": float(np.mean([f["sharpe_net"] for f in wf])) if wf else None,
@@ -280,9 +306,15 @@ def main():
         print(f"  wrote {name}")
 
     print("\n==== HEADLINE ====")
+    print(f"Cost model: {cost_model} ({summary['instrument']}) "
+          f"round-trip {summary['roundtrip_cost_bps']:.2f} bps")
     print(f"Mean AUC (test, 20 horizons): {summary['mean_auc']:.4f}")
     print(f"Mean IC  (test): {summary['mean_ic']:.4f}")
     print(f"Quantile L/S Sharpe (net, h={ph}): {summary['strategy_sharpe_net']:.3f}")
+    print(f"Strategy total return: {summary['strategy_total_return']*100:.2f}%  "
+          f"vs buy-hold {summary['buy_hold_total_return']*100:.2f}%  "
+          f"(excess {summary['strategy_excess_return']*100:.2f}%)")
+    print(f"Buy-hold Sharpe: {summary['buy_hold_sharpe']:.3f}")
     print(f"Walk-forward mean Sharpe: {summary['walk_forward_mean_sharpe']}")
     print("Artifacts ->", out_dir)
 

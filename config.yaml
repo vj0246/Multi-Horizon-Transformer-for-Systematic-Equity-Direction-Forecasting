@@ -65,8 +65,22 @@ backtest:
   primary_horizon: 20           # horizon used for the alpha-signal strategy
   periods_per_year: 252
   holding_period: 20            # non-overlapping 20-day returns
-  transaction_cost_bps: 5       # commission/fees per side, in basis points (round-trip = 2x)
-  slippage_bps: 2               # execution slippage per side, bps (added to commission)
+
+  # Cost model: "india" uses the itemized Indian statutory cost stack
+  # (Source/Backtest/costs.py); "flat" uses transaction_cost_bps + slippage_bps.
+  cost_model: india
+  india:
+    instrument: futures         # futures (allows short) | delivery (long-only ETF)
+    brokerage_bps: 0.3          # discount-broker equivalent, per side
+    slippage_bps: 3.0           # bid-ask + impact, per side
+    exchange_txn_bps: 0.19      # NSE transaction charge, per side
+    sebi_bps: 0.01              # SEBI turnover fee, per side
+    gst_pct: 18.0               # GST on brokerage + exchange charges
+    # STT and stamp duty are instrument-dependent (see costs.INSTRUMENTS)
+
+  # Legacy flat model (used only when cost_model: flat)
+  transaction_cost_bps: 5       # commission/fees per side, in basis points
+  slippage_bps: 2               # execution slippage per side, bps
   quantile_upper: 70            # long above this percentile of the signal
   quantile_lower: 30            # short below this percentile
   walk_forward:

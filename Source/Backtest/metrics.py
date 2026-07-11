@@ -13,8 +13,15 @@ from sklearn.metrics import roc_auc_score
 
 
 def total_cost_bps(cfg: dict) -> float:
-    """Per-side cost = commission/fees + execution slippage, in basis points."""
+    """Per-side cost in basis points (apply_costs doubles it to a round trip).
+
+    Uses the itemized Indian cost stack when backtest.cost_model == "india",
+    otherwise the legacy flat fees + slippage model.
+    """
     bt = cfg["backtest"]
+    if bt.get("cost_model", "flat") == "india":
+        from Source.Backtest.costs import india_cost_breakdown
+        return india_cost_breakdown(cfg)["per_side_bps"]
     return float(bt.get("transaction_cost_bps", 0) + bt.get("slippage_bps", 0))
 
 
@@ -109,6 +116,28 @@ def strategy_report(
         "avg_exposure": float(np.mean(np.abs(pos))) if pos.size else 0.0,
         "n_trades": int(pos.size),
         "hit_rate": float(np.mean(net > 0)) if net.size else 0.0,
+        "equity_curve": [round(float(v), 5) for v in eq],
+    }
+
+
+def buy_and_hold_report(fwd_no: np.ndarray, cfg: dict) -> dict:
+    """Passive long-only Nifty benchmark over the same non-overlapping periods.
+
+    The strategy must beat this to add value - the index has a strong upward
+    drift, so any long-biased signal looks good until compared here. Charges a
+    single round-trip cost for the whole hold (enter once, exit once).
+    """
+    bt = cfg["backtest"]
+    ppy = bt["periods_per_year"] / bt["holding_period"]
+    eq = equity_curve(fwd_no)                       # always long, position = +1
+    roundtrip = 2 * total_cost_bps(cfg) / 1e4
+    net_total = float(eq[-1] * (1 - roundtrip) - 1) if eq.size else 0.0
+    return {
+        "mode": "buy_and_hold",
+        "sharpe_net": annualized_sharpe(fwd_no, ppy),
+        "total_return": net_total,
+        "max_drawdown": max_drawdown(eq),
+        "n_trades": int(fwd_no.size),
         "equity_curve": [round(float(v), 5) for v in eq],
     }
 
