@@ -16,6 +16,26 @@ Training uses strict temporal split (70/15/15 — no look-ahead leakage), Standa
 
 ---
 
+## Live Demo
+
+**→ [multi-horizon-transformer-for-syste.vercel.app](https://multi-horizon-transformer-for-syste.vercel.app)**
+
+A static Next.js dashboard (in `frontend/`) visualizes the **real, regenerated** backtest results — per-horizon AUC/IC, the cost-aware equity curve, walk-forward folds, attention distribution, and training history. Every number is produced by an actual training run, not hand-authored.
+
+### Reproduce end-to-end
+
+```bash
+# 1. train the Transformer + run the full backtest -> writes frontend/public/data/*.json
+python -m Source.Backtest.run
+
+# 2. rebuild + preview the site
+cd frontend && npm install && npm run dev
+```
+
+Everything is driven by `config.yaml`. Results are stochastic across runs (CPU non-determinism, small test sample): the single-split long-short Sharpe looks strong (~1.5) while the **walk-forward mean Sharpe (~0.2) is the honest robust estimate** — the site reports both. Set `REUSE=1` before `run.py` to regenerate the JSON from a cached run without retraining.
+
+---
+
 ## Repository Structure
 
 ```
@@ -107,7 +127,7 @@ The attention scores from the second encoder block are extracted via a parallel 
 
 ### 1. Data — What Was Used
 
-Raw data is Nifty 50 daily OHLCV downloaded via `yfinance` with `auto_adjust=False` (preserving raw unadjusted prices and separate adjusted close columns). The dataset spans from **January 2006 to February 2026**, giving roughly 4,900 trading day observations — two full market cycles including the 2008 GFC, 2020 COVID crash, and multiple bull runs.
+Raw data is Nifty 50 daily OHLCV downloaded via `yfinance` with `auto_adjust=False` (preserving raw unadjusted prices and separate adjusted close columns). The dataset spans from **October 2007 to February 2026**, giving roughly 4,500 trading day observations — two full market cycles including the 2008 GFC, 2020 COVID crash, and multiple bull runs.
 
 The raw download includes a duplicate close column (yfinance artifact) that gets dropped, and the first two header rows are cleaned during preprocessing. Columns are manually renamed to `['date', 'close', 'high', 'low', 'open', 'volume']`.
 
@@ -351,14 +371,13 @@ python Source/Ingestion/Fetch_Market_Data.py
 **Run the model:**
 Open `Notebooks/Notebooks/Eda.ipynb` and execute all cells sequentially. Update the CSV path in Cell 3 to match your local or Colab path.
 
-**For news sentiment (optional):**
-```python
-from Source.News.fetch_news import fetch_news
-from Source.News.sentiment import compute_sentiment
-
-fetch_news("Nifty 50 India stock market", api_key="YOUR_NEWSAPI_KEY")
-compute_sentiment()
+**For news sentiment fusion (optional, off by default):**
+```bash
+# Needs NEWSAPI_KEY. Writes Data/Processed_Data/daily_sentiment.csv
+NEWSAPI_KEY=xxxx python -m Source.News.build_sentiment --query "Nifty 50 India stock market"
+# Then set features.use_sentiment: true in config.yaml and re-run the pipeline.
 ```
+Note: NewsAPI only serves ~30 days of history, so this cannot backfill the 2007-2026 training window. The fusion path is real and tested, but stays disabled so the historical backtest never trains on unavailable/fabricated sentiment.
 
 ---
 
@@ -373,12 +392,18 @@ Numerically more stable than sigmoid + BCE separately. Means raw logit values ca
 **Why GlobalAveragePooling instead of CLS token or last-step?**
 GlobalAverage is more stable for small datasets. CLS token would require dedicated training. Last-step pooling would concentrate all signal on the final time step, ignoring the context the attention mechanism builds.
 
-**What's not done yet (honest):**
-- `config.yaml` is empty — all hyperparameters are hardcoded in the notebook
-- `Source/Features/Returns.py` and `Volatility.py` are empty stubs
-- News features are not yet fused into the Transformer input
-- No walk-forward backtesting (single temporal split only)
-- No transaction cost modeling in strategy evaluation
+**What's done since the original notebook:**
+- `config.yaml` now holds every hyperparameter (windows, split, model, costs)
+- `Source/Features/Returns.py` and `Volatility.py` are implemented, not stubs
+- The notebook logic is extracted into a reproducible pipeline (`Source/Pipeline`, `Source/Models`, `Source/Backtest`) runnable with one command
+- Walk-forward validation (expanding-window retrain) is implemented
+- Transaction costs **and slippage** are charged on every trade; returns are non-overlapping
+- News / FinBERT sentiment fusion is wired end-to-end (config-gated 17th feature via `Source/News/build_sentiment.py`)
+- A static Next.js site visualizes the real, regenerated results (see below)
+
+**What's still not done (honest):**
+- Sentiment fusion is **off by default** — NewsAPI only serves ~30 days of history, so a real sentiment feature cannot be backfilled over 2007-2026. The mechanism is real; the historical data is not available, and no fabricated feature is ever fed to the backtest.
+- Single-asset backtest — no borrow cost or capacity modeling (slippage *is* modeled)
 - Risk module is a placeholder
 - API serving layer is a placeholder
 
