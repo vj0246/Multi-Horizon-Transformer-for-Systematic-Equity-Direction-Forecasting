@@ -1,0 +1,78 @@
+# =====================================================
+# Multi-Horizon Transformer - Central Configuration
+# All hyperparameters previously hardcoded in the notebook now live here.
+# =====================================================
+
+data:
+  ticker: "^NSEI"
+  raw_csv: "Data/Raw_Data/^NSEI_daily.csv"
+  start_date: "2006-01-01"
+
+features:
+  # Rolling windows used across return / volatility / volume features
+  return_windows: [5, 10, 20]
+  vol_windows: [5, 10, 20]
+  momentum_period: 10
+  volume_mean_window: 5
+  ma_diff_window: 10
+  # News/FinBERT sentiment fusion. OFF by default: NewsAPI only serves ~30 days of
+  # history, so a real daily sentiment column cannot be backfilled over 2007-2026.
+  # When a daily_sentiment.csv exists AND this flag is true, sentiment becomes a
+  # 17th input feature. See Source/News/build_sentiment.py.
+  use_sentiment: false
+  sentiment_csv: "Data/Processed_Data/daily_sentiment.csv"
+  feature_cols:
+    - close
+    - high
+    - low
+    - open
+    - volume
+    - daily_ret
+    - roll_mean_ret_5
+    - roll_mean_ret_10
+    - roll_mean_ret_20
+    - roll_vol_5
+    - roll_vol_10
+    - roll_vol_20
+    - momentum_10
+    - log_volume
+    - vol_roll_mean_5
+    - ma_diff_10
+
+sequence:
+  lookback: 60
+  horizons: 20          # predict h = 1..20 days ahead
+
+split:
+  train_frac: 0.70
+  val_frac: 0.15        # test = remaining 0.15
+
+model:
+  d_model: 64
+  num_heads: 4
+  ff_dim: 128
+  num_layers: 2
+  dropout: 0.1
+
+training:
+  epochs: 40
+  batch_size: 32
+  learning_rate: 0.0001
+  early_stopping_patience: 7
+  seed: 42
+
+backtest:
+  primary_horizon: 20           # horizon used for the alpha-signal strategy
+  periods_per_year: 252
+  holding_period: 20            # non-overlapping 20-day returns
+  transaction_cost_bps: 5       # commission/fees per side, in basis points (round-trip = 2x)
+  slippage_bps: 2               # execution slippage per side, bps (added to commission)
+  quantile_upper: 70            # long above this percentile of the signal
+  quantile_lower: 30            # short below this percentile
+  walk_forward:
+    n_folds: 5
+    min_train_frac: 0.40        # first fold trains on at least this fraction
+
+output:
+  artifacts_dir: "frontend/public/data"
+  model_dir: "Data/Processed_Data"
