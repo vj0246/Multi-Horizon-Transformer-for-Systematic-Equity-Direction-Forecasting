@@ -7,6 +7,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  Legend,
   Line,
   LineChart,
   ReferenceLine,
@@ -72,7 +73,8 @@ export function HorizonIC() {
 
 export function EquityCurve() {
   const eq = data.strategies.quantile?.equity_curve ?? [];
-  const d = eq.map((v, i) => ({ i, v }));
+  const bh = data.strategies.buy_and_hold?.equity_curve ?? [];
+  const d = eq.map((v, i) => ({ i, strategy: v, buyhold: bh[i] }));
   return (
     <ResponsiveContainer width="100%" height={300}>
       <AreaChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -86,9 +88,11 @@ export function EquityCurve() {
         <XAxis dataKey="i" tick={AX} tickLine={false} axisLine={{ stroke: GRID }}
           label={{ value: "trade #", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
-        <Tooltip {...tip} formatter={(v: number) => v.toFixed(4)} />
+        <Tooltip {...tip} formatter={(v: number) => v?.toFixed(4)} />
+        <Legend wrapperStyle={{ fontSize: 11 }} />
         <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
-        <Area type="monotone" dataKey="v" stroke="#4ade80" strokeWidth={2} fill="url(#eq)" />
+        <Area type="monotone" dataKey="strategy" name="quantile L/S" stroke="#4ade80" strokeWidth={2} fill="url(#eq)" />
+        <Area type="monotone" dataKey="buyhold" name="buy & hold Nifty" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
       </AreaChart>
     </ResponsiveContainer>
   );

@@ -28,12 +28,30 @@ export interface Summary {
   strategy_sharpe_net: number;
   strategy_total_return: number;
   strategy_max_drawdown: number;
-  transaction_cost_bps: number;
-  slippage_bps: number;
-  total_cost_bps: number;
+  cost_model: string;
+  cost_breakdown: CostBreakdown | null;
+  roundtrip_cost_bps: number;
+  per_side_cost_bps: number;
+  instrument: string | null;
+  buy_hold_sharpe: number;
+  buy_hold_total_return: number;
+  strategy_excess_return: number;
   use_sentiment: boolean;
   model: Record<string, number>;
   walk_forward_mean_sharpe: number | null;
+}
+
+export interface CostBreakdown {
+  instrument: string;
+  brokerage_bps: number;
+  exchange_txn_bps: number;
+  sebi_bps: number;
+  stt_bps: number;
+  stamp_duty_bps: number;
+  gst_bps: number;
+  slippage_bps: number;
+  roundtrip_bps: number;
+  per_side_bps: number;
 }
 
 export interface HorizonRow {
@@ -62,7 +80,7 @@ export interface StrategyReport {
 export const data = {
   summary: summary as Summary,
   horizons: horizons as HorizonRow[],
-  strategies: strategies as Record<string, StrategyReport>,
+  strategies: strategies as unknown as Record<string, StrategyReport>,
   thresholdSweep: thresholdSweep as { threshold: number; sharpe: number; trade_freq: number }[],
   decile: decile as { decile: number; mean_return: number }[],
   yearly: yearly as { year: number; sharpe: number; n: number }[],

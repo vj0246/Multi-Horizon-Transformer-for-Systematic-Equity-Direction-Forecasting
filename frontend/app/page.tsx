@@ -28,6 +28,8 @@ export default function Page() {
   const q = data.strategies.quantile;
   const sign = data.strategies.sign;
   const long = data.strategies.long;
+  const bh = data.strategies.buy_and_hold;
+  const cb = s.cost_breakdown;
   const meanAuc = s.mean_auc ?? 0;
   const meanIc = s.mean_ic ?? 0;
 
@@ -90,7 +92,7 @@ export default function Page() {
             <Stat
               label="L/S Sharpe (net)"
               value={fmtSigned(q.sharpe_net, 2)}
-              sub={`after ${s.total_cost_bps}bps costs · h=${s.primary_horizon}`}
+              sub={`net of ${s.roundtrip_cost_bps.toFixed(1)}bps round-trip · h=${s.primary_horizon}`}
               tone={q.sharpe_net >= 0 ? "good" : "bad"}
             />
             <Stat
@@ -228,9 +230,61 @@ export default function Page() {
           <Stat label="Avg Exposure" value={fmtPct(q.avg_exposure, 0)} sub="fraction of capital deployed" />
         </div>
 
-        <Panel title="Equity curve — quantile long-short (net of costs)" subtitle={`${s.total_cost_bps}bps per side (${s.transaction_cost_bps} fees + ${s.slippage_bps} slippage) · non-overlapping ${s.primary_horizon}-day holds`}>
+        <Panel title="Equity curve — quantile long-short vs buy-and-hold" subtitle={`net of ${s.roundtrip_cost_bps.toFixed(2)}bps round-trip India ${s.instrument ?? ""} costs · non-overlapping ${s.primary_horizon}-day holds`}>
           <EquityCurve />
         </Panel>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <Panel title="vs passive Nifty benchmark" subtitle="does the signal beat simply holding the index?">
+            <div className="grid grid-cols-3 gap-3 text-center">
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted">Strategy</div>
+                <div className={`mt-1 text-lg font-semibold tag ${q.total_return >= 0 ? "text-accent" : "text-danger"}`}>{fmtPct(q.total_return, 1)}</div>
+                <div className="text-[11px] text-muted">Sharpe {fmtSigned(q.sharpe_net, 2)}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted">Buy &amp; Hold</div>
+                <div className={`mt-1 text-lg font-semibold tag ${bh.total_return >= 0 ? "text-accent" : "text-danger"}`}>{fmtPct(bh.total_return, 1)}</div>
+                <div className="text-[11px] text-muted">Sharpe {fmtSigned(bh.sharpe_net, 2)}</div>
+              </div>
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted">Excess</div>
+                <div className={`mt-1 text-lg font-semibold tag ${s.strategy_excess_return >= 0 ? "text-accent" : "text-danger"}`}>{fmtPct(s.strategy_excess_return, 1)}</div>
+                <div className="text-[11px] text-muted">over holding</div>
+              </div>
+            </div>
+            <p className="mt-4 text-xs leading-relaxed text-muted">
+              The Nifty has a strong upward drift, so a long-biased signal can look good on its own.
+              The honest test is the excess over passively holding the index, net of costs.
+            </p>
+          </Panel>
+          {cb && (
+            <Panel title={`India cost model · ${cb.instrument}`} subtitle={`round-trip ${cb.roundtrip_bps.toFixed(2)}bps charged on every trade`}>
+              <table className="w-full text-xs tag">
+                <tbody>
+                  {[
+                    ["STT (securities transaction tax)", cb.stt_bps],
+                    ["Stamp duty", cb.stamp_duty_bps],
+                    ["Slippage (bid-ask + impact)", cb.slippage_bps],
+                    ["Exchange transaction", cb.exchange_txn_bps],
+                    ["Brokerage", cb.brokerage_bps],
+                    ["GST", cb.gst_bps],
+                    ["SEBI turnover", cb.sebi_bps],
+                  ].map(([k, v]: any) => (
+                    <tr key={k} className="border-b border-edge/40">
+                      <td className="py-1.5 text-muted">{k}</td>
+                      <td className="py-1.5 text-right text-white">{Number(v).toFixed(2)} bps</td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className="py-2 font-semibold text-white">Round-trip total</td>
+                    <td className="py-2 text-right font-semibold text-accent">{cb.roundtrip_bps.toFixed(2)} bps</td>
+                  </tr>
+                </tbody>
+              </table>
+            </Panel>
+          )}
+        </div>
 
         <div className="mt-4 grid gap-4 lg:grid-cols-3">
           <Panel title="Strategy comparison">
@@ -247,6 +301,7 @@ export default function Page() {
                   ["Sign", sign],
                   ["Quantile L/S", q],
                   ["Long-only", long],
+                  ["Buy & Hold", bh],
                 ].map(([name, r]: any) => (
                   <tr key={name} className="border-b border-edge/40">
                     <td className="py-2 text-white">{name}</td>
@@ -322,9 +377,9 @@ export default function Page() {
           <Panel title="What is real here">
             <ul className="list-inside list-disc space-y-2 text-sm text-muted">
               <li>Every metric is computed on held-out test data from a freshly trained model.</li>
-              <li>Costs of {s.total_cost_bps}bps/side ({s.transaction_cost_bps} fees + {s.slippage_bps} slippage) are charged on every trade.</li>
-              <li>Returns are non-overlapping to avoid autocorrelation inflation.</li>
-              <li>Walk-forward retraining checks the result is not a single-split fluke.</li>
+              <li>India {s.instrument} costs ({s.roundtrip_cost_bps.toFixed(1)}bps round-trip: STT, stamp, slippage, brokerage, exchange, GST) are charged on every trade.</li>
+              <li>Results are benchmarked against passively holding the Nifty, net of costs.</li>
+              <li>Returns are non-overlapping; walk-forward retraining checks it is not a single-split fluke.</li>
             </ul>
           </Panel>
           <Panel title="Honest limitations">
