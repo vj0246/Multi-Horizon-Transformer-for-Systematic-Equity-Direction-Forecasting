@@ -32,7 +32,10 @@ python -m Source.Backtest.run
 cd frontend && npm install && npm run dev
 ```
 
-Everything is driven by `config.yaml`. Results are stochastic across runs (CPU non-determinism, small test sample): the single-split long-short Sharpe looks strong (~1.5) while the **walk-forward mean Sharpe (~0.2) is the honest robust estimate** — the site reports both. Set `REUSE=1` before `run.py` to regenerate the JSON from a cached run without retraining.
+Everything is driven by `config.yaml`. Training is made reproducible via TensorFlow op-determinism, so reruns give stable numbers. Set `REUSE=1` before `run.py` to regenerate the JSON from a cached run without retraining.
+
+### Headline result (honest)
+After realistic India **futures** costs (~11 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the horizon-20 quantile long-short signal **does not beat buy-and-hold**. On the 2023-2026 test window the strategy loses ~11% while the index gains ~40% (excess ≈ -51%); per-horizon AUC sits near 0.53 and walk-forward Sharpe is near zero. Daily Nifty direction is close to efficient and there is no exploitable edge after costs. The site reports these numbers as-is — nothing is dressed up. A passive buy-and-hold benchmark is shown alongside every strategy so results are judged as *excess over holding the index*, not in isolation.
 
 ---
 
