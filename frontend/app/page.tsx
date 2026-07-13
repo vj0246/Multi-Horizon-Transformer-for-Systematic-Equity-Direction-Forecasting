@@ -434,11 +434,19 @@ export default function Page() {
               {" "}The model also sees <span className="text-white">{cs2.n_features} features</span>{" "}
               including cross-sectional ones — momentum and returns demeaned by the
               universe, per-date percentile ranks, and sector-relative momentum — the
-              relative signals a ranking task needs. Every configuration run (absolute vs
-              relative targets, per-stock vs cross-sectional features) is published; none
-              is cherry-picked.
+              relative signals a ranking task needs.
             </>
           )}
+          {cs2.objective === "regression" && (
+            <>
+              {" "}The head is a <span className="text-white">continuous excess-return
+              regression</span> (Huber loss): the model is trained on <em>how much</em> a
+              name out- or underperforms the universe median, not just the binary sign — a
+              richer gradient for ranking.
+            </>
+          )}
+          {" "}Every configuration (absolute/relative targets, per-stock/cross-sectional
+          features, classification/regression head) is published; none is cherry-picked.
         </p>
 
         <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -478,7 +486,7 @@ export default function Page() {
           <Panel title="Quintile attribution" subtitle="mean 20-day forward return by signal quintile — monotonic = signal ranks correctly">
             <CSQuintiles />
           </Panel>
-          <Panel title="Daily cross-sectional IC" subtitle="Spearman rank correlation across stocks, per test date (overlapping horizon — disclosed)">
+          <Panel title="Daily cross-sectional IC" subtitle={`Spearman rank corr across stocks, per test date${cs2.pooled_ic !== undefined ? ` · pooled rank IC ${fmtSigned(cs2.pooled_ic, 3)}` : ""} (overlapping horizon — disclosed)`}>
             <CSICSeries />
           </Panel>
         </div>

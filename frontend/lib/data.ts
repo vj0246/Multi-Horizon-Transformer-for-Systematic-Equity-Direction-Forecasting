@@ -67,6 +67,8 @@ export interface CSBlock {
 
 export interface CrossSection {
   target_mode?: string;
+  objective?: string;
+  pooled_ic?: number;
   n_features?: number;
   use_xs_features?: boolean;
   feature_cols?: string[];
