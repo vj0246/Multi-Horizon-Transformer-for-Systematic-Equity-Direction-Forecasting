@@ -3,6 +3,9 @@ import { Panel, Section, Stat } from "@/components/ui";
 import {
   AttentionChart,
   CalibrationChart,
+  CSEquity,
+  CSICSeries,
+  CSQuintiles,
   DecileChart,
   EquityCurve,
   HorizonAUC,
@@ -21,6 +24,7 @@ const NAV = [
   ["results", "Results"],
   ["backtest", "Backtest"],
   ["walkforward", "Walk-Forward"],
+  ["crosssection", "Cross-Section"],
   ["attention", "Attention"],
   ["method", "Method"],
 ];
@@ -33,6 +37,7 @@ export default function Page() {
   const sign = data.strategies.sign;
   const bh = data.strategies.buy_and_hold;
   const cb = s.cost_breakdown;
+  const cs2 = data.crossSection;
   const [ciLo, ciHi] = s.sharpe_ci95 ?? [NaN, NaN];
   const meanAuc = s.mean_auc ?? 0;
   const meanIc = s.mean_ic ?? 0;
@@ -400,6 +405,82 @@ export default function Page() {
               </div>
             </div>
           ))}
+        </div>
+      </Section>
+
+      {/* Cross-section */}
+      <Section
+        id="crosssection"
+        eyebrow="Cross-Section"
+        title={`Where direction models can earn: ranking ${cs2.universe_size} stocks against each other`}
+      >
+        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
+          Timing one near-efficient index failed the honest test above. This track asks a
+          better question: on the same date, which of {cs2.universe_size} NSE large caps
+          will do <em>relatively</em> better? The same shared-weight Transformer scores
+          every stock; each rebalance goes long the top 20% and short the bottom 20% —
+          a genuine cross-sectional quantile spread, the construct the single-index
+          section could only imitate.
+          {cs2.target_mode === "relative" && (
+            <>
+              {" "}Targets here are <span className="text-white">relative</span>: did the
+              stock beat the cross-sectional median return that date — the canonical label
+              for a ranking task (absolute direction labels saturate to &quot;up&quot; in a
+              bull window). Both formulations were run and both artifacts are published.
+            </>
+          )}
+        </p>
+
+        <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Stat
+            label="Mean daily IC"
+            value={fmtSigned(cs2.mean_daily_ic, 3)}
+            sub={`IR ${cs2.ic_ir.toFixed(2)} · ${(cs2.pct_days_ic_positive * 100).toFixed(0)}% days positive`}
+            tone={cs2.mean_daily_ic >= 0 ? "good" : "bad"}
+          />
+          <Stat
+            label="L/S Spread Sharpe"
+            value={fmtSigned(cs2.spread.sharpe, 2)}
+            sub={`95% CI [${cs2.spread.sharpe_ci95[0].toFixed(2)}, ${cs2.spread.sharpe_ci95[1].toFixed(2)}] · net futures`}
+            tone={cs2.spread.sharpe >= 0 ? "good" : "bad"}
+          />
+          <Stat
+            label="Long-only Top 20%"
+            value={fmtPct(cs2.long_only.total_return, 1)}
+            sub={`vs EW universe ${fmtPct(cs2.ew_benchmark.total_return, 1)} (gross)`}
+            tone={cs2.long_only.total_return >= cs2.ew_benchmark.total_return ? "good" : "bad"}
+          />
+          <Stat
+            label="Test Window"
+            value={`${cs2.spread.n_rebalances} rebal.`}
+            sub={`${cs2.test_start} → ${cs2.test_end} · 20-day holds`}
+          />
+        </div>
+
+        <Panel
+          title="Equity curves — spread, long-only, and the passive benchmark"
+          subtitle={`legs charged real India costs: futures ${cs2.costs.futures_roundtrip_bps.toFixed(1)}bps, delivery ${cs2.costs.delivery_roundtrip_bps.toFixed(1)}bps round-trip`}
+        >
+          <CSEquity />
+        </Panel>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <Panel title="Quintile attribution" subtitle="mean 20-day forward return by signal quintile — monotonic = signal ranks correctly">
+            <CSQuintiles />
+          </Panel>
+          <Panel title="Daily cross-sectional IC" subtitle="Spearman rank correlation across stocks, per test date (overlapping horizon — disclosed)">
+            <CSICSeries />
+          </Panel>
+        </div>
+
+        <div className="mt-4">
+          <Panel title="Honest caveats">
+            <ul className="list-inside list-disc space-y-2 text-sm text-muted">
+              {cs2.caveats.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          </Panel>
         </div>
       </Section>
 

@@ -12,6 +12,7 @@ import price from "@/public/data/price.json";
 import training from "@/public/data/training.json";
 import features from "@/public/data/features.json";
 import calibration from "@/public/data/calibration.json";
+import crossSection from "@/public/data/cross_section.json";
 
 export interface Summary {
   ticker: string;
@@ -52,6 +53,36 @@ export interface CalibrationBin {
   predicted: number;
   observed: number;
   count: number;
+}
+
+export interface CSBlock {
+  sharpe: number;
+  sharpe_ci95: number[];
+  total_return: number;
+  max_drawdown: number;
+  hit_rate: number;
+  n_rebalances: number;
+  equity_curve: number[];
+}
+
+export interface CrossSection {
+  target_mode?: string;
+  universe_size: number;
+  tickers: string[];
+  test_start: string;
+  test_end: string;
+  n_test_dates: number;
+  auc_h20_pooled: number;
+  mean_daily_ic: number;
+  ic_ir: number;
+  pct_days_ic_positive: number;
+  quintile_mean_fwd20: number[];
+  spread: CSBlock;
+  long_only: CSBlock;
+  ew_benchmark: CSBlock;
+  costs: { futures_roundtrip_bps: number; delivery_roundtrip_bps: number };
+  ic_series: { date: string; ic: number }[];
+  caveats: string[];
 }
 
 export interface CostBreakdown {
@@ -114,6 +145,7 @@ export const data = {
   training: training as { loss: number[]; val_loss: number[]; auc: number[]; val_auc: number[] },
   features: features as string[],
   calibration: calibration as { horizon: number; pre: CalibrationBin[]; post: CalibrationBin[] },
+  crossSection: crossSection as unknown as CrossSection,
 };
 
 export const fmtPct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;

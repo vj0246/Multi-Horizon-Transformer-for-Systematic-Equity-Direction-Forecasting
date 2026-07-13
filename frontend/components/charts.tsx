@@ -213,6 +213,82 @@ export function CalibrationChart() {
   );
 }
 
+export function CSQuintiles() {
+  const d = data.crossSection.quintile_mean_fwd20.map((v, i) => ({
+    q: `Q${i + 1}`,
+    ret: v,
+  }));
+  return (
+    <ResponsiveContainer width="100%" height={260}>
+      <BarChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+        <CartesianGrid stroke={GRID} vertical={false} />
+        <XAxis dataKey="q" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
+        <YAxis tick={AX} tickLine={false} axisLine={false} />
+        <Tooltip {...tip} formatter={(v: number) => `${(v * 100).toFixed(2)}%`} />
+        <ReferenceLine y={0} stroke="#8b98ad" />
+        <Bar dataKey="ret" radius={[3, 3, 0, 0]}>
+          {d.map((row, i) => (
+            <Cell key={i} fill={row.ret >= 0 ? "#4ade80" : "#f87171"} />
+          ))}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function CSEquity() {
+  const cs = data.crossSection;
+  const n = Math.max(
+    cs.spread.equity_curve.length,
+    cs.long_only.equity_curve.length,
+    cs.ew_benchmark.equity_curve.length
+  );
+  const d = Array.from({ length: n }, (_, i) => ({
+    i,
+    spread: cs.spread.equity_curve[i],
+    longonly: cs.long_only.equity_curve[i],
+    ew: cs.ew_benchmark.equity_curve[i],
+  }));
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+        <CartesianGrid stroke={GRID} vertical={false} />
+        <XAxis dataKey="i" tick={AX} tickLine={false} axisLine={{ stroke: GRID }}
+          label={{ value: "rebalance #", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
+        <YAxis tick={AX} tickLine={false} axisLine={false} domain={["auto", "auto"]} />
+        <Tooltip {...tip} formatter={(v: number) => v?.toFixed(4)} />
+        <Legend wrapperStyle={{ fontSize: 11 }} />
+        <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
+        <Line type="monotone" dataKey="spread" name="L/S spread (net, futures)" stroke="#4ade80" strokeWidth={2} dot={false} />
+        <Line type="monotone" dataKey="longonly" name="long-only top 20% (net, delivery)" stroke="#38bdf8" strokeWidth={1.8} dot={false} />
+        <Line type="monotone" dataKey="ew" name="equal-weight universe (gross)" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" dot={false} />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function CSICSeries() {
+  const d = data.crossSection.ic_series.map((r) => ({ date: r.date, ic: r.ic }));
+  return (
+    <ResponsiveContainer width="100%" height={220}>
+      <AreaChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+        <defs>
+          <linearGradient id="ic" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.3} />
+            <stop offset="100%" stopColor="#38bdf8" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid stroke={GRID} vertical={false} />
+        <XAxis dataKey="date" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} minTickGap={60} />
+        <YAxis tick={AX} tickLine={false} axisLine={false} />
+        <Tooltip {...tip} formatter={(v: number) => v?.toFixed(3)} />
+        <ReferenceLine y={0} stroke="#8b98ad" />
+        <Area type="monotone" dataKey="ic" stroke="#38bdf8" strokeWidth={1.4} fill="url(#ic)" />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
+}
+
 export function PriceChart() {
   const d = data.price;
   return (
