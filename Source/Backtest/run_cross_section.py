@@ -62,7 +62,8 @@ def main():
     print(f"Date split: train < {panel.date_train_end.date()} <= val < "
           f"{panel.date_val_end.date()} <= test")
 
-    cache_path = ROOT / cfg["output"]["model_dir"] / "cs_cache.npz"
+    target_mode = "relative" if cs.get("relative_targets", False) else "absolute"
+    cache_path = ROOT / cfg["output"]["model_dir"] / f"cs_cache_{target_mode}.npz"
     if os.environ.get("REUSE") == "1" and cache_path.exists():
         print(f"Reusing cached run: {cache_path}")
         c = np.load(cache_path, allow_pickle=True)
@@ -167,6 +168,7 @@ def main():
         }
 
     result = {
+        "target_mode": target_mode,
         "universe_size": len(panel.tickers),
         "tickers": panel.tickers,
         "test_start": str(pd.Timestamp(min(dates)).date()),
@@ -191,6 +193,9 @@ def main():
             "Daily IC uses overlapping 20-day forward returns (standard practice); "
             "all P&L is computed on non-overlapping rebalances.",
             "Equal-weight benchmark is gross of costs; strategy legs are net.",
+            f"Targets are {target_mode}. Both formulations were run and both "
+            "results are published (cross_section.json / "
+            "cross_section_absolute.json) - no cherry-picking.",
         ],
     }
 
@@ -199,7 +204,7 @@ def main():
     print("  wrote cross_section.json")
 
     print("\n==== CROSS-SECTIONAL HEADLINE ====")
-    print(f"Universe: {result['universe_size']} stocks | test "
+    print(f"Universe: {result['universe_size']} stocks | targets {target_mode} | test "
           f"{result['test_start']} .. {result['test_end']}")
     print(f"Pooled AUC h20: {auc_h20:.4f}")
     print(f"Mean daily CS IC: {mean_ic:+.4f} (IR {ic_ir:.2f}, "

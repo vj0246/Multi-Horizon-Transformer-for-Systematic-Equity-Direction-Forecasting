@@ -58,7 +58,33 @@ def load_universe(cfg: dict) -> dict[str, pd.DataFrame]:
             continue
         df = df.sort_values("date").reset_index(drop=True)
         out[path.stem] = build_features(df, cfg)
+    if cfg["cross_section"].get("relative_targets", False):
+        out = _attach_relative_targets(out, cfg)
     return out
+
+
+def _attach_relative_targets(stocks: dict[str, pd.DataFrame], cfg: dict) -> dict[str, pd.DataFrame]:
+    """Overwrite target_h with RELATIVE labels: did the stock beat the
+    cross-sectional median h-day forward return on that date?
+
+    Absolute direction labels cannot discriminate in a trending market (nearly
+    every label is 1 in a bull window); relative labels are the canonical
+    formulation when the trading decision is a rank.
+    """
+    horizons = cfg["sequence"]["horizons"]
+    # h-day forward log return per stock on its own price series
+    fwd_cols: dict[int, dict[str, pd.Series]] = {h: {} for h in range(1, horizons + 1)}
+    for tick, df in stocks.items():
+        c = df.set_index("date")["close"]
+        for h in range(1, horizons + 1):
+            fwd_cols[h][tick] = np.log(c.shift(-h) / c)
+    for h in range(1, horizons + 1):
+        wide = pd.DataFrame(fwd_cols[h])                    # index=date, cols=ticker
+        excess = wide.sub(wide.median(axis=1), axis=0)
+        tgt = (excess > 0).astype("float32").where(~excess.isna())
+        for tick, df in stocks.items():
+            df[f"target_{h}"] = df["date"].map(tgt[tick]).astype("float32")
+    return stocks
 
 
 def _windows_for_stock(
@@ -77,6 +103,8 @@ def _windows_for_stock(
 
     X, y, d, fwd = [], [], [], []
     for t in range(lookback, len(df) - horizons, stride):
+        if np.isnan(targs[t]).any():
+            continue
         X.append(feats[t - lookback:t])
         y.append(targs[t])
         d.append(dates[t])

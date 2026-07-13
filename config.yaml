@@ -64,6 +64,12 @@ cross_section:
   holding_period: 20            # non-overlapping 20-day rebalances
   batch_size: 128               # larger batches for the pooled panel
   epochs: 25
+  # true  -> target_h = stock's h-day return beats the cross-sectional median
+  #          that date (the canonical formulation for a ranking task)
+  # false -> absolute direction targets, same as the index track (first attempt;
+  #          in a bull window everything is "up", so it cannot discriminate).
+  # Both formulations' results are published - no cherry-picking.
+  relative_targets: true
 
 features:
   # Rolling windows used across return / volatility / volume features
