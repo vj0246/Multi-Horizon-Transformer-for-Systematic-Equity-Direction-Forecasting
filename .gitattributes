@@ -1,0 +1,2 @@
+# Shell scripts run inside WSL/bash and must stay LF regardless of platform.
+*.sh text eol=lf
