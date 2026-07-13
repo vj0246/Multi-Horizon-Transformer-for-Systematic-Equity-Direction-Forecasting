@@ -2,6 +2,7 @@ import { data, fmtNum, fmtPct, fmtSigned } from "@/lib/data";
 import { Panel, Section, Stat } from "@/components/ui";
 import {
   AttentionChart,
+  CalibrationChart,
   DecileChart,
   EquityCurve,
   HorizonAUC,
@@ -25,11 +26,14 @@ const NAV = [
 ];
 
 export default function Page() {
-  const q = data.strategies.quantile;
+  const prim = data.strategies.timing_ensemble;
+  const timingH20 = data.strategies.timing_h20;
+  const timingBest = data.strategies.timing_best;
+  const quantile = data.strategies.quantile;
   const sign = data.strategies.sign;
-  const long = data.strategies.long;
   const bh = data.strategies.buy_and_hold;
   const cb = s.cost_breakdown;
+  const [ciLo, ciHi] = s.sharpe_ci95 ?? [NaN, NaN];
   const meanAuc = s.mean_auc ?? 0;
   const meanIc = s.mean_ic ?? 0;
 
@@ -90,15 +94,15 @@ export default function Page() {
               tone={meanIc >= 0 ? "good" : "bad"}
             />
             <Stat
-              label="L/S Sharpe (net)"
-              value={fmtSigned(q.sharpe_net, 2)}
-              sub={`net of ${s.roundtrip_cost_bps.toFixed(1)}bps round-trip · h=${s.primary_horizon}`}
-              tone={q.sharpe_net >= 0 ? "good" : "bad"}
+              label="Timing Sharpe (net)"
+              value={fmtSigned(prim.sharpe_net, 2)}
+              sub={`95% CI [${ciLo.toFixed(2)}, ${ciHi.toFixed(2)}] · ${s.roundtrip_cost_bps.toFixed(1)}bps round-trip`}
+              tone={prim.sharpe_net >= 0 ? "good" : "bad"}
             />
             <Stat
               label="Max Drawdown"
-              value={fmtPct(q.max_drawdown, 1)}
-              sub="quantile long-short equity"
+              value={fmtPct(prim.max_drawdown, 1)}
+              sub="long/flat timing equity"
               tone="default"
             />
           </div>
@@ -125,9 +129,10 @@ export default function Page() {
           </Panel>
           <Panel title="Signal, not just accuracy">
             <p className="text-sm leading-relaxed text-muted">
-              Raw logits are treated as a continuous alpha signal and stress-tested with
-              quant metrics: Information Coefficient, quantile long-short Sharpe with
-              transaction costs, decile attribution, and walk-forward validation.
+              All 20 horizon logits are ensembled into one signal, Platt-calibrated on
+              validation data, and stress-tested as a long/flat timing strategy with
+              India costs, bootstrap confidence intervals, decile attribution, and
+              walk-forward validation.
             </p>
           </Panel>
         </div>
@@ -150,7 +155,9 @@ export default function Page() {
                   `Dense projection → d_model = ${s.model.d_model}`,
                   "＋ Sinusoidal positional encoding",
                   `${s.model.num_layers} × Encoder block  ·  ${s.model.num_heads} heads  ·  FFN ${s.model.ff_dim}`,
-                  "GlobalAveragePooling1D",
+                  s.model.pooling === "attention"
+                    ? "Attention pooling (learned softmax over the 60 steps)"
+                    : "GlobalAveragePooling1D",
                   `Dense(${s.horizons}) → ${s.horizons} raw logits`,
                 ].map((step, i) => (
                   <div key={i} className="flex items-center gap-3">
@@ -175,6 +182,7 @@ export default function Page() {
                   ["Attention heads", `${s.model.num_heads}`],
                   ["Encoder blocks", `${s.model.num_layers}`],
                   ["FFN hidden dim", `${s.model.ff_dim}`],
+                  ["Pooling", s.model.pooling === "attention" ? "Attention (learned)" : "GlobalAverage"],
                   ["Output horizons", `${s.horizons}`],
                   ["Loss", "BCE (from logits)"],
                 ].map(([k, v]) => (
@@ -189,7 +197,7 @@ export default function Page() {
         </div>
 
         <div className="mt-4">
-          <Panel title="Input features" subtitle={`${data.features.length} engineered signals per day`}>
+          <Panel title="Input features" subtitle={`${data.features.length} stationary signals per day — raw OHLCV price levels are excluded (non-stationary out-of-sample)`}>
             <div className="flex flex-wrap gap-2">
               {data.features.map((f) => (
                 <span
@@ -219,18 +227,44 @@ export default function Page() {
           as expected for a liquid benchmark. The value is in the aggregate ranking of the
           signal, tested next in a cost-aware backtest.
         </p>
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          <Panel
+            title={`Probability calibration · horizon ${data.calibration.horizon}`}
+            subtitle="reliability diagram on test — closer to the diagonal is better"
+          >
+            <CalibrationChart />
+          </Panel>
+          <Panel title="Why calibrate?">
+            <p className="text-sm leading-relaxed text-muted">
+              The model is trained for classification, so its raw sigmoid outputs rank
+              market states well but are not trustworthy probabilities. A Platt scaler is
+              fit per horizon on the <span className="text-white">validation set only</span>{" "}
+              and applied to test predictions, so &quot;P(up) = 0.6&quot; means the market
+              actually rose about 60% of the time at that score. All probability
+              thresholds on this page use the calibrated values; rank metrics (AUC, IC)
+              are unaffected.
+            </p>
+          </Panel>
+        </div>
       </Section>
 
       {/* Backtest */}
-      <Section id="backtest" eyebrow="Backtest" title={`Alpha-signal backtest · horizon ${s.primary_horizon}`}>
+      <Section id="backtest" eyebrow="Backtest" title="Long/flat timing backtest — calibrated 20-horizon ensemble">
+        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
+          On a single index, long-short quantile spreads are a cross-sectional idea that
+          does not transfer; the honest framing is <span className="text-white">market
+          timing</span>: hold the index when the ensemble signal is in its top{" "}
+          {100 - 70}% (threshold fixed on validation data), sit in cash otherwise.
+        </p>
         <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Stat label="Net Sharpe" value={fmtSigned(q.sharpe_net, 2)} sub="quantile long-short" tone={q.sharpe_net >= 0 ? "good" : "bad"} />
-          <Stat label="Total Return" value={fmtPct(q.total_return, 1)} sub={`${q.n_trades} non-overlapping trades`} tone={q.total_return >= 0 ? "good" : "bad"} />
-          <Stat label="Hit Rate" value={fmtPct(q.hit_rate, 1)} sub="profitable trades" />
-          <Stat label="Avg Exposure" value={fmtPct(q.avg_exposure, 0)} sub="fraction of capital deployed" />
+          <Stat label="Net Sharpe" value={fmtSigned(prim.sharpe_net, 2)} sub={`95% CI [${ciLo.toFixed(2)}, ${ciHi.toFixed(2)}]`} tone={prim.sharpe_net >= 0 ? "good" : "bad"} />
+          <Stat label="Total Return" value={fmtPct(prim.total_return, 1)} sub={`${prim.n_trades} non-overlapping trades`} tone={prim.total_return >= 0 ? "good" : "bad"} />
+          <Stat label="Hit Rate" value={fmtPct(prim.hit_rate, 1)} sub="profitable trades" />
+          <Stat label="Avg Exposure" value={fmtPct(prim.avg_exposure, 0)} sub="time in market vs cash" />
         </div>
 
-        <Panel title="Equity curve — quantile long-short vs buy-and-hold" subtitle={`net of ${s.roundtrip_cost_bps.toFixed(2)}bps round-trip India ${s.instrument ?? ""} costs · non-overlapping ${s.primary_horizon}-day holds`}>
+        <Panel title="Equity curve — long/flat timing vs buy-and-hold" subtitle={`net of ${s.roundtrip_cost_bps.toFixed(2)}bps round-trip India ${s.instrument ?? ""} costs · non-overlapping ${s.primary_horizon}-day holds`}>
           <EquityCurve />
         </Panel>
 
@@ -239,8 +273,8 @@ export default function Page() {
             <div className="grid grid-cols-3 gap-3 text-center">
               <div>
                 <div className="text-[11px] uppercase tracking-wider text-muted">Strategy</div>
-                <div className={`mt-1 text-lg font-semibold tag ${q.total_return >= 0 ? "text-accent" : "text-danger"}`}>{fmtPct(q.total_return, 1)}</div>
-                <div className="text-[11px] text-muted">Sharpe {fmtSigned(q.sharpe_net, 2)}</div>
+                <div className={`mt-1 text-lg font-semibold tag ${prim.total_return >= 0 ? "text-accent" : "text-danger"}`}>{fmtPct(prim.total_return, 1)}</div>
+                <div className="text-[11px] text-muted">Sharpe {fmtSigned(prim.sharpe_net, 2)}</div>
               </div>
               <div>
                 <div className="text-[11px] uppercase tracking-wider text-muted">Buy &amp; Hold</div>
@@ -298,9 +332,11 @@ export default function Page() {
               </thead>
               <tbody className="tag">
                 {[
-                  ["Sign", sign],
-                  ["Quantile L/S", q],
-                  ["Long-only", long],
+                  ["Timing · ensemble", prim],
+                  ["Timing · h20 only", timingH20],
+                  [`Timing · best-val h${s.best_val_horizon}`, timingBest],
+                  ["Quantile L/S (ref)", quantile],
+                  ["Sign (ref)", sign],
                   ["Buy & Hold", bh],
                 ].map(([name, r]: any) => (
                   <tr key={name} className="border-b border-edge/40">
@@ -315,17 +351,21 @@ export default function Page() {
                 ))}
               </tbody>
             </table>
+            <p className="mt-3 text-[11px] leading-relaxed text-muted">
+              Quantile L/S and sign are cross-sectional constructs kept for reference —
+              shorting a structurally drifting index is not a meaningful strategy.
+            </p>
           </Panel>
-          <Panel title="Threshold sweep" subtitle="long-only Sharpe vs entry threshold">
+          <Panel title="Threshold sweep" subtitle="long/flat Sharpe vs calibrated P(up) threshold (thresholds from validation)">
             <ThresholdSweep />
           </Panel>
-          <Panel title="Decile attribution" subtitle="mean forward return by signal decile">
+          <Panel title="Decile attribution" subtitle="mean forward return by calibrated-probability decile">
             <DecileChart />
           </Panel>
         </div>
 
         <div className="mt-4">
-          <Panel title="Yearly Sharpe" subtitle="regime stability of the quantile long-short strategy">
+          <Panel title="Yearly Sharpe" subtitle="regime stability of the long/flat timing strategy">
             <YearlyChart />
           </Panel>
         </div>
@@ -336,13 +376,17 @@ export default function Page() {
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
           The single split can get lucky. Here the model is retrained from scratch on an
           expanding window and evaluated out-of-sample on the next block —{" "}
-          {data.walkforward.length} folds. Mean net Sharpe:{" "}
+          {data.walkforward.length} folds, each using the long/flat ensemble timing rule
+          with thresholds fixed on its own training carve. Mean net Sharpe:{" "}
           <span className={`tag ${(s.walk_forward_mean_sharpe ?? 0) >= 0 ? "text-accent" : "text-danger"}`}>
             {s.walk_forward_mean_sharpe !== null ? fmtSigned(s.walk_forward_mean_sharpe, 2) : "n/a"}
           </span>
+          {s.walk_forward_sharpe_std !== null && (
+            <span className="text-muted"> ± {s.walk_forward_sharpe_std.toFixed(2)} across folds</span>
+          )}
           .
         </p>
-        <div className="grid gap-3 md:grid-cols-5">
+        <div className="grid gap-3 md:grid-cols-4">
           {data.walkforward.map((f) => (
             <div key={f.fold} className="panel p-4">
               <div className="text-[11px] uppercase tracking-wider text-muted">Fold {f.fold}</div>
@@ -378,13 +422,15 @@ export default function Page() {
             <ul className="list-inside list-disc space-y-2 text-sm text-muted">
               <li>Every metric is computed on held-out test data from a freshly trained model.</li>
               <li>India {s.instrument} costs ({s.roundtrip_cost_bps.toFixed(1)}bps round-trip: STT, stamp, slippage, brokerage, exchange, GST) are charged on every trade.</li>
-              <li>Results are benchmarked against passively holding the Nifty, net of costs.</li>
-              <li>Returns are non-overlapping; walk-forward retraining checks it is not a single-split fluke.</li>
+              <li>Entry thresholds, signal z-scoring, and Platt calibration are all fit on validation data only — nothing is tuned on the test set.</li>
+              <li>Sharpe is reported with a bootstrap 95% CI; results are benchmarked against passively holding the Nifty.</li>
+              <li>Inputs are restricted to stationary features; returns are non-overlapping; {data.walkforward.length}-fold walk-forward retraining checks it is not a single-split fluke.</li>
             </ul>
           </Panel>
           <Panel title="Honest limitations">
             <ul className="list-inside list-disc space-y-2 text-sm text-muted">
               <li>A liquid index is near-efficient at daily frequency — skill is thin by design.</li>
+              <li>~30 non-overlapping test trades: the CI is wide and any point estimate is fragile.</li>
               <li>Single-asset backtest; no borrow costs or capacity modeling (slippage is included).</li>
               <li>FinBERT sentiment fusion is wired in (config-gated) but off: NewsAPI can&apos;t backfill history, so no fabricated features enter the backtest.</li>
               <li>Research artifact, not a deployed trading system.</li>

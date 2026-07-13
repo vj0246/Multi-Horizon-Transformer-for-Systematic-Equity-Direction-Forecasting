@@ -72,7 +72,7 @@ export function HorizonIC() {
 }
 
 export function EquityCurve() {
-  const eq = data.strategies.quantile?.equity_curve ?? [];
+  const eq = data.strategies.timing_ensemble?.equity_curve ?? [];
   const bh = data.strategies.buy_and_hold?.equity_curve ?? [];
   const d = eq.map((v, i) => ({ i, strategy: v, buyhold: bh[i] }));
   return (
@@ -91,7 +91,7 @@ export function EquityCurve() {
         <Tooltip {...tip} formatter={(v: number) => v?.toFixed(4)} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
         <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
-        <Area type="monotone" dataKey="strategy" name="quantile L/S" stroke="#4ade80" strokeWidth={2} fill="url(#eq)" />
+        <Area type="monotone" dataKey="strategy" name="long/flat timing (ensemble)" stroke="#4ade80" strokeWidth={2} fill="url(#eq)" />
         <Area type="monotone" dataKey="buyhold" name="buy & hold Nifty" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
       </AreaChart>
     </ResponsiveContainer>
@@ -179,6 +179,35 @@ export function TrainingHistory() {
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(4)} />
         <Line type="monotone" dataKey="loss" stroke="#38bdf8" strokeWidth={2} dot={false} name="train loss" />
         <Line type="monotone" dataKey="val_loss" stroke="#4ade80" strokeWidth={2} dot={false} name="val loss" />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function CalibrationChart() {
+  const bins = new Map<number, { x: number; raw?: number; calibrated?: number }>();
+  data.calibration.pre.forEach((b) => {
+    bins.set(b.bin_mid, { x: b.bin_mid, raw: b.observed });
+  });
+  data.calibration.post.forEach((b) => {
+    const e = bins.get(b.bin_mid) ?? { x: b.bin_mid };
+    e.calibrated = b.observed;
+    bins.set(b.bin_mid, e);
+  });
+  const d = [...bins.values()].sort((a, b) => a.x - b.x);
+  return (
+    <ResponsiveContainer width="100%" height={260}>
+      <LineChart data={d} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+        <CartesianGrid stroke={GRID} vertical={false} />
+        <XAxis dataKey="x" type="number" domain={[0, 1]} tick={AX} tickLine={false}
+          axisLine={{ stroke: GRID }}
+          label={{ value: "predicted P(up)", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
+        <YAxis domain={[0, 1]} tick={AX} tickLine={false} axisLine={false} />
+        <Tooltip {...tip} formatter={(v: number) => v?.toFixed(3)} />
+        <Legend wrapperStyle={{ fontSize: 11 }} />
+        <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]} stroke="#8b98ad" strokeDasharray="4 4" />
+        <Line type="monotone" dataKey="raw" name="raw sigmoid" stroke="#f87171" strokeWidth={1.6} strokeDasharray="5 3" connectNulls />
+        <Line type="monotone" dataKey="calibrated" name="Platt-calibrated" stroke="#4ade80" strokeWidth={2} connectNulls />
       </LineChart>
     </ResponsiveContainer>
   );

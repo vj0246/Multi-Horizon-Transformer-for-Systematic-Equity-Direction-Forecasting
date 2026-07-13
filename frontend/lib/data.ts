@@ -11,6 +11,7 @@ import walkforward from "@/public/data/walkforward.json";
 import price from "@/public/data/price.json";
 import training from "@/public/data/training.json";
 import features from "@/public/data/features.json";
+import calibration from "@/public/data/calibration.json";
 
 export interface Summary {
   ticker: string;
@@ -25,9 +26,12 @@ export interface Summary {
   mean_auc: number | null;
   mean_ic: number | null;
   primary_horizon: number;
+  primary_strategy: string;
   strategy_sharpe_net: number;
+  sharpe_ci95: number[];
   strategy_total_return: number;
   strategy_max_drawdown: number;
+  best_val_horizon: number;
   cost_model: string;
   cost_breakdown: CostBreakdown | null;
   roundtrip_cost_bps: number;
@@ -37,8 +41,17 @@ export interface Summary {
   buy_hold_total_return: number;
   strategy_excess_return: number;
   use_sentiment: boolean;
-  model: Record<string, number>;
+  model: Record<string, number | string>;
   walk_forward_mean_sharpe: number | null;
+  walk_forward_sharpe_std: number | null;
+  walk_forward_folds: number;
+}
+
+export interface CalibrationBin {
+  bin_mid: number;
+  predicted: number;
+  observed: number;
+  count: number;
 }
 
 export interface CostBreakdown {
@@ -66,6 +79,8 @@ export interface HorizonRow {
 
 export interface StrategyReport {
   mode: string;
+  holding_days?: number;
+  horizon?: number;
   sharpe_net: number;
   sharpe_gross: number;
   mean_return: number;
@@ -74,6 +89,7 @@ export interface StrategyReport {
   avg_exposure: number;
   n_trades: number;
   hit_rate: number;
+  net_returns?: number[];
   equity_curve: number[];
 }
 
@@ -97,6 +113,7 @@ export const data = {
   price: price as { date: string; close: number }[],
   training: training as { loss: number[]; val_loss: number[]; auc: number[]; val_auc: number[] },
   features: features as string[],
+  calibration: calibration as { horizon: number; pre: CalibrationBin[]; post: CalibrationBin[] },
 };
 
 export const fmtPct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;
