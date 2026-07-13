@@ -74,30 +74,40 @@ def strategy_report(
     fwd_ret: np.ndarray,
     idx: np.ndarray,
     cfg: dict,
-    mode: str = "quantile",
+    mode: str = "timing",
+    threshold_ref: np.ndarray | None = None,
+    holding: int | None = None,
 ) -> dict:
     """Full non-overlapping strategy report for one signal vector.
 
     mode:
-      "sign"     -> long if signal>0 else short
-      "quantile" -> long top pct, short bottom pct, flat middle
-      "long"     -> long only when signal in top pct, else flat
+      "sign"           -> long if signal>0 else short
+      "quantile"       -> long top pct, short bottom pct, flat middle (cross-
+                          sectional construct; kept for reference on a single index)
+      "timing"/"long"  -> long/flat market timing: long when signal in top pct,
+                          in cash otherwise. The honest single-index framing.
+
+    threshold_ref: distribution percentile thresholds are computed from. Pass the
+    VALIDATION-period signal so the entry rule is fixed without peeking at test
+    data; defaults to `signal` itself (legacy in-sample behavior).
+    holding: override holding period in days (defaults to config holding_period).
     """
     bt = cfg["backtest"]
-    holding = bt["holding_period"]
+    holding = holding or bt["holding_period"]
     ppy = bt["periods_per_year"] / holding
     cost_bps = total_cost_bps(cfg)
+    ref = np.asarray(threshold_ref, dtype=float) if threshold_ref is not None else signal
 
     sig, ret = non_overlapping(idx, signal, fwd_ret, holding)
 
     if mode == "sign":
         pos = np.sign(sig)
-    elif mode == "long":
-        thr = np.percentile(signal, bt["quantile_upper"])
+    elif mode in ("timing", "long"):
+        thr = np.percentile(ref, bt["quantile_upper"])
         pos = (sig >= thr).astype(float)
     else:  # quantile long-short
-        up = np.percentile(signal, bt["quantile_upper"])
-        lo = np.percentile(signal, bt["quantile_lower"])
+        up = np.percentile(ref, bt["quantile_upper"])
+        lo = np.percentile(ref, bt["quantile_lower"])
         pos = np.zeros_like(sig, dtype=float)
         pos[sig >= up] = 1.0
         pos[sig <= lo] = -1.0
@@ -108,6 +118,7 @@ def strategy_report(
 
     return {
         "mode": mode,
+        "holding_days": int(holding),
         "sharpe_net": annualized_sharpe(net, ppy),
         "sharpe_gross": annualized_sharpe(gross, ppy),
         "mean_return": float(net.mean()) if net.size else 0.0,
@@ -116,8 +127,79 @@ def strategy_report(
         "avg_exposure": float(np.mean(np.abs(pos))) if pos.size else 0.0,
         "n_trades": int(pos.size),
         "hit_rate": float(np.mean(net > 0)) if net.size else 0.0,
+        "net_returns": [round(float(v), 6) for v in net],
         "equity_curve": [round(float(v), 5) for v in eq],
     }
+
+
+def bootstrap_sharpe_ci(
+    period_returns: np.ndarray,
+    periods_per_year: float,
+    n_boot: int = 2000,
+    ci: float = 95.0,
+    seed: int = 42,
+) -> list[float]:
+    """Bootstrap confidence interval for the annualized Sharpe.
+
+    With only ~30 non-overlapping trades a point-estimate Sharpe is mostly noise;
+    the CI makes that uncertainty explicit instead of hiding it.
+    """
+    r = np.asarray(period_returns, dtype=float)
+    if r.size < 3:
+        return [float("nan"), float("nan")]
+    rng = np.random.default_rng(seed)
+    stats = np.empty(n_boot)
+    for i in range(n_boot):
+        s = rng.choice(r, size=r.size, replace=True)
+        sd = s.std()
+        stats[i] = 0.0 if sd == 0 else s.mean() / sd * np.sqrt(periods_per_year)
+    lo, hi = np.percentile(stats, [(100 - ci) / 2, 100 - (100 - ci) / 2])
+    return [float(lo), float(hi)]
+
+
+def calibrate_probs(
+    logits_val: np.ndarray, y_val: np.ndarray, logits_test: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """Platt-scale each horizon's logit into a calibrated probability.
+
+    The BCE-trained logits are fine for ranking but their sigmoid is not a
+    trustworthy P(up). A per-horizon logistic fit on the VALIDATION set (never
+    test) maps logit -> calibrated probability. Rank metrics (AUC/IC) are
+    unchanged; thresholds and reliability become meaningful.
+    """
+    from sklearn.linear_model import LogisticRegression
+
+    n_h = logits_val.shape[1]
+    cal_val = np.zeros_like(logits_val, dtype=float)
+    cal_test = np.zeros_like(logits_test, dtype=float)
+    for h in range(n_h):
+        try:
+            lr = LogisticRegression(C=1e6, max_iter=1000)
+            lr.fit(logits_val[:, h:h + 1], y_val[:, h])
+            cal_val[:, h] = lr.predict_proba(logits_val[:, h:h + 1])[:, 1]
+            cal_test[:, h] = lr.predict_proba(logits_test[:, h:h + 1])[:, 1]
+        except ValueError:  # degenerate single-class horizon: fall back to sigmoid
+            cal_val[:, h] = 1 / (1 + np.exp(-logits_val[:, h]))
+            cal_test[:, h] = 1 / (1 + np.exp(-logits_test[:, h]))
+    return cal_val, cal_test
+
+
+def reliability_bins(p: np.ndarray, y: np.ndarray, n_bins: int = 10) -> list[dict]:
+    """Reliability-diagram bins: mean predicted probability vs observed up-frequency."""
+    edges = np.linspace(0, 1, n_bins + 1)
+    which = np.clip(np.digitize(p, edges) - 1, 0, n_bins - 1)
+    out = []
+    for b in range(n_bins):
+        m = which == b
+        if m.sum() == 0:
+            continue
+        out.append({
+            "bin_mid": float((edges[b] + edges[b + 1]) / 2),
+            "predicted": float(p[m].mean()),
+            "observed": float(y[m].mean()),
+            "count": int(m.sum()),
+        })
+    return out
 
 
 def buy_and_hold_report(fwd_no: np.ndarray, cfg: dict) -> dict:
