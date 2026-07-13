@@ -42,11 +42,24 @@ Timing one index is the hardest possible use of a direction model; ranking many 
 
 Leakage guards specific to the panel: the train/val/test split is by **calendar date** (the same market day never sits in train for one stock and test for another) and the scaler is fit on pooled train windows only.
 
-**Target formulation matters.** The first run reused the index track's *absolute* direction labels (will this stock close higher in h days?) — in a trending market nearly every label is "up", so the model learns nothing that separates one stock from another (measured mean daily IC ≈ -0.01, non-monotonic quintiles). The corrected formulation uses **relative labels**: did the stock beat the *cross-sectional median* h-day return on that date (`cross_section.relative_targets: true`). Both runs' artifacts are published (`cross_section.json`, `cross_section_absolute.json`) — the formulation was chosen a priori, not by shopping for the better number.
+**Target formulation matters.** The first run reused the index track's *absolute* direction labels (will this stock close higher in h days?) — in a trending market nearly every label is "up", so the model learns nothing that separates one stock from another (measured mean daily IC ≈ -0.01, non-monotonic quintiles). The corrected formulation uses **relative labels**: did the stock beat the *cross-sectional median* h-day return on that date (`cross_section.relative_targets: true`).
+
+**Cross-sectional features matter too.** The 11 stationary features describe each stock *in isolation* (its own momentum, volatility, returns) — they carry no information about how the stock stands *relative to its peers*, which is exactly what a ranking task needs. `cross_section.use_xs_features: true` adds six such features: return and 10-day momentum demeaned by the universe, per-date percentile ranks of return/momentum/volatility, and momentum demeaned by the stock's sector (`Source/Pipeline/cross_section.py::_attach_cross_sectional_features`). All are computed from same-date values only (no look-ahead) and lift the model input from 11 to 17 features.
+
+Every configuration is published, none cherry-picked: `cross_section.json` (relative targets + cross-sectional features, the principled setup), `cross_section_base_features.json` (relative targets, per-stock features only), and `cross_section_absolute.json` (absolute targets, per-stock features). Each choice was made a priori from a diagnosis, not by shopping for the better number.
 
 **Disclosed biases:** the universe is (mostly) today's large caps backtested into the past — survivorship bias inflates absolute returns (the long-short spread is partially insulated but still favored); daily IC uses overlapping 20-day forward returns (standard practice) while all P&L is non-overlapping.
 
-**Measured outcome (honest):** neither formulation shows a cross-sectional edge with the current inputs. On the Jun-2023 → Jun-2026 test window, relative targets give mean daily IC ≈ **-0.006** (IR -0.03, 46% of days positive), non-monotonic quintiles, and a net long-short spread of **-21%** (Sharpe -0.56, CI [-1.64, 0.66]); the absolute-target run is materially identical. The 11 price/volume features describe each stock in isolation — they carry no *relative* information (momentum vs the universe, sector-relative strength, valuation), which is what ranking requires. That is the documented next lever, not more tuning of this feature set.
+**Measured outcome (honest):** adding cross-sectional features moved **every** metric in the predicted direction, confirming the diagnosis — but the edge is still not statistically meaningful. On the Jun-2023 → Jun-2026 test window:
+
+| Configuration | Mean daily IC | L/S spread (net) | Long-only top 20% |
+|---|---|---|---|
+| Absolute targets, per-stock features | -0.007 | -21.6% (Sharpe -0.49) | +7.9% |
+| Relative targets, per-stock features | -0.006 | -21.3% (Sharpe -0.56) | +9.7% |
+| **Relative targets, + cross-sectional features** | **+0.005** | **-0.6% (Sharpe +0.05)** | **+26.5% (Sharpe +0.55)** |
+| Equal-weight universe (gross benchmark) | — | — | +36.7% (Sharpe +0.84) |
+
+The cross-sectional features flipped IC positive, took the long-short spread from -21% to roughly flat, and nearly tripled the long-only return. That is real, directionally-consistent progress — but IC's information ratio is ~0.03, the spread's 95% CI is [-1.13, 1.22], quintiles are not yet monotonic, and the long-only book still trails passively holding the universe. **The signal is now pointed the right way but remains within noise.** Honest read: the diagnosis was correct and the lever works, yet a deployable edge needs richer inputs still — fundamental/quality factors and a continuous excess-return objective (documented as the next steps, both requiring data or a modeling change beyond this iteration). Nothing here is dressed up; all three configurations' artifacts are published.
 
 ```bash
 python -m Source.Ingestion.fetch_universe        # one-time: download the universe

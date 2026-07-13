@@ -34,7 +34,7 @@ Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 - `Source/Backtest/metrics.py` — Sharpe/drawdown/IC/decile/costs
 - `Source/Backtest/run.py` — index-track orchestrator, exports JSON artifacts
 - `Source/Backtest/run_cross_section.py` — cross-sectional track (panel train + quantile spread)
-- `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage)
+- `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage); relative targets + cross-sectional features (universe/sector-relative, per-date ranks)
 - `Source/Ingestion/fetch_universe.py` — NSE universe downloader (Data/Raw_Data/Universe/, gitignored)
 - `Source/Ingestion/` — yfinance downloader
 - `Source/News/` — NewsAPI + FinBERT sentiment (parallel track, not fused)
