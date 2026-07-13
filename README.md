@@ -46,7 +46,9 @@ Leakage guards specific to the panel: the train/val/test split is by **calendar 
 
 **Cross-sectional features matter too.** The 11 stationary features describe each stock *in isolation* (its own momentum, volatility, returns) — they carry no information about how the stock stands *relative to its peers*, which is exactly what a ranking task needs. `cross_section.use_xs_features: true` adds six such features: return and 10-day momentum demeaned by the universe, per-date percentile ranks of return/momentum/volatility, and momentum demeaned by the stock's sector (`Source/Pipeline/cross_section.py::_attach_cross_sectional_features`). All are computed from same-date values only (no look-ahead) and lift the model input from 11 to 17 features.
 
-Every configuration is published, none cherry-picked: `cross_section.json` (relative targets + cross-sectional features, the principled setup), `cross_section_base_features.json` (relative targets, per-stock features only), and `cross_section_absolute.json` (absolute targets, per-stock features). Each choice was made a priori from a diagnosis, not by shopping for the better number.
+**A regression objective was also tested.** A binary "beat the median" label throws away magnitude — a stock that outperforms by 0.1% and one that outperforms by 15% are the same label. `cross_section.objective: regression` instead trains the model on the **continuous cross-sectional excess log-return** per horizon (the stock's h-day return minus the universe median), with a Huber loss (robust to the heavy tails of 20-day excess returns). The Dense(20) head is linear in both cases, so the **architecture is unchanged** — only the loss and targets differ. On this data it underperformed the classification head (see the results table below), so the classification model is the one the site presents.
+
+Every configuration is published, none cherry-picked: `cross_section.json` (classification head + relative targets + cross-sectional features — the best result), `cross_section_regression.json` (regression head, same inputs), `cross_section_classification.json` (a copy of the classification best), `cross_section_base_features.json` (classification, per-stock features only), and `cross_section_absolute.json` (absolute targets, per-stock features). Each choice was made a priori from a diagnosis, not by shopping for the better number.
 
 **Disclosed biases:** the universe is (mostly) today's large caps backtested into the past — survivorship bias inflates absolute returns (the long-short spread is partially insulated but still favored); daily IC uses overlapping 20-day forward returns (standard practice) while all P&L is non-overlapping.
 
@@ -54,12 +56,18 @@ Every configuration is published, none cherry-picked: `cross_section.json` (rela
 
 | Configuration | Mean daily IC | L/S spread (net) | Long-only top 20% |
 |---|---|---|---|
-| Absolute targets, per-stock features | -0.007 | -21.6% (Sharpe -0.49) | +7.9% |
-| Relative targets, per-stock features | -0.006 | -21.3% (Sharpe -0.56) | +9.7% |
-| **Relative targets, + cross-sectional features** | **+0.005** | **-0.6% (Sharpe +0.05)** | **+26.5% (Sharpe +0.55)** |
+| Absolute targets, per-stock features (classification) | -0.007 | -21.6% (Sharpe -0.49) | +7.9% |
+| Relative targets, per-stock features (classification) | -0.006 | -21.3% (Sharpe -0.56) | +9.7% |
+| **Relative targets + cross-sectional features (classification)** | **+0.005** | **-0.6% (Sharpe +0.05)** | **+26.5% (Sharpe +0.55)** |
+| Same inputs, continuous excess-return **regression** head | -0.012 | -25.1% (Sharpe -0.79) | +5.8% |
 | Equal-weight universe (gross benchmark) | — | — | +36.7% (Sharpe +0.84) |
 
-The cross-sectional features flipped IC positive, took the long-short spread from -21% to roughly flat, and nearly tripled the long-only return. That is real, directionally-consistent progress — but IC's information ratio is ~0.03, the spread's 95% CI is [-1.13, 1.22], quintiles are not yet monotonic, and the long-only book still trails passively holding the universe. **The signal is now pointed the right way but remains within noise.** Honest read: the diagnosis was correct and the lever works, yet a deployable edge needs richer inputs still — fundamental/quality factors and a continuous excess-return objective (documented as the next steps, both requiring data or a modeling change beyond this iteration). Nothing here is dressed up; all three configurations' artifacts are published.
+Two levers were tested, and the results are reported exactly as they came out:
+
+- **Cross-sectional features helped** (as predicted). Adding universe/sector-relative momentum and per-date ranks flipped IC positive, took the long-short spread from -21% to roughly flat, and nearly tripled the long-only return. Real, directionally-consistent progress — but IC's information ratio is ~0.03, the spread's 95% CI is [-1.13, 1.22], quintiles are not yet monotonic, and the long-only book still trails passively holding the universe.
+- **The regression head did *not* help.** Training on the continuous excess return (Huber loss) instead of a binary beat/miss label made every metric worse (IC -0.012, long-only +5.8%). The 20-day cross-sectional excess is heavy-tailed, and the regression objective appears to chase that tail noise rather than the rank; the classification head is the better fit here. This was a reasonable hypothesis that the data rejected, kept in the record rather than deleted.
+
+**Honest read:** the best configuration (classification + cross-sectional features) points the signal the right way but stays within noise and does not beat passively holding the universe. A deployable edge needs richer inputs still — fundamental/quality factors (blocked on a survivorship-clean data source for NSE back to 2007). All four configurations' artifacts are published (`cross_section.json` = the best, `cross_section_regression.json`, `cross_section_classification.json`, `cross_section_base_features.json`, `cross_section_absolute.json`); nothing is dressed up or cherry-picked.
 
 ```bash
 python -m Source.Ingestion.fetch_universe        # one-time: download the universe

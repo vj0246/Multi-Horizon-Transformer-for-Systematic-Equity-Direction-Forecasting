@@ -34,7 +34,8 @@ Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 - `Source/Backtest/metrics.py` — Sharpe/drawdown/IC/decile/costs
 - `Source/Backtest/run.py` — index-track orchestrator, exports JSON artifacts
 - `Source/Backtest/run_cross_section.py` — cross-sectional track (panel train + quantile spread)
-- `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage); relative targets + cross-sectional features (universe/sector-relative, per-date ranks)
+- `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage); relative/absolute/regression targets + cross-sectional features (universe/sector-relative, per-date ranks)
+- Cross-section objective: `cross_section.objective: regression` trains on continuous excess log-return (Huber loss); `classification` uses binary beat-median labels. Head stays linear Dense(20) - architecture unchanged. `compile_model(..., objective=)` switches the loss.
 - `Source/Ingestion/fetch_universe.py` — NSE universe downloader (Data/Raw_Data/Universe/, gitignored)
 - `Source/Ingestion/` — yfinance downloader
 - `Source/News/` — NewsAPI + FinBERT sentiment (parallel track, not fused)
