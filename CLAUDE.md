@@ -27,6 +27,17 @@ npm run build                                   # static export -> frontend/out
 ```
 Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 
+### GPU training (WSL2 + CUDA)
+Native-Windows TF ≥2.11 is CPU-only. Train on the RTX 2050 through WSL2:
+```bash
+# one-time: CUDA-enabled TF venv inside WSL Ubuntu
+wsl -d Ubuntu bash -lc 'python3 -m venv ~/venvs/mht && ~/venvs/mht/bin/pip install "tensorflow[and-cuda]==2.21.0" numpy pandas scipy scikit-learn pyyaml yfinance'
+
+# run training on GPU (repo is on the Windows drive, visible at /mnt/c)
+wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/vivaa/OneDrive/Desktop/Personal Projects/Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting" && python -m Source.Backtest.run_cross_section'
+```
+`Source/device.py` logs the device and, with `training.require_gpu: true`, aborts rather than silently using CPU. `config.yaml` `training.require_gpu` enforces GPU-only runs.
+
 ## Directory Map
 - `Source/Features/` — Returns.py, Volatility.py (feature engineering)
 - `Source/Pipeline/` — data_loader.py (clean CSV), dataset.py (features→targets→windows→split→scale)

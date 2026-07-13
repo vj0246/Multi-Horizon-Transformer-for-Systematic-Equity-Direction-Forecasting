@@ -81,8 +81,9 @@ cross_section:
   #                     median). A richer gradient than a binary beat/miss label:
   #                     the model is rewarded for HOW MUCH a name out/underperforms.
   #   classification -> binary "beat the median" targets (relative_targets above).
-  # Both are published; regression is the principled choice for a ranking signal.
-  objective: regression
+  # Both are published. Default is classification: it empirically beat the
+  # regression head on this data (see README results table).
+  objective: classification
   huber_delta: 0.03             # Huber loss transition (excess returns are heavy-tailed)
   xs_features:
     - xs_ret_vs_uni       # daily return minus universe-mean return that date
@@ -144,11 +145,11 @@ training:
   learning_rate: 0.0001
   early_stopping_patience: 7
   seed: 42
-  # require_gpu: abort training if no GPU is visible to TensorFlow. Kept false
-  # because the current native-Windows TF wheel is CPU-only (TF 2.11+ dropped
-  # native-Windows GPU support). Flip to true once a GPU-enabled TF is in place
-  # (WSL2 + tensorflow[and-cuda], or the DirectML plugin). See Source/device.py.
-  require_gpu: false
+  # require_gpu: abort training if no GPU is visible to TensorFlow. Enforced:
+  # training runs through the WSL2 CUDA venv (see CLAUDE.md / scripts/train_gpu.sh).
+  # Native-Windows TF is CPU-only, so a Windows-side run will now fail fast rather
+  # than silently use the CPU. See Source/device.py.
+  require_gpu: true
 
 backtest:
   primary_horizon: 20           # horizon used for the alpha-signal strategy
