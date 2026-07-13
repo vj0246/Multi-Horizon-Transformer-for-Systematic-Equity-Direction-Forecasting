@@ -25,6 +25,60 @@ from Source.Pipeline.dataset import build_features, resolve_feature_cols
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# Sector map for sector-relative features (keyed by the CSV stem = ticker without
+# the .NS suffix; "&" is written as "_" by fetch_universe). Coarse GICS-style
+# buckets - enough to demean momentum within a peer group.
+SECTORS = {
+    "RELIANCE": "Energy", "ONGC": "Energy", "NTPC": "Energy", "BPCL": "Energy", "GAIL": "Energy",
+    "TCS": "IT", "INFY": "IT", "WIPRO": "IT", "HCLTECH": "IT",
+    "HDFCBANK": "Bank", "ICICIBANK": "Bank", "SBIN": "Bank", "KOTAKBANK": "Bank", "AXISBANK": "Bank",
+    "ITC": "FMCG", "HINDUNILVR": "FMCG", "NESTLEIND": "FMCG", "BRITANNIA": "FMCG",
+    "MARUTI": "Auto", "M_M": "Auto", "HEROMOTOCO": "Auto", "EICHERMOT": "Auto", "TATAMOTORS": "Auto",
+    "SUNPHARMA": "Pharma", "DRREDDY": "Pharma", "CIPLA": "Pharma",
+    "TATASTEEL": "Metal", "JSWSTEEL": "Metal", "HINDALCO": "Metal",
+    "GRASIM": "Cement", "ULTRACEMCO": "Cement", "AMBUJACEM": "Cement",
+    "SIEMENS": "CapGoods", "HAVELLS": "CapGoods", "LT": "CapGoods",
+    "BHARTIARTL": "Telecom", "TITAN": "Consumer", "ASIANPAINT": "Consumer",
+}
+
+
+def active_feature_cols(cfg: dict) -> list[str]:
+    """Base stationary features plus cross-sectional features when enabled."""
+    cols = resolve_feature_cols(cfg)
+    if cfg["cross_section"].get("use_xs_features", False):
+        cols = cols + list(cfg["cross_section"]["xs_features"])
+    return cols
+
+
+def _attach_cross_sectional_features(stocks: dict[str, pd.DataFrame], cfg: dict) -> dict[str, pd.DataFrame]:
+    """Add features that describe each stock RELATIVE TO THE UNIVERSE on each date.
+
+    Per-stock features (momentum, volatility, returns) describe a stock in
+    isolation and carry no ranking information. These add: return/momentum
+    demeaned by the universe, cross-sectional percentile ranks, and momentum
+    demeaned by the stock's sector - exactly the relative signals a cross-
+    sectional model needs. Computed only from same-date values (no look-ahead).
+    """
+    def wide(col: str) -> pd.DataFrame:
+        return pd.DataFrame({t: df.set_index("date")[col] for t, df in stocks.items()})
+
+    mom, ret, vol = wide("momentum_10"), wide("daily_ret"), wide("roll_vol_20")
+    xs = {
+        "xs_ret_vs_uni": ret.sub(ret.mean(axis=1), axis=0),
+        "xs_mom_vs_uni": mom.sub(mom.mean(axis=1), axis=0),
+        "xs_mom_rank": mom.rank(axis=1, pct=True) - 0.5,
+        "xs_ret_rank": ret.rank(axis=1, pct=True) - 0.5,
+        "xs_vol_rank": vol.rank(axis=1, pct=True) - 0.5,
+    }
+    sec = pd.Series({t: SECTORS.get(t, "OTHER") for t in stocks})
+    sector_mean = mom.T.groupby(sec).transform("mean").T   # per date, per ticker = its sector's mean momentum
+    xs["sector_rel_mom"] = mom - sector_mean
+
+    for name, frame in xs.items():
+        for t, df in stocks.items():
+            df[name] = df["date"].map(frame[t]).astype("float32").fillna(0.0)
+    return stocks
+
 
 @dataclass
 class Panel:
@@ -42,6 +96,7 @@ class Panel:
     test_date: np.ndarray
     test_fwd20: np.ndarray
     tickers: list[str]
+    feature_cols: list[str]
     date_train_end: pd.Timestamp
     date_val_end: pd.Timestamp
 
@@ -60,6 +115,8 @@ def load_universe(cfg: dict) -> dict[str, pd.DataFrame]:
         out[path.stem] = build_features(df, cfg)
     if cfg["cross_section"].get("relative_targets", False):
         out = _attach_relative_targets(out, cfg)
+    if cfg["cross_section"].get("use_xs_features", False):
+        out = _attach_cross_sectional_features(out, cfg)
     return out
 
 
@@ -91,7 +148,7 @@ def _windows_for_stock(
     df: pd.DataFrame, cfg: dict, stride: int
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """(X, y, end_date, fwd20) tuples for one stock, stepping `stride` days."""
-    feat_cols = resolve_feature_cols(cfg)
+    feat_cols = active_feature_cols(cfg)
     lookback = cfg["sequence"]["lookback"]
     horizons = cfg["sequence"]["horizons"]
     target_cols = [f"target_{h}" for h in range(1, horizons + 1)]
@@ -166,5 +223,6 @@ def build_panel(cfg: dict) -> Panel:
         test_ticker=np.concatenate(te_tick), test_date=np.concatenate(te_date),
         test_fwd20=np.concatenate(te_fwd),
         tickers=list(stocks.keys()),
+        feature_cols=active_feature_cols(cfg),
         date_train_end=date_train_end, date_val_end=date_val_end,
     )

@@ -63,16 +63,18 @@ def main():
           f"{panel.date_val_end.date()} <= test")
 
     target_mode = "relative" if cs.get("relative_targets", False) else "absolute"
-    cache_path = ROOT / cfg["output"]["model_dir"] / f"cs_cache_{target_mode}.npz"
+    feat_tag = "xs" if cs.get("use_xs_features", False) else "base"
+    n_features = len(panel.feature_cols)
+    cache_path = ROOT / cfg["output"]["model_dir"] / f"cs_cache_{target_mode}_{feat_tag}.npz"
     if os.environ.get("REUSE") == "1" and cache_path.exists():
         print(f"Reusing cached run: {cache_path}")
         c = np.load(cache_path, allow_pickle=True)
         logits_val, logits_test = c["logits_val"], c["logits_test"]
         hist_history = c["hist_history"].item()
     else:
-        print("Training shared-weight model on the pooled panel...")
+        print(f"Training shared-weight model on the pooled panel ({n_features} features)...")
         set_seeds(cfg["training"]["seed"])
-        model, _ = build_model(cfg)
+        model, _ = build_model(cfg, num_features=n_features)
         compile_model(model, cfg)
         es = tf.keras.callbacks.EarlyStopping(
             patience=cfg["training"]["early_stopping_patience"], restore_best_weights=True)
@@ -169,6 +171,9 @@ def main():
 
     result = {
         "target_mode": target_mode,
+        "n_features": n_features,
+        "use_xs_features": bool(cs.get("use_xs_features", False)),
+        "feature_cols": panel.feature_cols,
         "universe_size": len(panel.tickers),
         "tickers": panel.tickers,
         "test_start": str(pd.Timestamp(min(dates)).date()),
@@ -204,7 +209,8 @@ def main():
     print("  wrote cross_section.json")
 
     print("\n==== CROSS-SECTIONAL HEADLINE ====")
-    print(f"Universe: {result['universe_size']} stocks | targets {target_mode} | test "
+    print(f"Universe: {result['universe_size']} stocks | targets {target_mode} | "
+          f"{n_features} features ({feat_tag}) | test "
           f"{result['test_start']} .. {result['test_end']}")
     print(f"Pooled AUC h20: {auc_h20:.4f}")
     print(f"Mean daily CS IC: {mean_ic:+.4f} (IR {ic_ir:.2f}, "

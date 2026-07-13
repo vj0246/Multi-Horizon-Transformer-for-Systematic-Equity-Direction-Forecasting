@@ -41,13 +41,18 @@ def _encoder_block(x, num_heads: int, d_model: int, ff_dim: int, dropout: float)
     return x, attn_scores
 
 
-def build_model(cfg: dict) -> tuple[tf.keras.Model, tf.keras.Model]:
-    """Build (model, attention_model). Both share weights; attention_model emits scores."""
+def build_model(cfg: dict, num_features: int | None = None) -> tuple[tf.keras.Model, tf.keras.Model]:
+    """Build (model, attention_model). Both share weights; attention_model emits scores.
+
+    num_features overrides the input width; the cross-sectional track passes the
+    panel feature count (base stationary features + cross-sectional features).
+    """
     from Source.Pipeline.dataset import resolve_feature_cols
 
     m = cfg["model"]
     lookback = cfg["sequence"]["lookback"]
-    num_features = len(resolve_feature_cols(cfg))
+    if num_features is None:
+        num_features = len(resolve_feature_cols(cfg))
     horizons = cfg["sequence"]["horizons"]
 
     inputs = tf.keras.Input(shape=(lookback, num_features))

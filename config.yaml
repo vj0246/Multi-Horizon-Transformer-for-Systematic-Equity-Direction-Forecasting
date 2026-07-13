@@ -70,6 +70,18 @@ cross_section:
   #          in a bull window everything is "up", so it cannot discriminate).
   # Both formulations' results are published - no cherry-picking.
   relative_targets: true
+  # Cross-sectional features: give the model information ABOUT THE UNIVERSE that a
+  # per-stock feature set structurally lacks (momentum vs the universe mean,
+  # per-date rank transforms, sector-relative strength). This is what a ranking
+  # task actually needs. Adds 6 features on top of the 11 stationary ones.
+  use_xs_features: true
+  xs_features:
+    - xs_ret_vs_uni       # daily return minus universe-mean return that date
+    - xs_mom_vs_uni       # 10d momentum minus universe-mean momentum
+    - xs_mom_rank         # cross-sectional percentile rank of momentum, centered
+    - xs_ret_rank         # cross-sectional percentile rank of daily return
+    - xs_vol_rank         # cross-sectional percentile rank of 20d volatility
+    - sector_rel_mom      # 10d momentum minus the stock's sector-mean momentum
 
 features:
   # Rolling windows used across return / volatility / volume features
