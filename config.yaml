@@ -75,6 +75,15 @@ cross_section:
   # per-date rank transforms, sector-relative strength). This is what a ranking
   # task actually needs. Adds 6 features on top of the 11 stationary ones.
   use_xs_features: true
+  # Training objective for the panel:
+  #   regression     -> predict the continuous cross-sectional EXCESS log-return
+  #                     per horizon (stock's h-day return minus the universe
+  #                     median). A richer gradient than a binary beat/miss label:
+  #                     the model is rewarded for HOW MUCH a name out/underperforms.
+  #   classification -> binary "beat the median" targets (relative_targets above).
+  # Both are published; regression is the principled choice for a ranking signal.
+  objective: regression
+  huber_delta: 0.03             # Huber loss transition (excess returns are heavy-tailed)
   xs_features:
     - xs_ret_vs_uni       # daily return minus universe-mean return that date
     - xs_mom_vs_uni       # 10d momentum minus universe-mean momentum
@@ -135,6 +144,11 @@ training:
   learning_rate: 0.0001
   early_stopping_patience: 7
   seed: 42
+  # require_gpu: abort training if no GPU is visible to TensorFlow. Kept false
+  # because the current native-Windows TF wheel is CPU-only (TF 2.11+ dropped
+  # native-Windows GPU support). Flip to true once a GPU-enabled TF is in place
+  # (WSL2 + tensorflow[and-cuda], or the DirectML plugin). See Source/device.py.
+  require_gpu: false
 
 backtest:
   primary_horizon: 20           # horizon used for the alpha-signal strategy

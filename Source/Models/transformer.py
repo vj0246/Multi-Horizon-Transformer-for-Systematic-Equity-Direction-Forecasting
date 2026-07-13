@@ -83,10 +83,20 @@ def build_model(cfg: dict, num_features: int | None = None) -> tuple[tf.keras.Mo
     return model, attention_model
 
 
-def compile_model(model: tf.keras.Model, cfg: dict) -> tf.keras.Model:
-    model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=cfg["training"]["learning_rate"]),
-        loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-        metrics=[tf.keras.metrics.AUC(name="auc")],
-    )
+def compile_model(model: tf.keras.Model, cfg: dict, objective: str = "classification") -> tf.keras.Model:
+    """Compile for either classification (BCE on logits) or regression (Huber).
+
+    The Dense(20) head is linear in both cases; only the loss/metric differ, so
+    the architecture is identical across objectives.
+    """
+    opt = tf.keras.optimizers.Adam(learning_rate=cfg["training"]["learning_rate"])
+    if objective == "regression":
+        delta = cfg.get("cross_section", {}).get("huber_delta", 0.03)
+        model.compile(optimizer=opt,
+                      loss=tf.keras.losses.Huber(delta=delta),
+                      metrics=[tf.keras.metrics.MeanAbsoluteError(name="mae")])
+    else:
+        model.compile(optimizer=opt,
+                      loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+                      metrics=[tf.keras.metrics.AUC(name="auc")])
     return model

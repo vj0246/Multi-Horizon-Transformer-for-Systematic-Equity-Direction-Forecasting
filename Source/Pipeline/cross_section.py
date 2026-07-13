@@ -113,11 +113,34 @@ def load_universe(cfg: dict) -> dict[str, pd.DataFrame]:
             continue
         df = df.sort_values("date").reset_index(drop=True)
         out[path.stem] = build_features(df, cfg)
-    if cfg["cross_section"].get("relative_targets", False):
+    if cfg["cross_section"].get("objective", "classification") == "regression":
+        out = _attach_excess_return_targets(out, cfg)
+    elif cfg["cross_section"].get("relative_targets", False):
         out = _attach_relative_targets(out, cfg)
     if cfg["cross_section"].get("use_xs_features", False):
         out = _attach_cross_sectional_features(out, cfg)
     return out
+
+
+def _attach_excess_return_targets(stocks: dict[str, pd.DataFrame], cfg: dict) -> dict[str, pd.DataFrame]:
+    """Overwrite target_h with the CONTINUOUS cross-sectional excess log-return:
+    the stock's h-day forward log return minus the universe median that date.
+
+    This is the regression objective - the model is trained on the magnitude of
+    relative out/underperformance, not just its sign.
+    """
+    horizons = cfg["sequence"]["horizons"]
+    fwd_cols: dict[int, dict[str, pd.Series]] = {h: {} for h in range(1, horizons + 1)}
+    for tick, df in stocks.items():
+        c = df.set_index("date")["close"]
+        for h in range(1, horizons + 1):
+            fwd_cols[h][tick] = np.log(c.shift(-h) / c)
+    for h in range(1, horizons + 1):
+        wide = pd.DataFrame(fwd_cols[h])
+        excess = wide.sub(wide.median(axis=1), axis=0)      # continuous excess return
+        for tick, df in stocks.items():
+            df[f"target_{h}"] = df["date"].map(excess[tick]).astype("float32")
+    return stocks
 
 
 def _attach_relative_targets(stocks: dict[str, pd.DataFrame], cfg: dict) -> dict[str, pd.DataFrame]:

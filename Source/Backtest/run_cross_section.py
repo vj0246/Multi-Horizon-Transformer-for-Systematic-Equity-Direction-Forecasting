@@ -49,6 +49,8 @@ def load_config() -> dict:
 
 def main():
     cfg = load_config()
+    from Source.device import configure_devices
+    configure_devices(cfg)
     out_dir = ROOT / cfg["output"]["artifacts_dir"]
     out_dir.mkdir(parents=True, exist_ok=True)
     cs = cfg["cross_section"]
@@ -63,19 +65,22 @@ def main():
           f"{panel.date_val_end.date()} <= test")
 
     target_mode = "relative" if cs.get("relative_targets", False) else "absolute"
+    objective = cs.get("objective", "classification")
     feat_tag = "xs" if cs.get("use_xs_features", False) else "base"
     n_features = len(panel.feature_cols)
-    cache_path = ROOT / cfg["output"]["model_dir"] / f"cs_cache_{target_mode}_{feat_tag}.npz"
+    cache_path = (ROOT / cfg["output"]["model_dir"]
+                  / f"cs_cache_{objective}_{target_mode}_{feat_tag}.npz")
     if os.environ.get("REUSE") == "1" and cache_path.exists():
         print(f"Reusing cached run: {cache_path}")
         c = np.load(cache_path, allow_pickle=True)
         logits_val, logits_test = c["logits_val"], c["logits_test"]
         hist_history = c["hist_history"].item()
     else:
-        print(f"Training shared-weight model on the pooled panel ({n_features} features)...")
+        print(f"Training shared-weight model ({objective}) on the pooled panel "
+              f"({n_features} features)...")
         set_seeds(cfg["training"]["seed"])
         model, _ = build_model(cfg, num_features=n_features)
-        compile_model(model, cfg)
+        compile_model(model, cfg, objective=objective)
         es = tf.keras.callbacks.EarlyStopping(
             patience=cfg["training"]["early_stopping_patience"], restore_best_weights=True)
         hist = model.fit(
@@ -93,12 +98,10 @@ def main():
                             hist_history=np.array(hist_history, dtype=object))
         print(f"Cached -> {cache_path}")
 
-    # ---- pooled classification sanity (h20 AUC on the panel test set) ----
-    probs_test = tf.sigmoid(logits_test).numpy()
-    auc_h20 = M.per_horizon_classification(probs_test, panel.y_test)[
-        cfg["backtest"]["primary_horizon"] - 1]["auc"]
-
-    # ---- signal: ensemble of 20 heads, z-scored on validation stats ----
+    # For regression the outputs are excess-return estimates; for classification
+    # they are logits. The ranking signal (ensemble, z-scored on validation) and
+    # every downstream metric are identical either way.
+    ph = cfg["backtest"]["primary_horizon"]
     mu_v, sd_v = logits_val.mean(axis=0), logits_val.std(axis=0)
     sig_test = ensemble_signal(logits_test, mu_v, sd_v)
 
@@ -106,8 +109,19 @@ def main():
         "date": pd.to_datetime(panel.test_date),
         "ticker": panel.test_ticker,
         "signal": sig_test,
+        "score_h20": logits_test[:, ph - 1],
         "fwd20": panel.test_fwd20,
     }).dropna(subset=["fwd20"])
+
+    # ---- realized cross-sectional excess return + h20 AUC (works for both heads) ----
+    df["excess20"] = df["fwd20"] - df.groupby("date")["fwd20"].transform("median")
+    _m = df["excess20"].notna() & (df.groupby("date")["ticker"].transform("count") >= 2)
+    try:
+        from sklearn.metrics import roc_auc_score
+        auc_h20 = float(roc_auc_score((df.loc[_m, "excess20"] > 0).astype(int),
+                                      df.loc[_m, "score_h20"]))
+    except ValueError:
+        auc_h20 = float("nan")
 
     # ---- daily cross-sectional IC (overlapping horizon - disclosed) ----
     min_names = 15
@@ -121,6 +135,8 @@ def main():
     mean_ic = float(ic_df["ic"].mean())
     ic_ir = float(mean_ic / ic_df["ic"].std()) if len(ic_df) > 2 else float("nan")
     pct_ic_pos = float((ic_df["ic"] > 0).mean())
+    # Pooled rank IC: signal vs realized excess across the whole test panel.
+    pooled_ic = float(spearmanr(df.loc[_m, "signal"], df.loc[_m, "excess20"]).correlation)
 
     # ---- non-overlapping rebalances every `holding` trading days ----
     dates = sorted(ic_df["date"].unique())
@@ -171,6 +187,8 @@ def main():
 
     result = {
         "target_mode": target_mode,
+        "objective": objective,
+        "pooled_ic": pooled_ic,
         "n_features": n_features,
         "use_xs_features": bool(cs.get("use_xs_features", False)),
         "feature_cols": panel.feature_cols,
@@ -209,10 +227,10 @@ def main():
     print("  wrote cross_section.json")
 
     print("\n==== CROSS-SECTIONAL HEADLINE ====")
-    print(f"Universe: {result['universe_size']} stocks | targets {target_mode} | "
-          f"{n_features} features ({feat_tag}) | test "
+    print(f"Universe: {result['universe_size']} stocks | {objective} | targets "
+          f"{target_mode} | {n_features} features ({feat_tag}) | test "
           f"{result['test_start']} .. {result['test_end']}")
-    print(f"Pooled AUC h20: {auc_h20:.4f}")
+    print(f"Pooled AUC h20: {auc_h20:.4f} | pooled rank IC: {pooled_ic:+.4f}")
     print(f"Mean daily CS IC: {mean_ic:+.4f} (IR {ic_ir:.2f}, "
           f"{pct_ic_pos*100:.0f}% days positive)")
     print(f"Quintile mean fwd20: {[f'{v:+.4f}' for v in quintiles]}")
