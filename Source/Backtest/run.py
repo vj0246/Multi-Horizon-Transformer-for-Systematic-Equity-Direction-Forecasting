@@ -164,6 +164,8 @@ def walk_forward(df_feat, cfg) -> list[dict]:
 
 def main():
     cfg = load_config()
+    from Source.device import configure_devices
+    configure_devices(cfg)
     out_dir = ROOT / cfg["output"]["artifacts_dir"]
     out_dir.mkdir(parents=True, exist_ok=True)
 
