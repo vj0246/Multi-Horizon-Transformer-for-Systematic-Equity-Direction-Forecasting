@@ -26,7 +26,7 @@ Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 ## Directory Map
 - `Source/Features/` — Returns.py, Volatility.py (feature engineering)
 - `Source/Pipeline/` — data_loader.py (clean CSV), dataset.py (features→targets→windows→split→scale)
-- `Source/Models/transformer.py` — TF Transformer (2 blocks, 4 heads, d_model=64) + attention model
+- `Source/Models/transformer.py` — TF Transformer (2 blocks, 4 heads, d_model=64, attention pooling) + attention model
 - `Source/Backtest/metrics.py` — Sharpe/drawdown/IC/decile/costs
 - `Source/Backtest/run.py` — orchestrator, exports JSON artifacts
 - `Source/Ingestion/` — yfinance downloader
@@ -38,7 +38,7 @@ Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 
 ## Sentiment fusion (optional, off by default)
 - `python -m Source.News.build_sentiment --query "..."` (needs `NEWSAPI_KEY`) writes `Data/Processed_Data/daily_sentiment.csv`.
-- Set `features.use_sentiment: true` in config.yaml to add it as a 17th feature. `resolve_feature_cols()` and the model derive feature count automatically.
+- Set `features.use_sentiment: true` in config.yaml to append it as an extra feature. `resolve_feature_cols()` and the model derive feature count automatically.
 - Kept OFF: NewsAPI only serves ~30 days, so historical sentiment can't be backfilled. Never train the historical backtest on fabricated/all-zero sentiment.
 
 ## Costs

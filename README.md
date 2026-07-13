@@ -8,7 +8,7 @@
 
 This project builds a **multi-output binary classification Transformer** to answer one question with 20 simultaneous answers: *Will the Nifty 50 close higher than today — 1 day, 2 days, 3 days... all the way to 20 days from now?*
 
-The system ingests raw OHLCV data for `^NSEI` (Nifty 50) going back to 2006, engineers 16 time-series features capturing price momentum, rolling volatility, volume dynamics, and mean reversion signals, constructs 60-day sliding window sequences, and feeds them into a 2-block Transformer encoder with sinusoidal positional encoding. The model outputs 20 independent logits — one per forecast horizon — each representing the probability that the index will be higher at that future point.
+The system ingests raw OHLCV data for `^NSEI` (Nifty 50) going back to 2007, engineers 16 time-series features capturing price momentum, rolling volatility, volume dynamics, and mean reversion signals, and feeds the **11 stationary ones** (raw price levels are excluded — see below) as 60-day sliding window sequences into a 2-block Transformer encoder with sinusoidal positional encoding and learned attention pooling. The model outputs 20 independent logits — one per forecast horizon — each representing the probability that the index will be higher at that future point.
 
 Training uses strict temporal split (70/15/15 — no look-ahead leakage), StandardScaler fitted exclusively on training data, binary cross-entropy loss with AUC as the primary metric, and early stopping with patience=7. Post-training evaluation goes beyond classification metrics: the model's raw logits are used directly as alpha signals, tested via Spearman IC, sign-strategy Sharpe, quantile long-short Sharpe, and decile return attribution — all on held-out test data.
 
@@ -35,7 +35,7 @@ cd frontend && npm install && npm run dev
 Everything is driven by `config.yaml`. Training is made reproducible via TensorFlow op-determinism, so reruns give stable numbers. Set `REUSE=1` before `run.py` to regenerate the JSON from a cached run without retraining.
 
 ### Headline result (honest)
-After realistic India **futures** costs (~11 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the horizon-20 quantile long-short signal **does not beat buy-and-hold**. On the 2023-2026 test window the strategy loses ~11% while the index gains ~40% (excess ≈ -51%); per-horizon AUC sits near 0.53 and walk-forward Sharpe is near zero. Daily Nifty direction is close to efficient and there is no exploitable edge after costs. The site reports these numbers as-is — nothing is dressed up. A passive buy-and-hold benchmark is shown alongside every strategy so results are judged as *excess over holding the index*, not in isolation.
+After realistic India **futures** costs (~11.2 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the model has **no exploitable edge**. On the 2023-2026 test window the long/flat ensemble timing strategy returns ≈ **-3%** versus **+40%** for buy-and-hold; net Sharpe is **-0.62 with a bootstrap 95% CI of [-1.10, 0.00]**, mean test AUC is **0.48** (below coin-flip), and 8-fold walk-forward Sharpe is **+0.25 ± 0.79** — statistically indistinguishable from zero. Notably, restricting inputs to stationary features and fixing all thresholds on validation data *lowered* the headline numbers versus earlier, sloppier evaluations: the apparent edge was evaluation artifact, not alpha. Daily Nifty direction is close to efficient; the site reports these numbers as-is, benchmarked against passively holding the index.
 
 ---
 
@@ -83,12 +83,12 @@ Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting/
 ### Data Flow
 
 ```
-^NSEI Raw OHLCV (2006–2026, ~4,900 trading days)
+^NSEI Raw OHLCV (2007–2026, ~4,500 trading days)
         ↓
-  Feature Engineering (16 features per day)
+  Feature Engineering (16 engineered, 11 stationary features fed to the model)
         ↓
   Sliding Window Construction (lookback = 60 days)
-  → Tensor shape: (N, 60, 16)
+  → Tensor shape: (N, 60, 11)
         ↓
   Temporal Train/Val/Test Split (70/15/15)
         ↓
@@ -96,19 +96,20 @@ Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting/
         ↓
   Transformer Encoder (2 blocks)
         ↓
-  GlobalAveragePooling1D
+  Attention pooling (learned softmax over time; GAP available via config)
         ↓
   Dense(20) → 20 binary logits
         ↓
   20 horizon outputs: P(close_t+h > close_t) for h ∈ {1..20}
+  → ensembled (val-z-scored mean) into one timing signal
 ```
 
 ### Transformer Architecture
 
 | Component | Detail |
 |---|---|
-| Input shape | `(batch, 60, 16)` |
-| Linear projection | `Dense(64)` → maps 16 features to d_model=64 |
+| Input shape | `(batch, 60, 11)` — stationary features only |
+| Linear projection | `Dense(64)` → maps the 11 features to d_model=64 |
 | Positional encoding | Sinusoidal, standard Vaswani et al. formulation |
 | Encoder blocks | 2 stacked, each with identical structure |
 | Attention heads | 4 heads, key_dim = 64/4 = 16 per head |
@@ -116,7 +117,7 @@ Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting/
 | FFN hidden dim | 128 (ReLU activation) |
 | FFN output dim | 64 (projects back to d_model) |
 | Residual connections | Add-then-LayerNorm on both attention and FFN sub-layers |
-| Pooling | GlobalAveragePooling1D across the 60 time steps |
+| Pooling | Learned attention pooling (softmax-weighted sum over the 60 steps); GAP via config |
 | Output head | Dense(20), no activation (raw logits) |
 | Loss | BinaryCrossentropy(from_logits=True) |
 | Optimizer | Adam(lr=1e-4) |
@@ -157,7 +158,7 @@ Every feature is constructed to be **stationary or bounded** — no raw price le
 | `open` | raw open | Gap-up / gap-down signal |
 | `volume` | raw volume | Raw liquidity |
 
-Note: raw OHLC prices *are* included alongside the engineered features. This is intentional — the Transformer can learn relative price relationships within the 60-day window even if absolute levels aren't portable across decades. The model sees the full information set.
+Note: the five raw level columns (`close`, `high`, `low`, `open`, `volume`) are engineered and inspected during EDA but are **excluded from the model input**. They are non-stationary: the StandardScaler is fit on 2007-2019 training data, so 2023-2026 price levels land far outside the fitted range and those features degenerate out-of-sample. The model consumes the 11 stationary/bounded signals above them.
 
 ### 3. Target Construction — 20 Binary Horizons
 
@@ -392,16 +393,23 @@ Shared encoder weights across horizons allow the model to learn a single rich re
 **Why from_logits=True?**
 Numerically more stable than sigmoid + BCE separately. Means raw logit values can be directly used as ranked signals without applying sigmoid — which is exactly what the IC and Sharpe calculations do.
 
-**Why GlobalAveragePooling instead of CLS token or last-step?**
-GlobalAverage is more stable for small datasets. CLS token would require dedicated training. Last-step pooling would concentrate all signal on the final time step, ignoring the context the attention mechanism builds.
+**Why attention pooling instead of GlobalAveragePooling (the original choice)?**
+A plain mean over time steps discards the temporal-order information the positional encoding injected. The pooling layer now learns a softmax weighting over the 60 steps (one extra `Dense(1)`), letting the model emphasize the days that matter; GAP remains available via `model.pooling: gap` in config.
 
 **What's done since the original notebook:**
 - `config.yaml` now holds every hyperparameter (windows, split, model, costs)
 - `Source/Features/Returns.py` and `Volatility.py` are implemented, not stubs
 - The notebook logic is extracted into a reproducible pipeline (`Source/Pipeline`, `Source/Models`, `Source/Backtest`) runnable with one command
-- Walk-forward validation (expanding-window retrain) is implemented
-- Transaction costs **and slippage** are charged on every trade; returns are non-overlapping
-- News / FinBERT sentiment fusion is wired end-to-end (config-gated 17th feature via `Source/News/build_sentiment.py`)
+- An **itemized India cost model** (`Source/Backtest/costs.py`) charges STT, stamp duty, exchange + SEBI fees, brokerage, GST, and slippage — ~11.2 bps round-trip for Nifty futures
+- A **buy-and-hold Nifty benchmark**: results are judged as excess over passively holding the index
+- The primary strategy is **long/flat market timing** — quantile long-short is a cross-sectional construct, meaningless on a single index, kept only as a reference row
+- Model inputs restricted to the **11 stationary features**; raw OHLCV levels excluded (non-stationary out-of-sample)
+- The trading signal **ensembles all 20 horizon heads** (validation-z-scored mean); a best-validation-horizon variant is also reported
+- Probabilities are **Platt-calibrated on validation data**; a reliability diagram is exported
+- Entry thresholds fixed on **validation data only** — the test set tunes nothing
+- Sharpe carries a **bootstrap 95% confidence interval**; walk-forward runs **8 expanding-window folds**
+- **Learned attention pooling** replaces GlobalAveragePooling (GAP still available via config); training reproducible via TF op-determinism; returns non-overlapping
+- News / FinBERT sentiment fusion wired end-to-end (extra config-gated feature via `Source/News/build_sentiment.py`)
 - A static Next.js site visualizes the real, regenerated results (see below)
 
 **What's still not done (honest):**
