@@ -30,15 +30,19 @@ INSTRUMENTS = {
 }
 
 
-def india_cost_breakdown(cfg: dict) -> dict:
+def india_cost_breakdown(cfg: dict, instrument: str | None = None) -> dict:
     """Round-trip Indian cost breakdown (buy leg + sell leg), in basis points.
 
     Returns each component plus `roundtrip_bps` (full open+close) and
     `per_side_bps` (roundtrip / 2, the value the backtester charges per position
     via metrics.apply_costs, which doubles it back to a round trip).
+
+    `instrument` overrides the configured one (the cross-sectional track prices
+    its long-short legs as single-stock futures and its long-only variant as
+    delivery, in one run).
     """
     ind = cfg["backtest"]["india"]
-    inst = ind.get("instrument", "futures")
+    inst = instrument or ind.get("instrument", "futures")
     if inst not in INSTRUMENTS:
         raise ValueError(f"Unknown instrument '{inst}'. Use one of {list(INSTRUMENTS)}.")
     stat = INSTRUMENTS[inst]

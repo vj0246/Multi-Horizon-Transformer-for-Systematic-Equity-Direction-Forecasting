@@ -8,6 +8,63 @@ data:
   raw_csv: "Data/Raw_Data/^NSEI_daily.csv"
   start_date: "2006-01-01"
 
+# Cross-sectional track: a panel of liquid NSE large caps. The single-index
+# track showed daily index direction carries no edge after costs; ranking many
+# stocks against each other on the SAME date is where a direction model can
+# genuinely earn a spread. HONEST CAVEAT: this list is (mostly) today's large
+# caps backtested into the past -> survivorship bias inflates absolute returns;
+# the long-short spread is less affected but still favored. Disclosed on site.
+universe:
+  raw_dir: "Data/Raw_Data/Universe"
+  min_history_days: 3500        # drop tickers with shorter history
+  window_stride: 2              # sample every 2nd day per stock (runtime control)
+  tickers:
+    - RELIANCE.NS
+    - TCS.NS
+    - INFY.NS
+    - HDFCBANK.NS
+    - ICICIBANK.NS
+    - SBIN.NS
+    - LT.NS
+    - ITC.NS
+    - HINDUNILVR.NS
+    - BHARTIARTL.NS
+    - KOTAKBANK.NS
+    - AXISBANK.NS
+    - MARUTI.NS
+    - ASIANPAINT.NS
+    - TITAN.NS
+    - SUNPHARMA.NS
+    - DRREDDY.NS
+    - CIPLA.NS
+    - WIPRO.NS
+    - HCLTECH.NS
+    - TATASTEEL.NS
+    - JSWSTEEL.NS
+    - HINDALCO.NS
+    - TATAMOTORS.NS
+    - M&M.NS
+    - NTPC.NS
+    - ONGC.NS
+    - GRASIM.NS
+    - ULTRACEMCO.NS
+    - NESTLEIND.NS
+    - BRITANNIA.NS
+    - HEROMOTOCO.NS
+    - EICHERMOT.NS
+    - BPCL.NS
+    - GAIL.NS
+    - AMBUJACEM.NS
+    - SIEMENS.NS
+    - HAVELLS.NS
+
+cross_section:
+  top_frac: 0.2                 # long the top 20% of names by signal each rebalance
+  bottom_frac: 0.2              # short the bottom 20%
+  holding_period: 20            # non-overlapping 20-day rebalances
+  batch_size: 128               # larger batches for the pooled panel
+  epochs: 25
+
 features:
   # Rolling windows used across return / volatility / volume features
   return_windows: [5, 10, 20]
