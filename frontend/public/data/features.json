@@ -1,9 +1,4 @@
 [
-  "close",
-  "high",
-  "low",
-  "open",
-  "volume",
   "daily_ret",
   "roll_mean_ret_5",
   "roll_mean_ret_10",

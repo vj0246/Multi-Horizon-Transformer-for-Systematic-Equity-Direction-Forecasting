@@ -9,15 +9,21 @@
     "val": 663,
     "test": 664
   },
-  "n_features": 16,
+  "n_features": 11,
   "horizons": 20,
   "lookback": 60,
-  "mean_auc": 0.52897747311705,
-  "mean_ic": 0.04973683286049509,
+  "mean_auc": 0.48050607189232186,
+  "mean_ic": -0.03631900939634651,
   "primary_horizon": 20,
-  "strategy_sharpe_net": -0.4681745837589212,
-  "strategy_total_return": -0.11418141888272548,
-  "strategy_max_drawdown": -0.11649213417837749,
+  "primary_strategy": "timing_ensemble",
+  "strategy_sharpe_net": -0.6179143806533246,
+  "sharpe_ci95": [
+    -1.1042440123041997,
+    0.0
+  ],
+  "strategy_total_return": -0.0307567078093286,
+  "strategy_max_drawdown": -0.0307567078093286,
+  "best_val_horizon": 14,
   "cost_model": "india",
   "cost_breakdown": {
     "instrument": "futures",
@@ -36,14 +42,17 @@
   "instrument": "futures",
   "buy_hold_sharpe": 1.3370203781908145,
   "buy_hold_total_return": 0.3974410919618734,
-  "strategy_excess_return": -0.5116225108445989,
+  "strategy_excess_return": -0.428197799771202,
   "use_sentiment": false,
   "model": {
     "d_model": 64,
     "num_heads": 4,
     "ff_dim": 128,
     "num_layers": 2,
-    "dropout": 0.1
+    "dropout": 0.1,
+    "pooling": "attention"
   },
-  "walk_forward_mean_sharpe": 0.35021365949494243
+  "walk_forward_mean_sharpe": 0.24701973942145922,
+  "walk_forward_sharpe_std": 0.7887567834470328,
+  "walk_forward_folds": 8
 }
