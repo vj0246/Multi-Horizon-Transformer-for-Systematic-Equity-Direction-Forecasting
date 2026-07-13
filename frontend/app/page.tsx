@@ -426,7 +426,17 @@ export default function Page() {
               {" "}Targets here are <span className="text-white">relative</span>: did the
               stock beat the cross-sectional median return that date — the canonical label
               for a ranking task (absolute direction labels saturate to &quot;up&quot; in a
-              bull window). Both formulations were run and both artifacts are published.
+              bull window).
+            </>
+          )}
+          {cs2.use_xs_features && (
+            <>
+              {" "}The model also sees <span className="text-white">{cs2.n_features} features</span>{" "}
+              including cross-sectional ones — momentum and returns demeaned by the
+              universe, per-date percentile ranks, and sector-relative momentum — the
+              relative signals a ranking task needs. Every configuration run (absolute vs
+              relative targets, per-stock vs cross-sectional features) is published; none
+              is cherry-picked.
             </>
           )}
         </p>
