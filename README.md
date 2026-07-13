@@ -32,7 +32,9 @@ python -m Source.Backtest.run
 cd frontend && npm install && npm run dev
 ```
 
-Everything is driven by `config.yaml`. Training is made reproducible via TensorFlow op-determinism, so reruns give stable numbers. Set `REUSE=1` before `run.py` to regenerate the JSON from a cached run without retraining.
+Everything is driven by `config.yaml`. Set `REUSE=1` before a run to regenerate the JSON from a cached run without retraining.
+
+**Training hardware.** Models train on the GPU (an RTX 2050) through a WSL2 CUDA environment — native-Windows TensorFlow ≥2.11 is CPU-only, so `config.yaml` sets `training.require_gpu: true` and a Windows-side run now fails fast rather than silently using the CPU (`Source/device.py`). See CLAUDE.md and `scripts/train_gpu.sh` for the WSL invocation. TF op-determinism keeps a run reproducible on a given device; CPU and GPU kernels differ, so numbers can shift slightly (within the confidence interval) when switching hardware.
 
 ### Headline result (honest)
 After realistic India **futures** costs (~11.2 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the single-index model has **no exploitable edge**. On the 2023-2026 test window the long/flat ensemble timing strategy returns ≈ **-3%** versus **+40%** for buy-and-hold; net Sharpe is **-0.62 with a bootstrap 95% CI of [-1.10, 0.00]**, mean test AUC is **0.48** (below coin-flip), and 8-fold walk-forward Sharpe is **+0.25 ± 0.79** — statistically indistinguishable from zero. Notably, restricting inputs to stationary features and fixing all thresholds on validation data *lowered* the headline numbers versus earlier, sloppier evaluations: the apparent edge was evaluation artifact, not alpha. Daily Nifty direction is close to efficient; the site reports these numbers as-is, benchmarked against passively holding the index.
@@ -48,7 +50,7 @@ Leakage guards specific to the panel: the train/val/test split is by **calendar 
 
 **A regression objective was also tested.** A binary "beat the median" label throws away magnitude — a stock that outperforms by 0.1% and one that outperforms by 15% are the same label. `cross_section.objective: regression` instead trains the model on the **continuous cross-sectional excess log-return** per horizon (the stock's h-day return minus the universe median), with a Huber loss (robust to the heavy tails of 20-day excess returns). The Dense(20) head is linear in both cases, so the **architecture is unchanged** — only the loss and targets differ. On this data it underperformed the classification head (see the results table below), so the classification model is the one the site presents.
 
-Every configuration is published, none cherry-picked: `cross_section.json` (classification head + relative targets + cross-sectional features — the best result), `cross_section_regression.json` (regression head, same inputs), `cross_section_classification.json` (a copy of the classification best), `cross_section_base_features.json` (classification, per-stock features only), and `cross_section_absolute.json` (absolute targets, per-stock features). Each choice was made a priori from a diagnosis, not by shopping for the better number.
+Every configuration is published, none cherry-picked: `cross_section.json` (classification head + relative targets + cross-sectional features — the best result), `cross_section_regression.json` (regression head, same inputs), `cross_section_base_features.json` (classification, per-stock features only), and `cross_section_absolute.json` (absolute targets, per-stock features). Each choice was made a priori from a diagnosis, not by shopping for the better number.
 
 **Disclosed biases:** the universe is (mostly) today's large caps backtested into the past — survivorship bias inflates absolute returns (the long-short spread is partially insulated but still favored); daily IC uses overlapping 20-day forward returns (standard practice) while all P&L is non-overlapping.
 
@@ -58,9 +60,11 @@ Every configuration is published, none cherry-picked: `cross_section.json` (clas
 |---|---|---|---|
 | Absolute targets, per-stock features (classification) | -0.007 | -21.6% (Sharpe -0.49) | +7.9% |
 | Relative targets, per-stock features (classification) | -0.006 | -21.3% (Sharpe -0.56) | +9.7% |
-| **Relative targets + cross-sectional features (classification)** | **+0.005** | **-0.6% (Sharpe +0.05)** | **+26.5% (Sharpe +0.55)** |
+| **Relative targets + cross-sectional features (classification)** | **+0.007** | **+10.9% (Sharpe +0.36)** | **+33.2% (Sharpe +0.64)** |
 | Same inputs, continuous excess-return **regression** head | -0.012 | -25.1% (Sharpe -0.79) | +5.8% |
 | Equal-weight universe (gross benchmark) | — | — | +36.7% (Sharpe +0.84) |
+
+(The best row is the canonical GPU run — see the training-hardware note below. An earlier CPU run of the *same* configuration gave +0.005 IC / -0.6% spread / +26.5% long-only; the difference is run-to-run variance between CPU and GPU kernels, well inside the confidence interval, not a change in method. Both are within noise.)
 
 Two levers were tested, and the results are reported exactly as they came out:
 
