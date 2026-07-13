@@ -60,7 +60,17 @@ def build_model(cfg: dict) -> tuple[tf.keras.Model, tf.keras.Model]:
             x, m["num_heads"], m["d_model"], m["ff_dim"], m["dropout"]
         )
 
-    x = tf.keras.layers.GlobalAveragePooling1D()(x)
+    # Pooling: learned attention pooling keeps the temporal-order information the
+    # positional encoding injected (a plain mean discards it); GAP kept as fallback.
+    if m.get("pooling", "gap") == "attention":
+        scores = tf.keras.layers.Dense(1)(x)                    # (B, T, 1)
+        weights = tf.keras.layers.Softmax(axis=1)(scores)       # softmax over time
+        x = tf.keras.layers.Lambda(
+            lambda t: tf.reduce_sum(t[0] * t[1], axis=1),
+            output_shape=(m["d_model"],),
+        )([x, weights])
+    else:
+        x = tf.keras.layers.GlobalAveragePooling1D()(x)
     outputs = tf.keras.layers.Dense(horizons)(x)
 
     model = tf.keras.Model(inputs=inputs, outputs=outputs)

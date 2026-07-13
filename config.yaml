@@ -17,16 +17,15 @@ features:
   ma_diff_window: 10
   # News/FinBERT sentiment fusion. OFF by default: NewsAPI only serves ~30 days of
   # history, so a real daily sentiment column cannot be backfilled over 2007-2026.
-  # When a daily_sentiment.csv exists AND this flag is true, sentiment becomes a
-  # 17th input feature. See Source/News/build_sentiment.py.
+  # When a daily_sentiment.csv exists AND this flag is true, sentiment is appended
+  # as an extra input feature. See Source/News/build_sentiment.py.
   use_sentiment: false
   sentiment_csv: "Data/Processed_Data/daily_sentiment.csv"
+  # Model inputs are restricted to stationary/bounded signals. Raw OHLCV levels
+  # (close/high/low/open/volume) are still engineered and inspected in EDA but are
+  # NOT fed to the model: the scaler is fit on 2007-2019, so 2023-2026 price levels
+  # sit far outside the training range and those features degenerate out-of-sample.
   feature_cols:
-    - close
-    - high
-    - low
-    - open
-    - volume
     - daily_ret
     - roll_mean_ret_5
     - roll_mean_ret_10
@@ -53,6 +52,7 @@ model:
   ff_dim: 128
   num_layers: 2
   dropout: 0.1
+  pooling: attention    # attention (learned softmax over time) | gap (GlobalAveragePooling)
 
 training:
   epochs: 40
@@ -84,7 +84,7 @@ backtest:
   quantile_upper: 70            # long above this percentile of the signal
   quantile_lower: 30            # short below this percentile
   walk_forward:
-    n_folds: 5
+    n_folds: 8
     min_train_frac: 0.40        # first fold trains on at least this fraction
 
 output:
