@@ -35,7 +35,23 @@ cd frontend && npm install && npm run dev
 Everything is driven by `config.yaml`. Training is made reproducible via TensorFlow op-determinism, so reruns give stable numbers. Set `REUSE=1` before `run.py` to regenerate the JSON from a cached run without retraining.
 
 ### Headline result (honest)
-After realistic India **futures** costs (~11.2 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the model has **no exploitable edge**. On the 2023-2026 test window the long/flat ensemble timing strategy returns ≈ **-3%** versus **+40%** for buy-and-hold; net Sharpe is **-0.62 with a bootstrap 95% CI of [-1.10, 0.00]**, mean test AUC is **0.48** (below coin-flip), and 8-fold walk-forward Sharpe is **+0.25 ± 0.79** — statistically indistinguishable from zero. Notably, restricting inputs to stationary features and fixing all thresholds on validation data *lowered* the headline numbers versus earlier, sloppier evaluations: the apparent edge was evaluation artifact, not alpha. Daily Nifty direction is close to efficient; the site reports these numbers as-is, benchmarked against passively holding the index.
+After realistic India **futures** costs (~11.2 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the single-index model has **no exploitable edge**. On the 2023-2026 test window the long/flat ensemble timing strategy returns ≈ **-3%** versus **+40%** for buy-and-hold; net Sharpe is **-0.62 with a bootstrap 95% CI of [-1.10, 0.00]**, mean test AUC is **0.48** (below coin-flip), and 8-fold walk-forward Sharpe is **+0.25 ± 0.79** — statistically indistinguishable from zero. Notably, restricting inputs to stationary features and fixing all thresholds on validation data *lowered* the headline numbers versus earlier, sloppier evaluations: the apparent edge was evaluation artifact, not alpha. Daily Nifty direction is close to efficient; the site reports these numbers as-is, benchmarked against passively holding the index.
+
+### Cross-sectional track (where a direction model can genuinely earn)
+Timing one index is the hardest possible use of a direction model; ranking many stocks against each other on the same date is the natural one. `Source/Backtest/run_cross_section.py` trains the **same shared-weight Transformer** on a pooled panel of ~37 liquid NSE large caps (per-stock windows, same 11 stationary features) and trades a **real cross-sectional quantile spread**: every 20 trading days, long the top 20% of names by ensemble signal, short the bottom 20%, equal weight. Legs are charged single-stock-futures costs; the long-only variant is charged delivery costs (STT 0.1% both sides). Evaluation reports mean daily cross-sectional IC and its information ratio, quintile attribution, and net equity curves against a gross equal-weight universe benchmark.
+
+Leakage guards specific to the panel: the train/val/test split is by **calendar date** (the same market day never sits in train for one stock and test for another) and the scaler is fit on pooled train windows only.
+
+**Target formulation matters.** The first run reused the index track's *absolute* direction labels (will this stock close higher in h days?) — in a trending market nearly every label is "up", so the model learns nothing that separates one stock from another (measured mean daily IC ≈ -0.01, non-monotonic quintiles). The corrected formulation uses **relative labels**: did the stock beat the *cross-sectional median* h-day return on that date (`cross_section.relative_targets: true`). Both runs' artifacts are published (`cross_section.json`, `cross_section_absolute.json`) — the formulation was chosen a priori, not by shopping for the better number.
+
+**Disclosed biases:** the universe is (mostly) today's large caps backtested into the past — survivorship bias inflates absolute returns (the long-short spread is partially insulated but still favored); daily IC uses overlapping 20-day forward returns (standard practice) while all P&L is non-overlapping.
+
+**Measured outcome (honest):** neither formulation shows a cross-sectional edge with the current inputs. On the Jun-2023 → Jun-2026 test window, relative targets give mean daily IC ≈ **-0.006** (IR -0.03, 46% of days positive), non-monotonic quintiles, and a net long-short spread of **-21%** (Sharpe -0.56, CI [-1.64, 0.66]); the absolute-target run is materially identical. The 11 price/volume features describe each stock in isolation — they carry no *relative* information (momentum vs the universe, sector-relative strength, valuation), which is what ranking requires. That is the documented next lever, not more tuning of this feature set.
+
+```bash
+python -m Source.Ingestion.fetch_universe        # one-time: download the universe
+python -m Source.Backtest.run_cross_section      # train + cross-sectional backtest
+```
 
 ---
 

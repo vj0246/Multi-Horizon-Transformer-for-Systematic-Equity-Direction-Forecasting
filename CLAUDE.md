@@ -17,6 +17,10 @@ python Source/Ingestion/Fetch_Market_Data.py
 # 2. train + full backtest -> writes frontend/public/data/*.json
 python -m Source.Backtest.run
 
+# 2b. cross-sectional track (37 NSE large caps, real quantile L/S)
+python -m Source.Ingestion.fetch_universe        # one-time data download
+python -m Source.Backtest.run_cross_section      # -> cross_section.json
+
 # 3. frontend
 cd frontend && npm install && npm run dev      # local
 npm run build                                   # static export -> frontend/out
@@ -28,7 +32,10 @@ Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 - `Source/Pipeline/` — data_loader.py (clean CSV), dataset.py (features→targets→windows→split→scale)
 - `Source/Models/transformer.py` — TF Transformer (2 blocks, 4 heads, d_model=64, attention pooling) + attention model
 - `Source/Backtest/metrics.py` — Sharpe/drawdown/IC/decile/costs
-- `Source/Backtest/run.py` — orchestrator, exports JSON artifacts
+- `Source/Backtest/run.py` — index-track orchestrator, exports JSON artifacts
+- `Source/Backtest/run_cross_section.py` — cross-sectional track (panel train + quantile spread)
+- `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage)
+- `Source/Ingestion/fetch_universe.py` — NSE universe downloader (Data/Raw_Data/Universe/, gitignored)
 - `Source/Ingestion/` — yfinance downloader
 - `Source/News/` — NewsAPI + FinBERT sentiment (parallel track, not fused)
 - `Notebooks/Notebooks/Eda.ipynb` — original research notebook (source of truth for logic)
