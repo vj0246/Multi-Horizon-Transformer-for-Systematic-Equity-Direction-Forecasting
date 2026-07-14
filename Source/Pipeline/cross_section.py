@@ -97,6 +97,7 @@ class Panel:
     test_fwd20: np.ndarray
     tickers: list[str]
     feature_cols: list[str]
+    scaler: StandardScaler
     date_train_end: pd.Timestamp
     date_val_end: pd.Timestamp
 
@@ -247,5 +248,30 @@ def build_panel(cfg: dict) -> Panel:
         test_fwd20=np.concatenate(te_fwd),
         tickers=list(stocks.keys()),
         feature_cols=active_feature_cols(cfg),
+        scaler=scaler,
         date_train_end=date_train_end, date_val_end=date_val_end,
     )
+
+
+def latest_windows(cfg: dict, scaler) -> tuple[np.ndarray, list[str], list[str]]:
+    """Most recent 60-day feature window per stock (for a forward, out-of-sample
+    prediction whose 1..20-day outcome is not yet known).
+
+    Returns (X_scaled, tickers, as_of_dates). Uses the panel scaler so inputs
+    match training. No targets involved - this is pure inference on the tail.
+    """
+    stocks = load_universe(cfg)
+    feat_cols = active_feature_cols(cfg)
+    lookback = cfg["sequence"]["lookback"]
+    X, tick, asof = [], [], []
+    for t, df in stocks.items():
+        feats = df[feat_cols].to_numpy(dtype="float32")
+        if len(feats) < lookback:
+            continue
+        X.append(feats[-lookback:])
+        tick.append(t)
+        asof.append(pd.Timestamp(df["date"].iloc[-1]).strftime("%Y-%m-%d"))
+    X = np.asarray(X, dtype="float32")
+    nf = X.shape[-1]
+    X = scaler.transform(X.reshape(-1, nf)).reshape(X.shape).astype("float32")
+    return X, tick, asof

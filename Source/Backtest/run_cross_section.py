@@ -70,6 +70,7 @@ def main():
     n_features = len(panel.feature_cols)
     cache_path = (ROOT / cfg["output"]["model_dir"]
                   / f"cs_cache_{objective}_{target_mode}_{feat_tag}.npz")
+    model = None
     if os.environ.get("REUSE") == "1" and cache_path.exists():
         print(f"Reusing cached run: {cache_path}")
         c = np.load(cache_path, allow_pickle=True)
@@ -225,6 +226,68 @@ def main():
     with open(out_dir / "cross_section.json", "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, allow_nan=True)
     print("  wrote cross_section.json")
+
+    # ---- latest per-stock signal across all 20 horizons (forward, no outcome) ----
+    if model is not None:
+        from Source.Pipeline.cross_section import SECTORS, latest_windows
+        Xl, tickl, asofl = latest_windows(cfg, panel.scaler)
+        logits_l = model.predict(Xl, verbose=0, batch_size=512)
+        if objective == "classification":
+            _, probs_l = M.calibrate_probs(logits_val, panel.y_val, logits_l)
+        else:  # regression outputs are excess estimates; squash monotonically for display
+            probs_l = 1.0 / (1.0 + np.exp(-(logits_l - logits_l.mean(0)) / (logits_l.std(0) + 1e-9)))
+        ens_l = ensemble_signal(logits_l, mu_v, sd_v)
+        rank_pct = np.argsort(np.argsort(ens_l)) / max(1, len(ens_l) - 1)
+
+        rows = []
+        for i in range(len(tickl)):
+            rows.append({
+                "ticker": tickl[i].replace("_", "&"),
+                "sector": SECTORS.get(tickl[i], "Other"),
+                "ensemble_score": float(ens_l[i]),
+                "rank_pct": float(rank_pct[i]),
+                "probs": [round(float(p), 4) for p in probs_l[i]],
+            })
+        rows.sort(key=lambda r: -r["ensemble_score"])
+
+        names = [r["ticker"] for r in rows]
+        k = max(1, round(cs["top_frac"] * len(names)))
+        longs, shorts = names[:k], names[-k:]
+        _keep = ("sharpe", "sharpe_ci95", "total_return", "max_drawdown")
+        risk_profiles = [
+            {"key": "conservative", "label": "Conservative",
+             "construction": "Equal-weight the entire universe (no selection)",
+             **{m: result["ew_benchmark"][m] for m in _keep},
+             "long": names, "short": []},
+            {"key": "balanced", "label": "Balanced",
+             "construction": f"Long the top {k} names by signal (top {int(cs['top_frac']*100)}%)",
+             **{m: result["long_only"][m] for m in _keep},
+             "long": longs, "short": []},
+            {"key": "aggressive", "label": "Aggressive",
+             "construction": f"Long top {k} / short bottom {k} (market-neutral spread)",
+             **{m: result["spread"][m] for m in _keep},
+             "long": longs, "short": shorts},
+        ]
+        signals = {
+            "as_of": max(asofl) if asofl else None,
+            "objective": objective,
+            "horizons": cfg["sequence"]["horizons"],
+            "n_stocks": len(rows),
+            "disclaimer": (
+                "RESEARCH DEMONSTRATION ONLY - NOT INVESTMENT ADVICE. This model has "
+                "no validated predictive edge (see the results above: information "
+                "coefficients are within noise and no strategy beats a passive "
+                "equal-weight benchmark after costs). These are the model's raw "
+                "outputs on the most recent historical window, not a recommendation "
+                "to buy or sell any security. The universe carries survivorship bias. "
+                "Do not trade on this."
+            ),
+            "stocks": rows,
+            "risk_profiles": risk_profiles,
+        }
+        with open(out_dir / "stock_signals.json", "w", encoding="utf-8") as f:
+            json.dump(signals, f, indent=2, allow_nan=True)
+        print(f"  wrote stock_signals.json (as_of {signals['as_of']}, {len(rows)} stocks)")
 
     print("\n==== CROSS-SECTIONAL HEADLINE ====")
     print(f"Universe: {result['universe_size']} stocks | {objective} | targets "
