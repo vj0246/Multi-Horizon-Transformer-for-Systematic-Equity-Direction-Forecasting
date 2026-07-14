@@ -278,6 +278,33 @@ def main():
     prim = strategies["timing_ensemble"]
     sharpe_ci95 = M.bootstrap_sharpe_ci(np.asarray(prim["net_returns"]), ppy)
 
+    # Vol-targeted variant of the primary book (Source/Risk/sizing.py). Sizes on
+    # the primary's own realized vol (lagged, no look-ahead); cost-consistent with
+    # the explorer via scaled gross returns and exposures.
+    from Source.Risk.sizing import apply_vol_target
+    _pg = np.asarray(prim["gross_returns"]); _pap = np.asarray(prim["abs_pos"])
+    _, _w = apply_vol_target(np.asarray(prim["net_returns"]), cfg, ppy)
+    _gross_rt = _w * _pg
+    _abs_rt = _w * _pap
+    _net_rt = _gross_rt - _abs_rt * 2 * M.total_cost_bps(cfg) / 1e4
+    _eq_rt = M.equity_curve(_net_rt)
+    strategies["risk_targeted"] = {
+        "mode": "risk_targeted", "holding_days": holding,
+        "sharpe_net": M.annualized_sharpe(_net_rt, ppy),
+        "sharpe_gross": M.annualized_sharpe(_gross_rt, ppy),
+        "mean_return": float(_net_rt.mean()) if _net_rt.size else 0.0,
+        "total_return": float(_eq_rt[-1] - 1.0) if _eq_rt.size else 0.0,
+        "max_drawdown": M.max_drawdown(_eq_rt),
+        "avg_exposure": float(np.mean(_abs_rt)) if _abs_rt.size else 0.0,
+        "n_trades": int(_net_rt.size),
+        "hit_rate": float(np.mean(_net_rt > 0)) if _net_rt.size else 0.0,
+        "net_returns": [round(float(v), 6) for v in _net_rt],
+        "equity_curve": [round(float(v), 5) for v in _eq_rt],
+        "gross_returns": [round(float(v), 6) for v in _gross_rt],
+        "abs_pos": [round(float(v), 3) for v in _abs_rt],
+        "periods_per_year": float(ppy),
+    }
+
     # ---- threshold sweep on CALIBRATED P(up), thresholds from validation ----
     p_val = probs_val_cal[:, ph - 1]
     p_test = probs_test_cal[:, ph - 1][mask]

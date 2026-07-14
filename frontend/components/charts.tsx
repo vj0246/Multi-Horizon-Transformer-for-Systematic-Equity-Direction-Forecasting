@@ -419,6 +419,7 @@ export function StockSignals() {
 // per strategy: net_i = gross_i - abs_pos_i * 2 * (bps / 1e4).
 const EXPLORER_STRATS: { key: string; label: string; color: string }[] = [
   { key: "timing_ensemble", label: "Timing · ensemble", color: "#4ade80" },
+  { key: "risk_targeted", label: "Vol-targeted", color: "#a78bfa" },
   { key: "timing_h20", label: "Timing · h20", color: "#38bdf8" },
   { key: "quantile", label: "Quantile L/S", color: "#f59e0b" },
   { key: "sign", label: "Sign", color: "#f87171" },

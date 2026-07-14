@@ -265,6 +265,47 @@ def test_cross_section_artifact_valid():
             [[1.0], b["equity_curve"][:-1]])), atol=1e-3) or len(b["equity_curve"]) > 0
 
 
+# ---------------------------------------------------------------- risk sizing
+def test_vol_target_sizing_no_lookahead():
+    from Source.Risk.sizing import vol_target_weights
+    rng = np.random.default_rng(3)
+    # two regimes: calm then volatile — target-vol sizing must DELEVER in the vol regime
+    calm = rng.normal(0, 0.01, 60)
+    wild = rng.normal(0, 0.05, 60)
+    r = np.concatenate([calm, wild])
+    w = vol_target_weights(r, target_vol_annual=0.15, periods_per_year=12.6, lookback=6, max_leverage=3.0)
+    assert len(w) == len(r)
+    assert (w >= 0).all() and (w <= 3.0).all()
+    # average leverage in the calm block exceeds the volatile block (risk budgeting works)
+    assert np.nanmean(w[10:60]) > np.nanmean(w[70:])
+    # weight at t uses vol up to t-1 only: flipping returns AFTER index i cannot change w[i]
+    r2 = r.copy(); r2[80:] *= 5
+    w2 = vol_target_weights(r2, 0.15, 12.6, 6, 3.0)
+    assert np.allclose(w[:80], w2[:80])          # no look-ahead: earlier weights unchanged
+
+
+def test_risk_targeted_artifact_consistent():
+    if not (DATA / "strategies.json").exists():
+        pytest.skip("artifacts not generated")
+    strat = _load("strategies.json")
+    if "risk_targeted" not in strat:
+        pytest.skip("risk_targeted not in artifacts yet")
+    r = strat["risk_targeted"]
+    net = np.array(r["net_returns"]); gross = np.array(r["gross_returns"]); ap = np.array(r["abs_pos"])
+    assert np.allclose(net, gross - ap * 2 * M.total_cost_bps(CFG) / 1e4, atol=1e-4)
+
+
+def test_api_imports_and_serves():
+    try:
+        from fastapi.testclient import TestClient
+        from Source.Api.main import app
+    except Exception:
+        pytest.skip("fastapi not installed")
+    client = TestClient(app)
+    h = client.get("/health")
+    assert h.status_code == 200 and h.json()["status"] == "ok"
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

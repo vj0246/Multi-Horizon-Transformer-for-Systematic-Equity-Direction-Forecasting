@@ -236,6 +236,14 @@ backtest:
     n_folds: 8
     min_train_frac: 0.40        # first fold trains on at least this fraction
 
+# Volatility-targeted position sizing (Source/Risk/sizing.py). Produces a
+# risk_targeted strategy variant that scales the primary timing book to a
+# constant annualized-vol budget. Sizing uses lagged trailing vol (no look-ahead).
+risk:
+  target_vol_annual: 0.15       # 15% annualized target
+  lookback: 6                   # periods of trailing vol
+  max_leverage: 2.0
+
 output:
   artifacts_dir: "frontend/public/data"
   model_dir: "Data/Processed_Data"
