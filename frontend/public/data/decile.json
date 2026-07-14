@@ -1,42 +1,42 @@
 [
   {
     "decile": 0,
-    "mean_return": 0.023006732403968902
+    "mean_return": 0.01674544643518784
   },
   {
     "decile": 1,
-    "mean_return": 0.02372028183066423
+    "mean_return": 0.016055545603216797
   },
   {
     "decile": 2,
-    "mean_return": 0.011893920081035991
+    "mean_return": 0.013230407855124924
   },
   {
     "decile": 3,
-    "mean_return": 0.004142432704284502
+    "mean_return": 0.015243588111862905
   },
   {
     "decile": 4,
-    "mean_return": 0.005718337091848931
+    "mean_return": 0.005721409949871411
   },
   {
     "decile": 5,
-    "mean_return": 0.00486489110183339
+    "mean_return": 0.006685773696178847
   },
   {
     "decile": 6,
-    "mean_return": 0.008690832686294283
+    "mean_return": 0.005467141133710236
   },
   {
     "decile": 7,
-    "mean_return": 0.007143085842674558
+    "mean_return": -0.0020825719176309036
   },
   {
     "decile": 8,
-    "mean_return": 0.008184514218415463
+    "mean_return": 0.010549746300146318
   },
   {
     "decile": 9,
-    "mean_return": 0.00016779714101735008
+    "mean_return": 0.009746715267510048
   }
 ]
