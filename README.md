@@ -60,11 +60,11 @@ Every configuration is published, none cherry-picked: `cross_section.json` (clas
 |---|---|---|---|
 | Absolute targets, per-stock features (classification) | -0.007 | -21.6% (Sharpe -0.49) | +7.9% |
 | Relative targets, per-stock features (classification) | -0.006 | -21.3% (Sharpe -0.56) | +9.7% |
-| **Relative targets + cross-sectional features (classification)** | **+0.007** | **+10.9% (Sharpe +0.36)** | **+33.2% (Sharpe +0.64)** |
+| **Relative targets + cross-sectional features (classification)** | **+0.003** | **-7.4% (Sharpe -0.17)** | **+18.8% (Sharpe +0.44)** |
 | Same inputs, continuous excess-return **regression** head | -0.012 | -25.1% (Sharpe -0.79) | +5.8% |
 | Equal-weight universe (gross benchmark) | — | — | +36.7% (Sharpe +0.84) |
 
-(The best row is the canonical GPU run — see the training-hardware note below. An earlier CPU run of the *same* configuration gave +0.005 IC / -0.6% spread / +26.5% long-only; the difference is run-to-run variance between CPU and GPU kernels, well inside the confidence interval, not a change in method. Both are within noise.)
+(The best-configuration row is **noise-dominated**: re-running the *identical* config — same seed, same data — swings the long-only book roughly +19% to +33% and the long-short spread from -7% to +11% across CPU/GPU and run to run, all inside the confidence interval. That instability *is* the finding: the cross-sectional edge, if any, is smaller than the training noise. The table shows the current published artifact; nothing is pinned to the luckiest run.)
 
 Two levers were tested, and the results are reported exactly as they came out:
 
