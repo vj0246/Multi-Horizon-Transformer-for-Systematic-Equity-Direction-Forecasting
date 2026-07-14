@@ -20,7 +20,7 @@ Training uses strict temporal split (70/15/15 — no look-ahead leakage), Standa
 
 **→ [multi-horizon-transformer-for-syste.vercel.app](https://multi-horizon-transformer-for-syste.vercel.app)**
 
-A static Next.js dashboard (in `frontend/`) visualizes the **real, regenerated** backtest results — per-horizon AUC/IC, the cost-aware equity curve, walk-forward folds, attention distribution, and training history. Every number is produced by an actual training run, not hand-authored.
+A static Next.js dashboard (in `frontend/`) visualizes the **real, regenerated** backtest results — per-horizon AUC/IC, the cost-aware equity curve, walk-forward folds, the cross-sectional track, attention distribution, and training history. Every number is produced by an actual training run, not hand-authored. An **interactive Sharpe explorer** lets you drag the transaction cost and watch each strategy's net Sharpe and equity recompute live in the browser from the raw per-trade returns — making explicit how sensitive every ratio is to cost assumptions.
 
 ### Reproduce end-to-end
 
