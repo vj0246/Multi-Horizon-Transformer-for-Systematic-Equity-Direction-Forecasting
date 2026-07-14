@@ -13,6 +13,7 @@ import training from "@/public/data/training.json";
 import features from "@/public/data/features.json";
 import calibration from "@/public/data/calibration.json";
 import crossSection from "@/public/data/cross_section.json";
+import stockSignals from "@/public/data/stock_signals.json";
 
 export interface Summary {
   ticker: string;
@@ -154,7 +155,38 @@ export const data = {
   features: features as string[],
   calibration: calibration as { horizon: number; pre: CalibrationBin[]; post: CalibrationBin[] },
   crossSection: crossSection as unknown as CrossSection,
+  stockSignals: stockSignals as unknown as StockSignals,
 };
+
+export interface StockRow {
+  ticker: string;
+  sector: string;
+  ensemble_score: number;
+  rank_pct: number;
+  probs: number[];
+}
+
+export interface RiskProfile {
+  key: string;
+  label: string;
+  construction: string;
+  sharpe: number;
+  sharpe_ci95: number[];
+  total_return: number;
+  max_drawdown: number;
+  long: string[];
+  short: string[];
+}
+
+export interface StockSignals {
+  as_of: string;
+  objective: string;
+  horizons: number;
+  n_stocks: number;
+  disclaimer: string;
+  stocks: StockRow[];
+  risk_profiles: RiskProfile[];
+}
 
 export const fmtPct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;
 export const fmtNum = (x: number, d = 3) => x.toFixed(d);

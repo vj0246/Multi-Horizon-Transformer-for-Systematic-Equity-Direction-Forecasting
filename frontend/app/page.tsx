@@ -12,6 +12,7 @@ import {
   HorizonIC,
   PriceChart,
   SharpeExplorer,
+  StockSignals,
   ThresholdSweep,
   TrainingHistory,
   YearlyChart,
@@ -27,6 +28,7 @@ const NAV = [
   ["explorer", "Sharpe Explorer"],
   ["walkforward", "Walk-Forward"],
   ["crosssection", "Cross-Section"],
+  ["signals", "Stock Signals"],
   ["attention", "Attention"],
   ["method", "Method"],
 ];
@@ -532,6 +534,25 @@ export default function Page() {
             </ul>
           </Panel>
         </div>
+      </Section>
+
+      {/* Stock signals */}
+      <Section
+        id="signals"
+        eyebrow="Live signals"
+        title="Per-stock predictions across all 20 horizons — and pick your risk"
+      >
+        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
+          The cross-sectional model&apos;s latest output for every name in the universe:
+          each row is a stock, each column a forecast horizon (1–20 days), colored by the
+          calibrated probability that the stock outperforms the universe median. Click any
+          stock for its horizon curve. Then choose a risk profile — each is a{" "}
+          <span className="text-white">real backtested construction labelled by its actual
+          historical Sharpe</span>, showing the basket it would hold from today&apos;s signal.
+        </p>
+        <Panel title="Signal heatmap · risk profiles" subtitle={`objective: ${data.stockSignals.objective} · calibrated probabilities`}>
+          <StockSignals />
+        </Panel>
       </Section>
 
       {/* Attention */}

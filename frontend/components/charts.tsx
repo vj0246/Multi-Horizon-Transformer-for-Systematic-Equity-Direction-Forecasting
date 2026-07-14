@@ -290,6 +290,129 @@ export function CSICSeries() {
   );
 }
 
+// ---- Live stock signals: per-stock, all-horizons heatmap + risk profiles ---
+function probColor(p: number): string {
+  // Diverging around 0.5: red (underperform) -> neutral -> green (outperform).
+  const t = Math.max(-1, Math.min(1, (p - 0.5) * 6));
+  return t >= 0
+    ? `rgba(74, 222, 128, ${(t * 0.85).toFixed(3)})`
+    : `rgba(248, 113, 113, ${(-t * 0.85).toFixed(3)})`;
+}
+
+export function StockSignals() {
+  const sig = data.stockSignals;
+  const H = sig.horizons;
+  const [sel, setSel] = useState(sig.stocks[0]?.ticker ?? "");
+  const [risk, setRisk] = useState(sig.risk_profiles[1]?.key ?? sig.risk_profiles[0]?.key ?? "");
+
+  const selRow = sig.stocks.find((s) => s.ticker === sel) ?? sig.stocks[0];
+  const profile = sig.risk_profiles.find((p) => p.key === risk) ?? sig.risk_profiles[0];
+  const curve = selRow?.probs.map((p, i) => ({ h: i + 1, p })) ?? [];
+
+  return (
+    <div>
+      <div className="mb-5 rounded-lg border border-danger/40 bg-danger/5 px-4 py-3 text-xs leading-relaxed text-muted">
+        <span className="font-semibold text-danger">Research demonstration — not investment advice.</span>{" "}
+        {sig.disclaimer.replace("RESEARCH DEMONSTRATION ONLY - NOT INVESTMENT ADVICE. ", "")}
+      </div>
+
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+        <span>Model signal as of <span className="tag text-white">{sig.as_of}</span> · {sig.n_stocks} names · calibrated P(outperform universe median) per horizon</span>
+        <span className="flex items-center gap-3">
+          <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: probColor(0.62) }} /> outperform</span>
+          <span className="flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: probColor(0.38) }} /> underperform</span>
+        </span>
+      </div>
+
+      {/* Heatmap: stocks x 20 horizons */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[640px]">
+          <div className="flex text-[9px] text-muted">
+            <div className="w-20 shrink-0" />
+            {Array.from({ length: H }, (_, i) => (
+              <div key={i} className="flex-1 text-center">{i + 1}</div>
+            ))}
+          </div>
+          {sig.stocks.map((s) => (
+            <button
+              key={s.ticker}
+              onClick={() => setSel(s.ticker)}
+              className={`flex w-full items-center ${s.ticker === sel ? "ring-1 ring-accent2" : ""}`}
+              title={`${s.ticker} · rank ${(s.rank_pct * 100).toFixed(0)}%`}
+            >
+              <div className={`w-20 shrink-0 truncate pr-1 text-left text-[10px] ${s.ticker === sel ? "text-white" : "text-muted"}`}>{s.ticker}</div>
+              {s.probs.map((p, i) => (
+                <div key={i} className="h-3.5 flex-1" style={{ background: probColor(p) }} title={`h${i + 1}: ${(p * 100).toFixed(0)}%`} />
+              ))}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        {/* Selected stock horizon curve */}
+        <div>
+          <div className="mb-2 text-xs text-muted">
+            <span className="tag text-white">{selRow?.ticker}</span> ({selRow?.sector}) · P(outperform) across horizons
+          </div>
+          <ResponsiveContainer width="100%" height={220}>
+            <LineChart data={curve} margin={{ top: 4, right: 8, left: -18, bottom: 0 }}>
+              <CartesianGrid stroke={GRID} vertical={false} />
+              <XAxis dataKey="h" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
+              <YAxis domain={[0.3, 0.7]} tick={AX} tickLine={false} axisLine={false} />
+              <Tooltip {...tip} formatter={(v: number) => `${(v * 100).toFixed(1)}%`} />
+              <ReferenceLine y={0.5} stroke="#8b98ad" strokeDasharray="4 4" />
+              <Line type="monotone" dataKey="p" stroke="#38bdf8" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Risk profile selector */}
+        <div>
+          <div className="mb-2 text-xs text-muted">Pick a risk profile — each is a real backtested construction, labelled by its historical Sharpe</div>
+          <div className="mb-3 flex gap-2">
+            {sig.risk_profiles.map((p) => (
+              <button
+                key={p.key}
+                onClick={() => setRisk(p.key)}
+                className={`flex-1 rounded-md border px-2 py-2 text-xs ${p.key === risk ? "border-accent2 bg-panel2 text-white" : "border-edge text-muted hover:text-white"}`}
+              >
+                <div className="font-semibold">{p.label}</div>
+                <div className={`tag ${p.sharpe >= 0 ? "text-accent" : "text-danger"}`}>Sharpe {p.sharpe >= 0 ? "+" : ""}{p.sharpe.toFixed(2)}</div>
+              </button>
+            ))}
+          </div>
+          <div className="rounded-lg border border-edge bg-panel2/40 p-3 text-xs">
+            <div className="mb-2 text-muted">{profile?.construction}</div>
+            <div className="mb-3 grid grid-cols-3 gap-2 tag">
+              <div><div className="text-[10px] uppercase text-muted">Hist. return</div><div className={profile?.total_return >= 0 ? "text-accent" : "text-danger"}>{((profile?.total_return ?? 0) * 100).toFixed(1)}%</div></div>
+              <div><div className="text-[10px] uppercase text-muted">Sharpe</div><div className={profile?.sharpe >= 0 ? "text-accent" : "text-danger"}>{(profile?.sharpe ?? 0).toFixed(2)}</div></div>
+              <div><div className="text-[10px] uppercase text-muted">Max DD</div><div className="text-danger">{((profile?.max_drawdown ?? 0) * 100).toFixed(1)}%</div></div>
+            </div>
+            <div className="mb-1 text-[10px] uppercase tracking-wider text-accent">Long today</div>
+            <div className="mb-2 flex flex-wrap gap-1">
+              {profile?.long.slice(0, 12).map((t) => (
+                <span key={t} className="rounded border border-accent/30 bg-accent/5 px-1.5 py-0.5 text-[10px] text-accent">{t}</span>
+              ))}
+              {profile && profile.long.length > 12 && <span className="text-[10px] text-muted">+{profile.long.length - 12} more</span>}
+            </div>
+            {profile && profile.short.length > 0 && (
+              <>
+                <div className="mb-1 text-[10px] uppercase tracking-wider text-danger">Short today</div>
+                <div className="flex flex-wrap gap-1">
+                  {profile.short.map((t) => (
+                    <span key={t} className="rounded border border-danger/30 bg-danger/5 px-1.5 py-0.5 text-[10px] text-danger">{t}</span>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ---- Interactive Sharpe explorer ------------------------------------------
 // Recomputes each strategy's Sharpe and equity live as the user sweeps the
 // per-side transaction cost. Uses the raw gross returns and exposures exported
