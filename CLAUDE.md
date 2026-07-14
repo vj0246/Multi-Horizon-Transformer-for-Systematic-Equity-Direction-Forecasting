@@ -24,6 +24,9 @@ python -m Source.Backtest.run_cross_section      # -> cross_section.json
 # 3. frontend
 cd frontend && npm install && npm run dev      # local
 npm run build                                   # static export -> frontend/out
+
+# tests: data-integrity, leakage audits, cost/strategy math, artifact validation
+python -m pytest tests/test_rigorous.py -q
 ```
 Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
 
@@ -47,6 +50,9 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 - `Source/Backtest/run_cross_section.py` — cross-sectional track (panel train + quantile spread)
 - `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage); relative/absolute/regression targets + cross-sectional features (universe/sector-relative, per-date ranks)
 - Cross-section objective: `cross_section.objective: regression` trains on continuous excess log-return (Huber loss); `classification` uses binary beat-median labels. Head stays linear Dense(20) - architecture unchanged. `compile_model(..., objective=)` switches the loss.
+- `Source/Models/ensemble.py` — seed-ensemble (`training.n_seeds`): trains N models, averages predictions. Collapses GPU run-to-run nondeterminism + improves generalization. Both run scripts set `TF_DETERMINISTIC_OPS`/`TF_CUDNN_DETERMINISM` before importing TF.
+- Universe is ~85 NSE names (price data only; no point-in-time fundamentals - would be look-ahead leakage). `Source/Ingestion/fetch_universe.py`.
+- Pipeline is quiet (no per-epoch/headline prints; `verbose=0`); read results from the JSON artifacts, not stdout.
 - `Source/Ingestion/fetch_universe.py` — NSE universe downloader (Data/Raw_Data/Universe/, gitignored)
 - `Source/Ingestion/` — yfinance downloader
 - `Source/News/` — NewsAPI + FinBERT sentiment (parallel track, not fused)

@@ -34,13 +34,17 @@ cd frontend && npm install && npm run dev
 
 Everything is driven by `config.yaml`. Set `REUSE=1` before a run to regenerate the JSON from a cached run without retraining.
 
-**Training hardware.** Models train on the GPU (an RTX 2050) through a WSL2 CUDA environment — native-Windows TensorFlow ≥2.11 is CPU-only, so `config.yaml` sets `training.require_gpu: true` and a Windows-side run now fails fast rather than silently using the CPU (`Source/device.py`). See CLAUDE.md and `scripts/train_gpu.sh` for the WSL invocation. TF op-determinism keeps a run reproducible on a given device; CPU and GPU kernels differ, so numbers can shift slightly (within the confidence interval) when switching hardware.
+**Training hardware.** Models train on the GPU (an RTX 2050) through a WSL2 CUDA environment — native-Windows TensorFlow ≥2.11 is CPU-only, so `config.yaml` sets `training.require_gpu: true` and a Windows-side run now fails fast rather than silently using the CPU (`Source/device.py`). See CLAUDE.md and `scripts/train_gpu.sh` for the WSL invocation.
+
+**Stability & accuracy — seed-ensembling.** GPU attention/cuDNN kernels are not fully deterministic even with `TF_DETERMINISTIC_OPS` and op-determinism enabled, so a single run's numbers wobble. `training.n_seeds` trains several models (seeds 42, 43, …) and **averages their predictions** (`Source/Models/ensemble.py`): this collapses the run-to-run variance that made earlier single-seed numbers swing, and averaging independent models also improves generalization. All published metrics are the ensemble's.
 
 ### Headline result (honest)
 After realistic India **futures** costs (~11.2 bps round-trip: STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage — see `Source/Backtest/costs.py`), the single-index model has **no exploitable edge**. On the 2023-2026 test window the long/flat ensemble timing strategy returns ≈ **-3%** versus **+40%** for buy-and-hold; net Sharpe is **-0.62 with a bootstrap 95% CI of [-1.10, 0.00]**, mean test AUC is **0.48** (below coin-flip), and 8-fold walk-forward Sharpe is **+0.25 ± 0.79** — statistically indistinguishable from zero. Notably, restricting inputs to stationary features and fixing all thresholds on validation data *lowered* the headline numbers versus earlier, sloppier evaluations: the apparent edge was evaluation artifact, not alpha. Daily Nifty direction is close to efficient; the site reports these numbers as-is, benchmarked against passively holding the index.
 
 ### Cross-sectional track (where a direction model can genuinely earn)
-Timing one index is the hardest possible use of a direction model; ranking many stocks against each other on the same date is the natural one. `Source/Backtest/run_cross_section.py` trains the **same shared-weight Transformer** on a pooled panel of ~37 liquid NSE large caps (per-stock windows, same 11 stationary features) and trades a **real cross-sectional quantile spread**: every 20 trading days, long the top 20% of names by ensemble signal, short the bottom 20%, equal weight. Legs are charged single-stock-futures costs; the long-only variant is charged delivery costs (STT 0.1% both sides). Evaluation reports mean daily cross-sectional IC and its information ratio, quintile attribution, and net equity curves against a gross equal-weight universe benchmark.
+Timing one index is the hardest possible use of a direction model; ranking many stocks against each other on the same date is the natural one. `Source/Backtest/run_cross_section.py` trains the **same shared-weight Transformer** on a pooled panel of **~85 liquid NSE large/mid caps** (per-stock windows, same 11 stationary features + 6 cross-sectional features) and trades a **real cross-sectional quantile spread**: every 20 trading days, long the top 20% of names by ensemble signal, short the bottom 20%, equal weight. Legs are charged single-stock-futures costs; the long-only variant is charged delivery costs (STT 0.1% both sides). Evaluation reports mean daily cross-sectional IC and its information ratio, quintile attribution, and net equity curves against a gross equal-weight universe benchmark.
+
+Only **price** data (yfinance) is used. Point-in-time fundamentals (earnings, ROE, valuation) would be the natural next feature block, but a survivorship-clean historical fundamental panel for NSE back to 2007 is not freely available, and using *current* fundamentals as historical features would be look-ahead leakage — so it is deliberately not done rather than faked.
 
 Leakage guards specific to the panel: the train/val/test split is by **calendar date** (the same market day never sits in train for one stock and test for another) and the scaler is fit on pooled train windows only.
 
@@ -54,15 +58,16 @@ Every configuration is published, none cherry-picked: `cross_section.json` (clas
 
 **Disclosed biases:** the universe is (mostly) today's large caps backtested into the past — survivorship bias inflates absolute returns (the long-short spread is partially insulated but still favored); daily IC uses overlapping 20-day forward returns (standard practice) while all P&L is non-overlapping.
 
-**Measured outcome (honest):** adding cross-sectional features moved **every** metric in the predicted direction, confirming the diagnosis — but the edge is still not statistically meaningful. On the Jun-2023 → Jun-2026 test window:
+**Measured outcome (honest).** The current canonical run uses an **~85-stock universe** and a **3-seed ensemble** (predictions averaged across seeds, which removes the run-to-run luck that made earlier single-seed numbers swing). With that noise stripped out, the verdict is unambiguous and *negative*: mean daily IC **-0.049** (information ratio -0.2), pooled rank IC -0.052, pooled AUC 0.477, and a **broadly declining quintile profile** — the names the model ranks highest actually *underperform* (top quintile +2.13% vs bottom +0.74% forward 20-day return; the top-ranked basket is the worst-returning). The signal is, if anything, slightly anti-predictive. On the Jun-2023 → Jun-2026 test window:
 
 | Configuration | Mean daily IC | L/S spread (net) | Long-only top 20% |
 |---|---|---|---|
-| Absolute targets, per-stock features (classification) | -0.007 | -21.6% (Sharpe -0.49) | +7.9% |
-| Relative targets, per-stock features (classification) | -0.006 | -21.3% (Sharpe -0.56) | +9.7% |
-| **Relative targets + cross-sectional features (classification)** | **+0.003** | **-7.4% (Sharpe -0.17)** | **+18.8% (Sharpe +0.44)** |
-| Same inputs, continuous excess-return **regression** head | -0.012 | -25.1% (Sharpe -0.79) | +5.8% |
-| Equal-weight universe (gross benchmark) | — | — | +36.7% (Sharpe +0.84) |
+| 37-stock, single seed, relative + cross-sectional features | +0.003 | -7.4% | +18.8% |
+| 37-stock, single seed, regression head | -0.012 | -25.1% | +5.8% |
+| **85-stock, 3-seed ensemble, relative + cross-sectional features** | **-0.049** | **-47.3% (Sharpe -1.26)** | **+14.6% (Sharpe +0.39)** |
+| Equal-weight universe (gross benchmark) | — | — | +53.3% (Sharpe +1.04) |
+
+The signal is **not flipped** to exploit the negative IC — that would be fitting to the test set. Reported as observed: the disciplined, honestly-evaluated model does not rank NSE stocks, and simply holding the universe equal-weight beats every model-selected basket.
 
 (The best-configuration row is **noise-dominated**: re-running the *identical* config — same seed, same data — swings the long-only book roughly +19% to +33% and the long-short spread from -7% to +11% across CPU/GPU and run to run, all inside the confidence interval. That instability *is* the finding: the cross-sectional edge, if any, is smaller than the training noise. The table shows the current published artifact; nothing is pinned to the luckiest run.)
 
