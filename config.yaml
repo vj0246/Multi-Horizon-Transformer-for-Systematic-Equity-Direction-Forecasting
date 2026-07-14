@@ -16,8 +16,12 @@ data:
 # the long-short spread is less affected but still favored. Disclosed on site.
 universe:
   raw_dir: "Data/Raw_Data/Universe"
-  min_history_days: 3500        # drop tickers with shorter history
-  window_stride: 2              # sample every 2nd day per stock (runtime control)
+  min_history_days: 3000        # ~12y; drop tickers with shorter history
+  window_stride: 3              # sample every 3rd day per stock (runtime control)
+  # Expanded liquid NSE large/mid-cap universe. Only PRICE data (yfinance) is used
+  # - point-in-time fundamentals are not fetched (using current fundamentals as
+  # historical features would be look-ahead leakage). Names without enough history
+  # are dropped by min_history_days.
   tickers:
     - RELIANCE.NS
     - TCS.NS
@@ -57,12 +61,62 @@ universe:
     - AMBUJACEM.NS
     - SIEMENS.NS
     - HAVELLS.NS
+    - BAJFINANCE.NS
+    - BAJAJFINSV.NS
+    - BAJAJ-AUTO.NS
+    - ADANIPORTS.NS
+    - ADANIENT.NS
+    - POWERGRID.NS
+    - COALINDIA.NS
+    - IOC.NS
+    - VEDL.NS
+    - SAIL.NS
+    - BANKBARODA.NS
+    - PNB.NS
+    - CANBK.NS
+    - INDUSINDBK.NS
+    - DABUR.NS
+    - MARICO.NS
+    - GODREJCP.NS
+    - COLPAL.NS
+    - PIDILITIND.NS
+    - BERGEPAINT.NS
+    - DLF.NS
+    - SHREECEM.NS
+    - LUPIN.NS
+    - AUROPHARMA.NS
+    - BIOCON.NS
+    - TORNTPHARM.NS
+    - MOTHERSON.NS
+    - BOSCHLTD.NS
+    - ABB.NS
+    - BEL.NS
+    - TATAPOWER.NS
+    - JINDALSTEL.NS
+    - NMDC.NS
+    - APOLLOHOSP.NS
+    - TVSMOTOR.NS
+    - ASHOKLEY.NS
+    - ESCORTS.NS
+    - BHEL.NS
+    - IDEA.NS
+    - ZEEL.NS
+    - UNITDSPR.NS
+    - TATACONSUM.NS
+    - PEL.NS
+    - CONCOR.NS
+    - PFC.NS
+    - RECLTD.NS
+    - MUTHOOTFIN.NS
+    - BANKINDIA.NS
+    - IDFCFIRSTB.NS
+    - FEDERALBNK.NS
 
 cross_section:
   top_frac: 0.2                 # long the top 20% of names by signal each rebalance
   bottom_frac: 0.2              # short the bottom 20%
   holding_period: 20            # non-overlapping 20-day rebalances
-  batch_size: 128               # larger batches for the pooled panel
+  batch_size: 128               # RTX 2050 exposes ~1.7GB usable; 256 OOMs
   epochs: 25
   # true  -> target_h = stock's h-day return beats the cross-sectional median
   #          that date (the canonical formulation for a ranking task)
@@ -145,6 +199,11 @@ training:
   learning_rate: 0.0001
   early_stopping_patience: 7
   seed: 42
+  # Seed-ensemble: train n_seeds models (seed, seed+1, ...) and average their
+  # predictions. GPU attention/cuDNN ops are not fully deterministic even with
+  # op-determinism, so a single run's numbers wobble; averaging several seeds
+  # collapses that run-to-run variance and improves generalization.
+  n_seeds: 3
   # require_gpu: abort training if no GPU is visible to TensorFlow. Enforced:
   # training runs through the WSL2 CUDA venv (see CLAUDE.md / scripts/train_gpu.sh).
   # Native-Windows TF is CPU-only, so a Windows-side run will now fail fast rather

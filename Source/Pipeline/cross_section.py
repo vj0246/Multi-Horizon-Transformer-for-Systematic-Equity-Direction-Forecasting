@@ -39,6 +39,24 @@ SECTORS = {
     "GRASIM": "Cement", "ULTRACEMCO": "Cement", "AMBUJACEM": "Cement",
     "SIEMENS": "CapGoods", "HAVELLS": "CapGoods", "LT": "CapGoods",
     "BHARTIARTL": "Telecom", "TITAN": "Consumer", "ASIANPAINT": "Consumer",
+    # expanded universe
+    "BAJFINANCE": "Finance", "BAJAJFINSV": "Finance", "PFC": "Finance",
+    "RECLTD": "Finance", "MUTHOOTFIN": "Finance", "PEL": "Finance",
+    "BAJAJ-AUTO": "Auto", "MOTHERSON": "Auto", "BOSCHLTD": "Auto",
+    "TVSMOTOR": "Auto", "ASHOKLEY": "Auto", "ESCORTS": "Auto",
+    "ADANIPORTS": "Infra", "ADANIENT": "Infra", "CONCOR": "Infra",
+    "POWERGRID": "Energy", "COALINDIA": "Energy", "IOC": "Energy", "TATAPOWER": "Energy",
+    "VEDL": "Metal", "SAIL": "Metal", "JINDALSTEL": "Metal", "NMDC": "Metal",
+    "BANKBARODA": "Bank", "PNB": "Bank", "CANBK": "Bank", "INDUSINDBK": "Bank",
+    "BANKINDIA": "Bank", "IDFCFIRSTB": "Bank", "FEDERALBNK": "Bank",
+    "DABUR": "FMCG", "MARICO": "FMCG", "GODREJCP": "FMCG", "COLPAL": "FMCG",
+    "TATACONSUM": "FMCG", "UNITDSPR": "FMCG",
+    "PIDILITIND": "Consumer", "BERGEPAINT": "Consumer", "ZEEL": "Consumer",
+    "DLF": "Realty", "SHREECEM": "Cement",
+    "LUPIN": "Pharma", "AUROPHARMA": "Pharma", "BIOCON": "Pharma",
+    "TORNTPHARM": "Pharma", "APOLLOHOSP": "Pharma",
+    "ABB": "CapGoods", "BEL": "CapGoods", "BHEL": "CapGoods",
+    "IDEA": "Telecom",
 }
 
 

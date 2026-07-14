@@ -25,19 +25,26 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 
-import numpy as np
-import pandas as pd
-import tensorflow as tf
-import yaml
-from scipy.stats import spearmanr
+# Determinism flags must be set before TensorFlow is imported.
+os.environ.setdefault("TF_DETERMINISTIC_OPS", "1")
+os.environ.setdefault("TF_CUDNN_DETERMINISM", "1")
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 
-from Source.Backtest import metrics as M
-from Source.Backtest.costs import india_cost_breakdown
-from Source.Backtest.run import ensemble_signal, set_seeds
-from Source.Models.transformer import build_model, compile_model
-from Source.Pipeline.cross_section import build_panel
+from pathlib import Path  # noqa: E402
+
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+import tensorflow as tf  # noqa: E402
+import yaml  # noqa: E402
+from scipy.stats import spearmanr  # noqa: E402
+
+from Source.Backtest import metrics as M  # noqa: E402
+from Source.Backtest.costs import india_cost_breakdown  # noqa: E402
+from Source.Backtest.run import ensemble_signal  # noqa: E402
+from Source.Models.ensemble import train_ensemble  # noqa: E402
+from Source.Models.transformer import build_model, compile_model  # noqa: E402
+from Source.Pipeline.cross_section import build_panel, latest_windows, SECTORS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -57,47 +64,42 @@ def main():
     holding = cs["holding_period"]
     ppy = cfg["backtest"]["periods_per_year"] / holding
 
-    print("Building panel...")
     panel = build_panel(cfg)
-    print(f"Panel: {len(panel.tickers)} stocks | train={len(panel.X_train)} "
-          f"val={len(panel.X_val)} test={len(panel.X_test)} windows")
-    print(f"Date split: train < {panel.date_train_end.date()} <= val < "
-          f"{panel.date_val_end.date()} <= test")
-
     target_mode = "relative" if cs.get("relative_targets", False) else "absolute"
     objective = cs.get("objective", "classification")
     feat_tag = "xs" if cs.get("use_xs_features", False) else "base"
     n_features = len(panel.feature_cols)
+    n_seeds = int(cfg["training"].get("n_seeds", 1))
+
+    # Latest 60-day window per stock -> forward, out-of-sample signal (no outcome).
+    Xl, tickl, asofl = latest_windows(cfg, panel.scaler)
+
     cache_path = (ROOT / cfg["output"]["model_dir"]
-                  / f"cs_cache_{objective}_{target_mode}_{feat_tag}.npz")
-    model = None
+                  / f"cs_cache_{objective}_{target_mode}_{feat_tag}_s{n_seeds}.npz")
     if os.environ.get("REUSE") == "1" and cache_path.exists():
-        print(f"Reusing cached run: {cache_path}")
         c = np.load(cache_path, allow_pickle=True)
-        logits_val, logits_test = c["logits_val"], c["logits_test"]
+        logits_val, logits_test, logits_latest = c["logits_val"], c["logits_test"], c["logits_latest"]
         hist_history = c["hist_history"].item()
     else:
-        print(f"Training shared-weight model ({objective}) on the pooled panel "
-              f"({n_features} features)...")
-        set_seeds(cfg["training"]["seed"])
-        model, _ = build_model(cfg, num_features=n_features)
-        compile_model(model, cfg, objective=objective)
-        es = tf.keras.callbacks.EarlyStopping(
-            patience=cfg["training"]["early_stopping_patience"], restore_best_weights=True)
-        hist = model.fit(
-            panel.X_train, panel.y_train,
-            validation_data=(panel.X_val, panel.y_val),
+        seeds = [cfg["training"]["seed"] + i for i in range(n_seeds)]
+        avg, _, _, hist_history = train_ensemble(
+            build_compile=lambda: (
+                compile_model(build_model(cfg, num_features=n_features)[0], cfg, objective=objective),
+                None,
+            ),
+            X_train=panel.X_train, y_train=panel.y_train,
+            X_val=panel.X_val, y_val=panel.y_val,
+            predict_sets={"val": panel.X_val, "test": panel.X_test, "latest": Xl},
+            seeds=seeds,
             epochs=cs.get("epochs", cfg["training"]["epochs"]),
             batch_size=cs.get("batch_size", cfg["training"]["batch_size"]),
-            callbacks=[es], verbose=1,
+            patience=cfg["training"]["early_stopping_patience"],
         )
-        logits_val = model.predict(panel.X_val, verbose=0, batch_size=512)
-        logits_test = model.predict(panel.X_test, verbose=0, batch_size=512)
-        hist_history = hist.history
+        logits_val, logits_test, logits_latest = avg["val"], avg["test"], avg["latest"]
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(cache_path, logits_val=logits_val, logits_test=logits_test,
+                            logits_latest=logits_latest,
                             hist_history=np.array(hist_history, dtype=object))
-        print(f"Cached -> {cache_path}")
 
     # For regression the outputs are excess-return estimates; for classification
     # they are logits. The ranking signal (ensemble, z-scored on validation) and
@@ -225,18 +227,14 @@ def main():
 
     with open(out_dir / "cross_section.json", "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, allow_nan=True)
-    print("  wrote cross_section.json")
 
     # ---- latest per-stock signal across all 20 horizons (forward, no outcome) ----
-    if model is not None:
-        from Source.Pipeline.cross_section import SECTORS, latest_windows
-        Xl, tickl, asofl = latest_windows(cfg, panel.scaler)
-        logits_l = model.predict(Xl, verbose=0, batch_size=512)
+    if len(tickl) > 0:
         if objective == "classification":
-            _, probs_l = M.calibrate_probs(logits_val, panel.y_val, logits_l)
+            _, probs_l = M.calibrate_probs(logits_val, panel.y_val, logits_latest)
         else:  # regression outputs are excess estimates; squash monotonically for display
-            probs_l = 1.0 / (1.0 + np.exp(-(logits_l - logits_l.mean(0)) / (logits_l.std(0) + 1e-9)))
-        ens_l = ensemble_signal(logits_l, mu_v, sd_v)
+            probs_l = 1.0 / (1.0 + np.exp(-(logits_latest - logits_latest.mean(0)) / (logits_latest.std(0) + 1e-9)))
+        ens_l = ensemble_signal(logits_latest, mu_v, sd_v)
         rank_pct = np.argsort(np.argsort(ens_l)) / max(1, len(ens_l) - 1)
 
         rows = []
@@ -287,25 +285,10 @@ def main():
         }
         with open(out_dir / "stock_signals.json", "w", encoding="utf-8") as f:
             json.dump(signals, f, indent=2, allow_nan=True)
-        print(f"  wrote stock_signals.json (as_of {signals['as_of']}, {len(rows)} stocks)")
 
-    print("\n==== CROSS-SECTIONAL HEADLINE ====")
-    print(f"Universe: {result['universe_size']} stocks | {objective} | targets "
-          f"{target_mode} | {n_features} features ({feat_tag}) | test "
-          f"{result['test_start']} .. {result['test_end']}")
-    print(f"Pooled AUC h20: {auc_h20:.4f} | pooled rank IC: {pooled_ic:+.4f}")
-    print(f"Mean daily CS IC: {mean_ic:+.4f} (IR {ic_ir:.2f}, "
-          f"{pct_ic_pos*100:.0f}% days positive)")
-    print(f"Quintile mean fwd20: {[f'{v:+.4f}' for v in quintiles]}")
-    sp, lo, ew = result["spread"], result["long_only"], result["ew_benchmark"]
-    print(f"L/S spread (futures, net): Sharpe {sp['sharpe']:+.2f} "
-          f"CI {[round(x, 2) for x in sp['sharpe_ci95']]} total {sp['total_return']*100:+.1f}%")
-    print(f"Long-only top 20% (delivery, net): Sharpe {lo['sharpe']:+.2f} "
-          f"total {lo['total_return']*100:+.1f}%")
-    print(f"EW universe benchmark (gross): Sharpe {ew['sharpe']:+.2f} "
-          f"total {ew['total_return']*100:+.1f}%")
+    print(f"cross-section done ({result['universe_size']} stocks, {n_seeds}-seed "
+          f"ensemble) -> {out_dir}")
 
 
 if __name__ == "__main__":
-    os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
     main()

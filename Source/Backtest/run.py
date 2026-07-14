@@ -22,17 +22,24 @@ from __future__ import annotations
 
 import json
 import os
-from pathlib import Path
 
-import numpy as np
-import pandas as pd
-import tensorflow as tf
-import yaml
+# Determinism flags must be set before TensorFlow is imported.
+os.environ.setdefault("TF_DETERMINISTIC_OPS", "1")
+os.environ.setdefault("TF_CUDNN_DETERMINISM", "1")
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 
-from Source.Backtest import metrics as M
-from Source.Models.transformer import build_model, compile_model
-from Source.Pipeline.data_loader import load_ohlcv
-from Source.Pipeline.dataset import build_dataset, build_features, make_windows
+from pathlib import Path  # noqa: E402
+
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
+import tensorflow as tf  # noqa: E402
+import yaml  # noqa: E402
+
+from Source.Backtest import metrics as M  # noqa: E402
+from Source.Models.ensemble import train_ensemble  # noqa: E402
+from Source.Models.transformer import build_model, compile_model  # noqa: E402
+from Source.Pipeline.data_loader import load_ohlcv  # noqa: E402
+from Source.Pipeline.dataset import build_dataset, build_features, make_windows  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -76,23 +83,6 @@ def ensemble_signal(logits: np.ndarray, mu: np.ndarray, sd: np.ndarray) -> np.nd
     """
     z = (logits - mu) / np.where(sd == 0, 1.0, sd)
     return z.mean(axis=1)
-
-
-def train_once(ds, cfg, epochs=None, verbose=0):
-    set_seeds(cfg["training"]["seed"])
-    model, attn_model = build_model(cfg)
-    compile_model(model, cfg)
-    es = tf.keras.callbacks.EarlyStopping(
-        patience=cfg["training"]["early_stopping_patience"], restore_best_weights=True
-    )
-    hist = model.fit(
-        ds.X_train, ds.y_train,
-        validation_data=(ds.X_val, ds.y_val),
-        epochs=epochs or cfg["training"]["epochs"],
-        batch_size=cfg["training"]["batch_size"],
-        callbacks=[es], verbose=verbose,
-    )
-    return model, attn_model, hist
 
 
 def walk_forward(df_feat, cfg) -> list[dict]:
@@ -157,8 +147,6 @@ def walk_forward(df_feat, cfg) -> list[dict]:
             "max_drawdown": rep["max_drawdown"],
             "auc_h20": auc,
         })
-        print(f"  wf fold {k + 1}/{n_folds}: sharpe {rep['sharpe_net']:+.2f} "
-              f"auc_h20 {auc:.3f}")
     return folds
 
 
@@ -169,7 +157,6 @@ def main():
     out_dir = ROOT / cfg["output"]["artifacts_dir"]
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print("Loading data...")
     df_raw = load_ohlcv(ROOT / cfg["data"]["raw_csv"])
     ds = build_dataset(df_raw, cfg)
     df = ds.df
@@ -178,18 +165,15 @@ def main():
     holding = cfg["backtest"]["holding_period"]
     ppy = cfg["backtest"]["periods_per_year"] / holding
     q_up = cfg["backtest"]["quantile_upper"]
-
-    print(f"Samples: train={len(ds.X_train)} val={len(ds.X_val)} test={len(ds.X_test)} "
-          f"features={len(ds.feature_cols)}")
+    n_seeds = int(cfg["training"].get("n_seeds", 1))
 
     # Heavy artifacts (predictions, attention, walk-forward, training history) are
     # cached so presentation-only tweaks can regenerate JSON without retraining.
     # Set REUSE=1 to load the cache; anything else trains from scratch.
-    cache_path = ROOT / cfg["output"]["model_dir"] / "run_cache_v2.npz"
+    cache_path = ROOT / cfg["output"]["model_dir"] / f"run_cache_v3_s{n_seeds}.npz"
     reuse = os.environ.get("REUSE") == "1" and cache_path.exists()
 
     if reuse:
-        print(f"Reusing cached run: {cache_path}")
         c = np.load(cache_path, allow_pickle=True)
         logits_test = c["logits_test"]
         logits_val = c["logits_val"]
@@ -197,14 +181,26 @@ def main():
         hist_history = c["hist_history"].item()
         wf = list(c["wf"])
     else:
-        print("Training main model...")
-        model, attn_model, hist = train_once(ds, cfg, verbose=1)
-        logits_test = model.predict(ds.X_test, verbose=0)
-        logits_val = model.predict(ds.X_val, verbose=0)
-        attn = attn_model.predict(ds.X_val, verbose=0)      # (N, heads, seq, seq)
-        avg_attention = np.mean(attn, axis=(0, 1, 2))       # (seq,)
-        hist_history = hist.history
-        print("Walk-forward validation...")
+        # Seed-ensemble main model: average predictions over n_seeds models.
+        def _build_index():
+            m, a = build_model(cfg)          # model and attn_model share weights
+            compile_model(m, cfg)
+            return m, a
+
+        seeds = [cfg["training"]["seed"] + i for i in range(n_seeds)]
+        avg, _, attn_model, hist_history = train_ensemble(
+            build_compile=_build_index,
+            X_train=ds.X_train, y_train=ds.y_train, X_val=ds.X_val, y_val=ds.y_val,
+            predict_sets={"test": ds.X_test, "val": ds.X_val},
+            seeds=seeds,
+            epochs=cfg["training"]["epochs"],
+            batch_size=cfg["training"]["batch_size"],
+            patience=cfg["training"]["early_stopping_patience"],
+        )
+        logits_test, logits_val = avg["test"], avg["val"]
+        # Attention from the last-seed model (interpretability only, not averaged).
+        attn = attn_model.predict(ds.X_val, verbose=0) if attn_model is not None else np.zeros((1, 1, cfg["sequence"]["lookback"], cfg["sequence"]["lookback"]))
+        avg_attention = np.mean(attn, axis=(0, 1, 2))
         wf = walk_forward(build_features(df_raw, cfg), cfg)
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(
@@ -214,7 +210,6 @@ def main():
             hist_history=np.array(hist_history, dtype=object),
             wf=np.array(wf, dtype=object),
         )
-        print(f"Cached run -> {cache_path}")
 
     probs_test = tf.sigmoid(logits_test).numpy()
 
@@ -386,27 +381,9 @@ def main():
     for name, obj in artifacts.items():
         with open(out_dir / name, "w", encoding="utf-8") as f:
             json.dump(obj, f, indent=2, allow_nan=True)
-        print(f"  wrote {name}")
 
-    print("\n==== HEADLINE ====")
-    print(f"Cost model: {cost_model} ({summary['instrument']}) "
-          f"round-trip {summary['roundtrip_cost_bps']:.2f} bps")
-    print(f"Mean AUC (test, 20 horizons): {summary['mean_auc']:.4f}")
-    print(f"Mean IC  (test): {summary['mean_ic']:.4f}")
-    print(f"PRIMARY long/flat timing (ensemble) Sharpe: {prim['sharpe_net']:.3f} "
-          f"95% CI [{sharpe_ci95[0]:.2f}, {sharpe_ci95[1]:.2f}]")
-    print(f"Strategy total return: {prim['total_return']*100:.2f}%  "
-          f"vs buy-hold {bh['total_return']*100:.2f}%  "
-          f"(excess {summary['strategy_excess_return']*100:.2f}%)")
-    print(f"Best-val horizon: {best_h} | timing_h20 Sharpe: "
-          f"{strategies['timing_h20']['sharpe_net']:.3f} | quantile L/S (ref): "
-          f"{strategies['quantile']['sharpe_net']:.3f}")
-    print(f"Walk-forward ({len(wf)} folds) mean Sharpe: "
-          f"{summary['walk_forward_mean_sharpe']:.3f} "
-          f"(std {summary['walk_forward_sharpe_std']:.3f})")
-    print("Artifacts ->", out_dir)
+    print(f"index track done ({n_seeds}-seed ensemble) -> {out_dir}")
 
 
 if __name__ == "__main__":
-    os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
     main()
