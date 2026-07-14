@@ -459,6 +459,7 @@ A plain mean over time steps discards the temporal-order information the positio
 - A static Next.js site visualizes the real, regenerated results (see below)
 
 **What's still not done (honest):**
+- **Fundamentals stay out of the model.** `Source/Ingestion/fetch_fundamentals.py` fetches a *current* fundamentals snapshot (yfinance: P/E, ROE, margins, market cap), which is fine for a live-context view but cannot be a backtest feature — today's ratios fed to a 2015 window is look-ahead leakage. A leak-free factor needs an as-of-date vendor (Capital IQ / Refinitiv / parsed filings), which isn't freely available, so it is deliberately omitted rather than faked.
 - Sentiment fusion is **off by default** — NewsAPI only serves ~30 days of history, so a real sentiment feature cannot be backfilled over 2007-2026. The mechanism is real; the historical data is not available, and no fabricated feature is ever fed to the backtest.
 - Single-asset backtest — no borrow cost or capacity modeling (slippage *is* modeled)
 - Risk module is a placeholder
