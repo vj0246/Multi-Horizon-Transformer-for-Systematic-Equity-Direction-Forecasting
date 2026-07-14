@@ -127,6 +127,9 @@ export interface StrategyReport {
   hit_rate: number;
   net_returns?: number[];
   equity_curve: number[];
+  gross_returns?: number[];
+  abs_pos?: number[];
+  periods_per_year?: number;
 }
 
 export const data = {

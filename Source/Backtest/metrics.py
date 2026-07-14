@@ -129,6 +129,11 @@ def strategy_report(
         "hit_rate": float(np.mean(net > 0)) if net.size else 0.0,
         "net_returns": [round(float(v), 6) for v in net],
         "equity_curve": [round(float(v), 5) for v in eq],
+        # Raw components so the frontend can recompute net = gross - abs_pos * 2 *
+        # (bps/1e4) at any transaction cost, for the interactive Sharpe explorer.
+        "gross_returns": [round(float(v), 6) for v in gross],
+        "abs_pos": [round(float(v), 3) for v in np.abs(pos)],
+        "periods_per_year": float(ppy),
     }
 
 

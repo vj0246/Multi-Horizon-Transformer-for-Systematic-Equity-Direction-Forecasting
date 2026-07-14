@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -16,7 +17,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { data } from "@/lib/data";
+import { data, type StrategyReport } from "@/lib/data";
 
 const AX = { stroke: "#8b98ad", fontSize: 11 };
 const GRID = "#232c3d";
@@ -286,6 +287,149 @@ export function CSICSeries() {
         <Area type="monotone" dataKey="ic" stroke="#38bdf8" strokeWidth={1.4} fill="url(#ic)" />
       </AreaChart>
     </ResponsiveContainer>
+  );
+}
+
+// ---- Interactive Sharpe explorer ------------------------------------------
+// Recomputes each strategy's Sharpe and equity live as the user sweeps the
+// per-side transaction cost. Uses the raw gross returns and exposures exported
+// per strategy: net_i = gross_i - abs_pos_i * 2 * (bps / 1e4).
+const EXPLORER_STRATS: { key: string; label: string; color: string }[] = [
+  { key: "timing_ensemble", label: "Timing · ensemble", color: "#4ade80" },
+  { key: "timing_h20", label: "Timing · h20", color: "#38bdf8" },
+  { key: "quantile", label: "Quantile L/S", color: "#f59e0b" },
+  { key: "sign", label: "Sign", color: "#f87171" },
+];
+
+function annSharpe(net: number[], ppy: number): number {
+  if (net.length < 2) return 0;
+  const mean = net.reduce((a, b) => a + b, 0) / net.length;
+  const variance = net.reduce((a, b) => a + (b - mean) ** 2, 0) / net.length;
+  const sd = Math.sqrt(variance);
+  return sd === 0 ? 0 : (mean / sd) * Math.sqrt(ppy);
+}
+
+function applyCost(strat: StrategyReport, bps: number): number[] {
+  const g = strat.gross_returns ?? [];
+  const a = strat.abs_pos ?? [];
+  return g.map((gi, i) => gi - (a[i] ?? 0) * 2 * (bps / 1e4));
+}
+
+export function SharpeExplorer() {
+  const roundtripDefault = Math.round((data.summary.per_side_cost_bps ?? 5) * 10) / 10;
+  const [bps, setBps] = useState(roundtripDefault);
+
+  const strats = useMemo(
+    () => EXPLORER_STRATS.map((s) => ({ ...s, r: data.strategies[s.key] }))
+      .filter((s) => s.r && s.r.gross_returns && s.r.gross_returns.length > 1),
+    []
+  );
+
+  const computed = useMemo(
+    () =>
+      strats.map((s) => {
+        const net = applyCost(s.r, bps);
+        const ppy = s.r.periods_per_year ?? 12.6;
+        let eq = 1;
+        const curve = net.map((n) => (eq *= 1 + n));
+        return {
+          key: s.key,
+          label: s.label,
+          color: s.color,
+          sharpe: annSharpe(net, ppy),
+          total: (curve.length ? curve[curve.length - 1] : 1) - 1,
+          curve,
+        };
+      }),
+    [strats, bps]
+  );
+
+  const bars = computed.map((c) => ({ label: c.label, sharpe: c.sharpe, color: c.color }));
+  const maxLen = Math.max(...computed.map((c) => c.curve.length), 0);
+  const equity = Array.from({ length: maxLen }, (_, i) => {
+    const row: Record<string, number> = { i };
+    computed.forEach((c) => (row[c.key] = c.curve[i]));
+    return row;
+  });
+
+  return (
+    <div>
+      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <label className="text-xs text-muted">
+          Transaction cost:{" "}
+          <span className="tag text-white">{bps.toFixed(1)} bps/side</span>{" "}
+          <span className="text-muted">({(bps * 2).toFixed(1)} bps round-trip)</span>
+        </label>
+        <input
+          type="range"
+          min={0}
+          max={30}
+          step={0.5}
+          value={bps}
+          onChange={(e) => setBps(parseFloat(e.target.value))}
+          className="h-1 w-full cursor-pointer appearance-none rounded bg-edge accent-accent sm:w-1/2"
+          aria-label="transaction cost basis points per side"
+        />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div>
+          <div className="mb-2 text-xs text-muted">Net Sharpe by strategy at this cost</div>
+          <ResponsiveContainer width="100%" height={240}>
+            <BarChart data={bars} layout="vertical" margin={{ top: 4, right: 12, left: 40, bottom: 0 }}>
+              <CartesianGrid stroke={GRID} horizontal={false} />
+              <XAxis type="number" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
+              <YAxis type="category" dataKey="label" tick={{ ...AX, fontSize: 10 }} tickLine={false} axisLine={false} width={90} />
+              <Tooltip {...tip} formatter={(v: number) => v.toFixed(3)} />
+              <ReferenceLine x={0} stroke="#8b98ad" />
+              <Bar dataKey="sharpe" radius={[0, 3, 3, 0]}>
+                {bars.map((b, i) => (
+                  <Cell key={i} fill={b.sharpe >= 0 ? b.color : "#f87171"} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div>
+          <div className="mb-2 text-xs text-muted">Equity curves at this cost (net)</div>
+          <ResponsiveContainer width="100%" height={240}>
+            <LineChart data={equity} margin={{ top: 4, right: 8, left: -12, bottom: 0 }}>
+              <CartesianGrid stroke={GRID} vertical={false} />
+              <XAxis dataKey="i" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
+              <YAxis tick={AX} tickLine={false} axisLine={false} />
+              <Tooltip {...tip} formatter={(v: number) => v?.toFixed(3)} />
+              <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
+              {computed.map((c) => (
+                <Line key={c.key} type="monotone" dataKey={c.key} name={c.label} stroke={c.color} strokeWidth={1.8} dot={false} />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <table className="mt-4 w-full text-xs tag">
+        <thead className="text-muted">
+          <tr className="border-b border-edge">
+            <th className="py-2 text-left font-normal">Strategy</th>
+            <th className="py-2 text-right font-normal">Net Sharpe</th>
+            <th className="py-2 text-right font-normal">Total return</th>
+          </tr>
+        </thead>
+        <tbody>
+          {computed.map((c) => (
+            <tr key={c.key} className="border-b border-edge/40">
+              <td className="py-2" style={{ color: c.color }}>{c.label}</td>
+              <td className={`py-2 text-right ${c.sharpe >= 0 ? "text-accent" : "text-danger"}`}>
+                {c.sharpe >= 0 ? "+" : ""}{c.sharpe.toFixed(2)}
+              </td>
+              <td className={`py-2 text-right ${c.total >= 0 ? "text-accent" : "text-danger"}`}>
+                {(c.total * 100).toFixed(1)}%
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

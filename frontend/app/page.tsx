@@ -11,6 +11,7 @@ import {
   HorizonAUC,
   HorizonIC,
   PriceChart,
+  SharpeExplorer,
   ThresholdSweep,
   TrainingHistory,
   YearlyChart,
@@ -23,6 +24,7 @@ const NAV = [
   ["architecture", "Architecture"],
   ["results", "Results"],
   ["backtest", "Backtest"],
+  ["explorer", "Sharpe Explorer"],
   ["walkforward", "Walk-Forward"],
   ["crosssection", "Cross-Section"],
   ["attention", "Attention"],
@@ -262,6 +264,18 @@ export default function Page() {
           timing</span>: hold the index when the ensemble signal is in its top{" "}
           {100 - 70}% (threshold fixed on validation data), sit in cash otherwise.
         </p>
+        {prim.avg_exposure === 0 && (
+          <div className="mb-4 rounded-lg border border-edge bg-panel2/60 px-4 py-3 text-xs leading-relaxed text-muted">
+            <span className="text-white">Honest out-of-sample outcome:</span> on this run the
+            ensemble signal never crossed its validation-fixed entry threshold during the test
+            window, so the disciplined strategy <span className="text-white">stayed entirely in
+            cash</span> — zero trades, zero Sharpe. Not a bug: with a threshold fixed on
+            past data and only {prim.n_trades} non-overlapping test periods, &quot;never good
+            enough to trade&quot; is a legitimate result, and a truer verdict on the edge than
+            forcing positions. The individual horizon and cross-sectional signals below still
+            carry the analysis; the Sharpe explorer lets you compare the strategies that did trade.
+          </div>
+        )}
         <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
           <Stat label="Net Sharpe" value={fmtSigned(prim.sharpe_net, 2)} sub={`95% CI [${ciLo.toFixed(2)}, ${ciHi.toFixed(2)}]`} tone={prim.sharpe_net >= 0 ? "good" : "bad"} />
           <Stat label="Total Return" value={fmtPct(prim.total_return, 1)} sub={`${prim.n_trades} non-overlapping trades`} tone={prim.total_return >= 0 ? "good" : "bad"} />
@@ -374,6 +388,24 @@ export default function Page() {
             <YearlyChart />
           </Panel>
         </div>
+      </Section>
+
+      {/* Sharpe explorer */}
+      <Section
+        id="explorer"
+        eyebrow="Interactive"
+        title="Sharpe explorer — sweep the cost, watch the ratios move"
+      >
+        <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
+          A Sharpe ratio is only meaningful next to its assumptions. Drag the transaction
+          cost and every strategy&apos;s net Sharpe and equity curve recompute live from the
+          raw per-trade returns — so you can see exactly how fragile (or robust) each ratio
+          is to costs, and how the strategies re-rank against each other. The default is the
+          model&apos;s India per-side cost.
+        </p>
+        <Panel title="Index-track strategies (horizon 20)" subtitle="net Sharpe = mean/std of non-overlapping period returns, annualized; recomputed in-browser">
+          <SharpeExplorer />
+        </Panel>
       </Section>
 
       {/* Walk-forward */}
