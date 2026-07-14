@@ -325,9 +325,9 @@ export function StockSignals() {
       </div>
 
       {/* Heatmap: stocks x 20 horizons */}
-      <div className="overflow-x-auto">
+      <div className="max-h-[520px] overflow-auto">
         <div className="min-w-[640px]">
-          <div className="flex text-[9px] text-muted">
+          <div className="sticky top-0 z-10 flex bg-panel text-[9px] text-muted">
             <div className="w-20 shrink-0" />
             {Array.from({ length: H }, (_, i) => (
               <div key={i} className="flex-1 text-center">{i + 1}</div>
