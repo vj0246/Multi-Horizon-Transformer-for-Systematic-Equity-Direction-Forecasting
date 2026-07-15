@@ -118,6 +118,11 @@ class Panel:
     scaler: StandardScaler
     date_train_end: pd.Timestamp
     date_val_end: pd.Timestamp
+    # latest 60-day window per stock (forward, out-of-sample) computed from the
+    # same load as the panel — no second universe load
+    X_latest: np.ndarray
+    latest_tickers: list[str]
+    latest_asof: list[str]
 
 
 def load_universe(cfg: dict) -> dict[str, pd.DataFrame]:
@@ -256,6 +261,9 @@ def build_panel(cfg: dict) -> Panel:
     def tf_(a):
         return scaler.transform(a.reshape(-1, nf)).reshape(a.shape).astype("float32")
 
+    # Latest windows from the SAME loaded stocks (no second universe load).
+    X_latest, latest_tickers, latest_asof = _latest_from_stocks(stocks, cfg, scaler)
+
     return Panel(
         X_train=tf_(X_train), y_train=y_train,
         X_val=tf_(X_val), y_val=y_val,
@@ -268,17 +276,13 @@ def build_panel(cfg: dict) -> Panel:
         feature_cols=active_feature_cols(cfg),
         scaler=scaler,
         date_train_end=date_train_end, date_val_end=date_val_end,
+        X_latest=X_latest, latest_tickers=latest_tickers, latest_asof=latest_asof,
     )
 
 
-def latest_windows(cfg: dict, scaler) -> tuple[np.ndarray, list[str], list[str]]:
-    """Most recent 60-day feature window per stock (for a forward, out-of-sample
-    prediction whose 1..20-day outcome is not yet known).
-
-    Returns (X_scaled, tickers, as_of_dates). Uses the panel scaler so inputs
-    match training. No targets involved - this is pure inference on the tail.
-    """
-    stocks = load_universe(cfg)
+def _latest_from_stocks(stocks: dict[str, pd.DataFrame], cfg: dict, scaler
+                        ) -> tuple[np.ndarray, list[str], list[str]]:
+    """Most recent 60-day scaled window per stock, from an already-loaded dict."""
     feat_cols = active_feature_cols(cfg)
     lookback = cfg["sequence"]["lookback"]
     X, tick, asof = [], [], []
@@ -293,3 +297,13 @@ def latest_windows(cfg: dict, scaler) -> tuple[np.ndarray, list[str], list[str]]
     nf = X.shape[-1]
     X = scaler.transform(X.reshape(-1, nf)).reshape(X.shape).astype("float32")
     return X, tick, asof
+
+
+def latest_windows(cfg: dict, scaler) -> tuple[np.ndarray, list[str], list[str]]:
+    """Standalone latest-window extractor (loads the universe itself).
+
+    build_panel already exposes these via panel.X_latest/latest_tickers/
+    latest_asof from its own load; use those in the pipeline. This wrapper is
+    for ad-hoc/standalone inference and tests.
+    """
+    return _latest_from_stocks(load_universe(cfg), cfg, scaler)

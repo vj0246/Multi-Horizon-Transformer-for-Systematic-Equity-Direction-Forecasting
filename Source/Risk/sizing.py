@@ -26,10 +26,11 @@ def vol_target_weights(
     r = pd.Series(np.asarray(period_returns, dtype=float))
     ann = np.sqrt(periods_per_year)
     trailing_vol = (r.rolling(lookback).std().shift(1) * ann).to_numpy()  # shift => no look-ahead
+    # trailing_vol is NaN during warmup and 0 for a flat window; the mask maps both
+    # to weight 1.0, so ratio's inf/nan there never survive.
     with np.errstate(divide="ignore", invalid="ignore"):
         ratio = target_vol_annual / trailing_vol
     w = np.where(trailing_vol > 0, ratio, 1.0)
-    w = np.nan_to_num(w, nan=1.0, posinf=max_leverage, neginf=0.0)
     return np.clip(w, 0.0, max_leverage)
 
 

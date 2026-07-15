@@ -27,6 +27,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# NOTE on the global "async by default in FastAPI" convention: routes here are
+# deliberately sync `def`. They do small blocking file reads, which FastAPI runs
+# in a threadpool - so they never block the event loop. An `async def` route with
+# a blocking read WOULD block it; sync def is the correct choice for this I/O.
+
 
 def _read(name: str) -> dict | list:
     path = DATA / name

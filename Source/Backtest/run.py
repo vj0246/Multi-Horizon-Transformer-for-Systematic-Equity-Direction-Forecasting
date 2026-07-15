@@ -170,7 +170,9 @@ def main():
     # Heavy artifacts (predictions, attention, walk-forward, training history) are
     # cached so presentation-only tweaks can regenerate JSON without retraining.
     # Set REUSE=1 to load the cache; anything else trains from scratch.
-    cache_path = ROOT / cfg["output"]["model_dir"] / f"run_cache_v3_s{n_seeds}.npz"
+    _sp = cfg["split"]
+    cache_path = (ROOT / cfg["output"]["model_dir"]
+                  / f"run_cache_v3_s{n_seeds}_tr{_sp['train_frac']}_v{_sp['val_frac']}.npz")
     reuse = os.environ.get("REUSE") == "1" and cache_path.exists()
 
     if reuse:
@@ -287,23 +289,8 @@ def main():
     _gross_rt = _w * _pg
     _abs_rt = _w * _pap
     _net_rt = _gross_rt - _abs_rt * 2 * M.total_cost_bps(cfg) / 1e4
-    _eq_rt = M.equity_curve(_net_rt)
-    strategies["risk_targeted"] = {
-        "mode": "risk_targeted", "holding_days": holding,
-        "sharpe_net": M.annualized_sharpe(_net_rt, ppy),
-        "sharpe_gross": M.annualized_sharpe(_gross_rt, ppy),
-        "mean_return": float(_net_rt.mean()) if _net_rt.size else 0.0,
-        "total_return": float(_eq_rt[-1] - 1.0) if _eq_rt.size else 0.0,
-        "max_drawdown": M.max_drawdown(_eq_rt),
-        "avg_exposure": float(np.mean(_abs_rt)) if _abs_rt.size else 0.0,
-        "n_trades": int(_net_rt.size),
-        "hit_rate": float(np.mean(_net_rt > 0)) if _net_rt.size else 0.0,
-        "net_returns": [round(float(v), 6) for v in _net_rt],
-        "equity_curve": [round(float(v), 5) for v in _eq_rt],
-        "gross_returns": [round(float(v), 6) for v in _gross_rt],
-        "abs_pos": [round(float(v), 3) for v in _abs_rt],
-        "periods_per_year": float(ppy),
-    }
+    strategies["risk_targeted"] = M.report_from_returns(
+        _net_rt, _gross_rt, _abs_rt, ppy, "risk_targeted", holding)
 
     # ---- threshold sweep on CALIBRATED P(up), thresholds from validation ----
     p_val = probs_val_cal[:, ph - 1]

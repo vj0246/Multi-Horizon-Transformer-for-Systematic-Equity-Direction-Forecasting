@@ -32,11 +32,12 @@ FIELDS = ["trailingPE", "priceToBook", "returnOnEquity", "profitMargins",
 
 def fetch_fundamentals() -> pd.DataFrame:
     cfg = yaml.safe_load(open(ROOT / "config.yaml", encoding="utf-8"))
+    from requests.exceptions import RequestException
     rows = []
     for ticker in cfg["universe"]["tickers"]:
         try:
             info = yf.Ticker(ticker).info
-        except Exception as e:  # network / symbol issues shouldn't abort the batch
+        except (RequestException, KeyError, ValueError) as e:  # network/symbol issues only
             print(f"  {ticker}: {e}")
             continue
         row = {"ticker": ticker.replace(".NS", "")}

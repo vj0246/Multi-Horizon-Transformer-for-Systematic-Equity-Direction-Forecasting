@@ -44,7 +44,7 @@ from Source.Backtest.costs import india_cost_breakdown  # noqa: E402
 from Source.Backtest.run import ensemble_signal  # noqa: E402
 from Source.Models.ensemble import train_ensemble  # noqa: E402
 from Source.Models.transformer import build_model, compile_model  # noqa: E402
-from Source.Pipeline.cross_section import build_panel, latest_windows, SECTORS  # noqa: E402
+from Source.Pipeline.cross_section import build_panel, SECTORS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -72,10 +72,13 @@ def main():
     n_seeds = int(cfg["training"].get("n_seeds", 1))
 
     # Latest 60-day window per stock -> forward, out-of-sample signal (no outcome).
-    Xl, tickl, asofl = latest_windows(cfg, panel.scaler)
+    # Emitted by build_panel from its own load (no second universe load).
+    Xl, tickl, asofl = panel.X_latest, panel.latest_tickers, panel.latest_asof
 
+    sp = cfg["split"]
+    split_tag = f"tr{sp['train_frac']}_v{sp['val_frac']}"
     cache_path = (ROOT / cfg["output"]["model_dir"]
-                  / f"cs_cache_{objective}_{target_mode}_{feat_tag}_s{n_seeds}.npz")
+                  / f"cs_cache_{objective}_{target_mode}_{feat_tag}_s{n_seeds}_{split_tag}.npz")
     if os.environ.get("REUSE") == "1" and cache_path.exists():
         c = np.load(cache_path, allow_pickle=True)
         logits_val, logits_test, logits_latest = c["logits_val"], c["logits_test"], c["logits_latest"]

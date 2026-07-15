@@ -114,8 +114,20 @@ def strategy_report(
 
     net = apply_costs(pos, ret, cost_bps)
     gross = pos * ret
-    eq = equity_curve(net)
+    return report_from_returns(net, gross, np.abs(pos), ppy, mode, holding)
 
+
+def report_from_returns(net, gross, abs_pos, ppy: float, mode: str, holding: int) -> dict:
+    """Assemble the canonical strategy-report dict from per-period return streams.
+
+    Shared by strategy_report and any transformed book (e.g. the vol-targeted
+    variant) so the exported schema stays in one place. `gross_returns` + `abs_pos`
+    let the frontend recompute net = gross - abs_pos * 2 * (bps/1e4) at any cost.
+    """
+    net = np.asarray(net, dtype=float)
+    gross = np.asarray(gross, dtype=float)
+    abs_pos = np.asarray(abs_pos, dtype=float)
+    eq = equity_curve(net)
     return {
         "mode": mode,
         "holding_days": int(holding),
@@ -124,15 +136,13 @@ def strategy_report(
         "mean_return": float(net.mean()) if net.size else 0.0,
         "total_return": float(eq[-1] - 1.0) if eq.size else 0.0,
         "max_drawdown": max_drawdown(eq),
-        "avg_exposure": float(np.mean(np.abs(pos))) if pos.size else 0.0,
-        "n_trades": int(pos.size),
+        "avg_exposure": float(np.mean(abs_pos)) if abs_pos.size else 0.0,
+        "n_trades": int(net.size),
         "hit_rate": float(np.mean(net > 0)) if net.size else 0.0,
         "net_returns": [round(float(v), 6) for v in net],
         "equity_curve": [round(float(v), 5) for v in eq],
-        # Raw components so the frontend can recompute net = gross - abs_pos * 2 *
-        # (bps/1e4) at any transaction cost, for the interactive Sharpe explorer.
         "gross_returns": [round(float(v), 6) for v in gross],
-        "abs_pos": [round(float(v), 3) for v in np.abs(pos)],
+        "abs_pos": [round(float(v), 3) for v in abs_pos],
         "periods_per_year": float(ppy),
     }
 
