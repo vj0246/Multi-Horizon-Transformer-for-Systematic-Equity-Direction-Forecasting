@@ -45,6 +45,24 @@ For scale: 0.5033 is a *whisper*, not an edge. Published work on daily index dir
 
 **Trading it is a different story.** After India futures costs (~11.2 bps round-trip: STT, stamp, exchange + SEBI, brokerage, GST, slippage — `Source/Backtest/costs.py`), the rolling-threshold timing book returns **+11.0%** at **Sharpe +0.62** (31% time in market, -9.4% max drawdown) — but its bootstrap **95% CI is [-0.58, 1.93]**, i.e. not distinguishable from zero, and **buy-and-hold beats it** (+30.2%, Sharpe +0.94). 8-fold walk-forward Sharpe is **+0.28 ± 0.36**.
 
+### The per-horizon structure does not survive a clean protocol
+
+The 0.5033 mean hides an unstable curve. Test AUC by horizon runs 0.44 (h1, the worst — next-day index direction is the most efficiently priced thing here) up to 0.571 (h13), with an apparently convincing cluster at h13-16 (0.549-0.571, IC +0.12 to +0.14). It is tempting to trade that region. **Do not.**
+
+A validation-only horizon selection settles it. Picking the horizon purely by **validation** AUC — never looking at test — chooses **h10 at VAL AUC 0.654**. That horizon's **test AUC is 0.474**, below a coin flip:
+
+| | validation | test |
+|---|---|---|
+| AUC range across the 20 horizons | 0.529 – **0.654** | 0.440 – 0.571 |
+| val-selected horizon (h10) | **0.654** | **0.474** |
+| mean across horizons | ~0.60 | **0.5033** |
+
+Validation says 0.65 everywhere; test says 0.50. That gap is systematic, and it has a concrete cause: **validation is not a clean holdout in this pipeline.** It is used for early stopping (`restore_best_weights` on val loss), hyperparameter selection, Platt calibration, *and* entry thresholds. Val AUC is optimistically biased by construction — **test is the only uncontaminated number in the project.**
+
+Two consequences, both honest:
+1. **The h13-16 cluster is almost certainly noise.** If it were a real regime, validation would have pointed at it. Validation pointed at h10, which then underperformed a coin flip. The cluster is not traded and is not claimed as signal.
+2. **Horizon selection does not rescue the result.** The protocol-clean answer to "which horizon should we trade?" is h10 — and h10 loses. Switching to h13-16 now, having seen test, is precisely the cheating this project refuses. (Note `best_val_horizon: 16` in summary.json was selected by validation *timing Sharpe* rather than AUC; the two validation criteria disagree, which is itself evidence there is no stable per-horizon structure to find.)
+
 **Selection caveat, stated plainly:** the model was chosen on validation, but the entry-threshold *rule* was not. The frozen-validation cutoff proved degenerate on test — the signal's level shifts between fit and deployment (validation mean 0.00 vs test mean **-0.79**), so it never trades and returns exactly 0. The rolling past-only, level-invariant rule was adopted *after* observing that, so its +0.62 carries selection optimism and is an upper bound, not a clean OOS number. All three rules (frozen / expanding / rolling) are published unmodified in `strategies.json`. Nothing is flipped or reweighted to exploit the test set.
 
 ### Cross-sectional track (where a direction model can genuinely earn)
@@ -64,16 +82,30 @@ Every configuration is published, none cherry-picked: `cross_section.json` (clas
 
 **Disclosed biases:** the universe is (mostly) today's large caps backtested into the past — survivorship bias inflates absolute returns (the long-short spread is partially insulated but still favored); daily IC uses overlapping 20-day forward returns (standard practice) while all P&L is non-overlapping.
 
-**Measured outcome (honest).** The current canonical run uses an **~85-stock universe** and a **3-seed ensemble** (predictions averaged across seeds, which removes the run-to-run luck that made earlier single-seed numbers swing). With that noise stripped out, the verdict is unambiguous and *negative*: mean daily IC **-0.049** (information ratio -0.2), pooled rank IC -0.052, pooled AUC 0.477, and a **broadly declining quintile profile** — the names the model ranks highest actually *underperform* (top quintile +2.13% vs bottom +0.74% forward 20-day return; the top-ranked basket is the worst-returning). The signal is, if anything, slightly anti-predictive. On the Jun-2023 → Jun-2026 test window:
+**Canonical factors.** The per-stock and rank features above still omitted the factors that actually drive cross-sectional equity returns, so these were added (`_attach_cross_sectional_features`, all from trailing prices only): **12-1 momentum** (12-month return skipping the last month — the standard construction, the skip avoiding short-term-reversal contamination), **short-term (1-month) reversal**, **beta** to an equal-weight universe proxy, and **60-day idiosyncratic volatility** (residual to beta·market), each as a centered cross-sectional rank. Market regime (VIX, overnight S&P, breadth) already reaches the panel via `features.use_macro` — it is constant across names on a date, so it adds no *ranking* information but lets the model condition on the regime. Panel input: 17 → **29 features**.
+
+**Measured outcome (honest).** The factors moved every metric in the right direction — roughly **halving** the negative IC — and it still is not enough to cross zero:
+
+| metric | 17 features | **29 features (+factors)** |
+|---|---|---|
+| mean daily IC | -0.0489 | **-0.0290** |
+| pooled rank IC | -0.0517 | **-0.0260** |
+| pooled AUC (h20) | 0.4771 | **0.4876** |
+| % of days IC > 0 | — | 42.0% |
+
+The quintile profile is still **inverted and monotonic**: Q1 +1.38% → Q5 +0.92% forward 20-day return. The names the model ranks highest keep underperforming the ones it ranks lowest. The signal is, if anything, slightly anti-predictive — and it is **not** sign-flipped to exploit that, which would be fitting the test set.
+
+(The test window shifts to 2023-10 → 2026-06 because the 252-day lookbacks for 12-1 momentum and beta consume more warmup, so the two columns are not perfectly like-for-like; the direction of travel is real, the exact deltas approximate.) On the Jun-2023 → Jun-2026 test window:
 
 | Configuration | Mean daily IC | L/S spread (net) | Long-only top 20% |
 |---|---|---|---|
 | 37-stock, single seed, relative + cross-sectional features | +0.003 | -7.4% | +18.8% |
 | 37-stock, single seed, regression head | -0.012 | -25.1% | +5.8% |
-| **85-stock, 3-seed ensemble, relative + cross-sectional features** | **-0.049** | **-47.3% (Sharpe -1.26)** | **+14.6% (Sharpe +0.39)** |
-| Equal-weight universe (gross benchmark) | — | — | +53.3% (Sharpe +1.04) |
+| 85-stock, 3-seed ensemble, 17 features | -0.049 | -47.3% (Sharpe -1.26) | +14.6% (Sharpe +0.39) |
+| **85-stock, 3-seed ensemble, 29 features (+canonical factors)** | **-0.029** | **-21.3% (Sharpe -0.89)** | **+18.9% (Sharpe +0.49)** |
+| Equal-weight universe (gross benchmark) | — | — | **+41.6% (Sharpe +0.98)** |
 
-The signal is **not flipped** to exploit the negative IC — that would be fitting to the test set. Reported as observed: the disciplined, honestly-evaluated model does not rank NSE stocks, and simply holding the universe equal-weight beats every model-selected basket.
+Every confidence interval spans zero (L/S spread [-2.38, +0.36]; long-only [-0.70, +1.94]; EW [-0.22, +2.50]). **Equal-weight — literally just holding all 85 names — beats every model-selected basket on both return and Sharpe.** Reported as observed: the disciplined, honestly-evaluated model does not rank NSE stocks.
 
 (The best-configuration row is **noise-dominated**: re-running the *identical* config — same seed, same data — swings the long-only book roughly +19% to +33% and the long-short spread from -7% to +11% across CPU/GPU and run to run, all inside the confidence interval. That instability *is* the finding: the cross-sectional edge, if any, is smaller than the training noise. The table shows the current published artifact; nothing is pinned to the luckiest run.)
 

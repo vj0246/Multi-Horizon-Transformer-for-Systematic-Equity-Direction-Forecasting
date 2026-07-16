@@ -61,10 +61,17 @@ SECTORS = {
 
 
 def active_feature_cols(cfg: dict) -> list[str]:
-    """Base stationary features plus cross-sectional features when enabled."""
+    """Base (+macro) features plus cross-sectional features when enabled."""
     cols = resolve_feature_cols(cfg)
     if cfg["cross_section"].get("use_xs_features", False):
         cols = cols + list(cfg["cross_section"]["xs_features"])
+    dupes = [c for c in set(cols) if cols.count(c) > 1]
+    if dupes:
+        raise ValueError(
+            f"Duplicate feature columns {sorted(dupes)} - a macro/regime feature is "
+            f"listed in cross_section.xs_features but already supplied by "
+            f"features.use_macro."
+        )
     return cols
 
 
@@ -81,6 +88,7 @@ def _attach_cross_sectional_features(stocks: dict[str, pd.DataFrame], cfg: dict)
         return pd.DataFrame({t: df.set_index("date")[col] for t, df in stocks.items()})
 
     mom, ret, vol = wide("momentum_10"), wide("daily_ret"), wide("roll_vol_20")
+    close = wide("close")
     xs = {
         "xs_ret_vs_uni": ret.sub(ret.mean(axis=1), axis=0),
         "xs_mom_vs_uni": mom.sub(mom.mean(axis=1), axis=0),
@@ -92,6 +100,26 @@ def _attach_cross_sectional_features(stocks: dict[str, pd.DataFrame], cfg: dict)
     sector_mean = mom.T.groupby(sec).transform("mean").T   # per date, per ticker = its sector's mean momentum
     xs["sector_rel_mom"] = mom - sector_mean
 
+    # ---- canonical cross-sectional equity factors (all from trailing prices) ----
+    # 12-1 momentum: 12-month return skipping the most recent month, the standard
+    # construction (the skip avoids short-term-reversal contamination).
+    mom12_1 = np.log(close.shift(21) / close.shift(252))
+    xs["xs_mom12_1_rank"] = mom12_1.rank(axis=1, pct=True) - 0.5
+    # Short-term (1-month) reversal: losers tend to bounce, so the factor is the
+    # NEGATIVE of the trailing 21-day return.
+    rev21 = -np.log(close / close.shift(21))
+    xs["xs_reversal_rank"] = rev21.rank(axis=1, pct=True) - 0.5
+    # Beta and idiosyncratic vol vs an equal-weight universe proxy for the market.
+    mkt = ret.mean(axis=1)
+    cov = ret.rolling(252).cov(mkt)
+    beta = cov.div(mkt.rolling(252).var(), axis=0)
+    xs["xs_beta_rank"] = beta.rank(axis=1, pct=True) - 0.5
+    resid = ret.sub(beta.mul(mkt, axis=0))
+    xs["xs_idiovol_rank"] = resid.rolling(60).std().rank(axis=1, pct=True) - 0.5
+
+    # NOTE: market-regime context (VIX z-score, overnight S&P, breadth) already
+    # reaches every stock via features.use_macro in build_features - it must NOT be
+    # re-added here or the columns duplicate.
     for name, frame in xs.items():
         for t, df in stocks.items():
             df[name] = df["date"].map(frame[t]).astype("float32").fillna(0.0)

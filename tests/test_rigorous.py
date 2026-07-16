@@ -123,6 +123,17 @@ def test_scaler_fit_on_train_only(ds, raw):
 
 
 # ---------------------------------------------------------------- cross-sectional leakage
+def test_cross_section_feature_cols_unique():
+    """Macro/regime features reach the panel via use_macro; listing them again in
+    xs_features would silently duplicate columns."""
+    from Source.Pipeline.cross_section import active_feature_cols
+    cols = active_feature_cols(CFG)          # raises on duplicates
+    assert len(cols) == len(set(cols))
+    if CFG["cross_section"].get("use_xs_features", False):
+        for c in CFG["cross_section"]["xs_features"]:
+            assert c in cols
+
+
 def test_cross_section_date_split_no_leakage():
     if not (ROOT / CFG["universe"]["raw_dir"]).exists():
         pytest.skip("universe not downloaded")

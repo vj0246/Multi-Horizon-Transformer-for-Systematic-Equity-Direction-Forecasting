@@ -146,6 +146,13 @@ cross_section:
     - xs_ret_rank         # cross-sectional percentile rank of daily return
     - xs_vol_rank         # cross-sectional percentile rank of 20d volatility
     - sector_rel_mom      # 10d momentum minus the stock's sector-mean momentum
+    # canonical cross-sectional equity factors (trailing prices only)
+    - xs_mom12_1_rank     # 12-month momentum skipping the last month
+    - xs_reversal_rank    # short-term (1-month) reversal
+    - xs_beta_rank        # 252d beta vs the equal-weight universe
+    - xs_idiovol_rank     # 60d idiosyncratic vol (residual to beta*market)
+    # (market regime - VIX, overnight S&P, breadth - already reaches the panel via
+    #  features.use_macro; do not list it here or the columns duplicate)
 
 features:
   # Rolling windows used across return / volatility / volume features
