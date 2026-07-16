@@ -21,10 +21,12 @@ SENTIMENT_COL = "daily_sentiment"
 
 
 def resolve_feature_cols(cfg: dict) -> list[str]:
-    """Active feature columns. Appends the sentiment feature when fusion is enabled."""
+    """Active feature columns. Appends sentiment / macro features when enabled."""
     cols = list(cfg["features"]["feature_cols"])
     if cfg["features"].get("use_sentiment", False):
         cols.append(SENTIMENT_COL)
+    if cfg["features"].get("use_macro", False):
+        cols += list(cfg["features"].get("macro_features", []))
     return cols
 
 
@@ -73,6 +75,13 @@ def build_features(df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
 
     if cfg["features"].get("use_sentiment", False):
         df = _merge_sentiment(df, cfg)
+
+    if cfg["features"].get("use_macro", False):
+        from pathlib import Path as _P
+
+        from Source.Features.Macro import add_breadth_features, add_macro_features
+        df = add_macro_features(df)
+        df = add_breadth_features(df, _P(cfg["universe"]["raw_dir"]))
 
     horizons = cfg["sequence"]["horizons"]
     for h in range(1, horizons + 1):

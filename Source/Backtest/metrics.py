@@ -102,6 +102,16 @@ def strategy_report(
 
     if mode == "sign":
         pos = np.sign(sig)
+    elif mode == "timing_expanding":
+        # Adaptive entry threshold: for period i, the cutoff is the quantile of
+        # every signal observed BEFORE i (the validation distribution `ref`, plus
+        # test periods 0..i-1). Uses only past information, and unlike a frozen
+        # threshold it survives a shift in the signal's level between fit and
+        # deployment (a static cutoff can leave the book permanently in cash).
+        pos = np.zeros_like(sig, dtype=float)
+        for i in range(sig.size):
+            past = np.concatenate([ref, sig[:i]]) if i else ref
+            pos[i] = float(sig[i] >= np.percentile(past, bt["quantile_upper"]))
     elif mode in ("timing", "long"):
         thr = np.percentile(ref, bt["quantile_upper"])
         pos = (sig >= thr).astype(float)

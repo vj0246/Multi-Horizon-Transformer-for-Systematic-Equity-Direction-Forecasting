@@ -160,6 +160,21 @@ features:
   # as an extra input feature. See Source/News/build_sentiment.py.
   use_sentiment: false
   sentiment_csv: "Data/Processed_Data/daily_sentiment.csv"
+  # Macro / market-state features (Source/Features/Macro.py). These add real
+  # information the ^NSEI price series lacks: India VIX, the overnight S&P move
+  # (US closes ~02:00 IST, before the Indian session), USDINR, crude, plus
+  # breadth from the constituent universe. Every external series is asof-backward
+  # merged then shifted one row => a feature at row t uses only info from <= t-1.
+  use_macro: true
+  macro_features:
+    - vix_chg
+    - vix_z60
+    - spx_ret
+    - spx_ret_5
+    - usdinr_ret
+    - crude_ret
+    - breadth_above_ma20
+    - xs_dispersion
   # Model inputs are restricted to stationary/bounded signals. Raw OHLCV levels
   # (close/high/low/open/volume) are still engineered and inspected in EDA but are
   # NOT fed to the model: the scaler is fit on 2007-2019, so 2023-2026 price levels
@@ -185,18 +200,20 @@ split:
   train_frac: 0.70
   val_frac: 0.15        # test = remaining 0.15
 
+# Architecture/optimizer selected by scripts/select_model.py on the VALIDATION set
+# only (best of a 6-config grid, VAL AUC 0.5828). The test set was not consulted.
 model:
   d_model: 64
   num_heads: 4
   ff_dim: 128
   num_layers: 2
-  dropout: 0.1
+  dropout: 0.4          # val-selected (was 0.1); 3k train windows need regularization
   pooling: attention    # attention (learned softmax over time) | gap (GlobalAveragePooling)
 
 training:
   epochs: 40
   batch_size: 32
-  learning_rate: 0.0001
+  learning_rate: 0.0003   # val-selected (was 0.0001)
   early_stopping_patience: 7
   seed: 42
   # Seed-ensemble: train n_seeds models (seed, seed+1, ...) and average their

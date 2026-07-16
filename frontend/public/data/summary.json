@@ -1,29 +1,30 @@
 {
   "ticker": "^NSEI",
-  "date_start": "2007-10-16",
+  "date_start": "2008-06-04",
   "date_end": "2026-02-20",
-  "n_trading_days": 4502,
-  "n_samples": 4422,
+  "n_trading_days": 4343,
+  "n_samples": 4263,
   "split": {
-    "train": 3095,
-    "val": 663,
-    "test": 664
+    "train": 2984,
+    "val": 639,
+    "test": 640
   },
-  "n_features": 11,
+  "n_features": 19,
   "horizons": 20,
   "lookback": 60,
-  "mean_auc": 0.4852343349993645,
-  "mean_ic": -0.022705410199948844,
+  "mean_auc": 0.5032857461737932,
+  "mean_ic": 0.021027700262940104,
   "primary_horizon": 20,
-  "primary_strategy": "timing_ensemble",
-  "strategy_sharpe_net": -0.6179143806533246,
+  "primary_strategy": "timing_rolling",
+  "threshold_rule_note": "Model architecture/optimizer were selected on VALIDATION only (scripts/select_model.py); the test set was evaluated once. The entry-threshold RULE, however, was not: the frozen validation cutoff (timing_ensemble) turned out degenerate on test - the signal's level shifts (validation mean 0.00 vs test mean -0.79), so it never trades and returns exactly 0. The rolling-window rule (past-only, level-invariant) was adopted after observing that, so its +0.62 Sharpe carries selection optimism and should be read as an upper bound, not a clean out-of-sample estimate. Its 95% CI spans zero and it still loses to buy-and-hold. All three rules are published unmodified.",
+  "strategy_sharpe_net": 0.621393770666859,
   "sharpe_ci95": [
-    -1.1042440123041997,
-    0.0
+    -0.5840923512076477,
+    1.9344909355281807
   ],
-  "strategy_total_return": -0.0307567078093286,
-  "strategy_max_drawdown": -0.0307567078093286,
-  "best_val_horizon": 15,
+  "strategy_total_return": 0.10990504874368878,
+  "strategy_max_drawdown": -0.09399478702004135,
+  "best_val_horizon": 9,
   "cost_model": "india",
   "cost_breakdown": {
     "instrument": "futures",
@@ -40,19 +41,19 @@
   "roundtrip_cost_bps": 11.1764,
   "per_side_cost_bps": 5.5882,
   "instrument": "futures",
-  "buy_hold_sharpe": 1.3370203781908145,
-  "buy_hold_total_return": 0.3974410919618734,
-  "strategy_excess_return": -0.428197799771202,
+  "buy_hold_sharpe": 0.9398967254384049,
+  "buy_hold_total_return": 0.30204996437041554,
+  "strategy_excess_return": -0.19214491562672675,
   "use_sentiment": false,
   "model": {
     "d_model": 64,
     "num_heads": 4,
     "ff_dim": 128,
     "num_layers": 2,
-    "dropout": 0.1,
+    "dropout": 0.4,
     "pooling": "attention"
   },
-  "walk_forward_mean_sharpe": 0.3767651843986359,
-  "walk_forward_sharpe_std": 0.905059319941097,
+  "walk_forward_mean_sharpe": 0.2765214768742206,
+  "walk_forward_sharpe_std": 0.36360024051061646,
   "walk_forward_folds": 8
 }

@@ -1,77 +1,47 @@
 [
   {
-    "threshold": 0.5931,
-    "sharpe": -0.3027746283969823,
-    "trade_freq": 0.3057228915662651
+    "threshold": 0.5886,
+    "sharpe": 0.8935635036033452,
+    "trade_freq": 0.0921875
   },
   {
-    "threshold": 0.5975,
-    "sharpe": -0.24529822243732372,
-    "trade_freq": 0.2786144578313253
+    "threshold": 0.5937,
+    "sharpe": 0.637535577754862,
+    "trade_freq": 0.078125
   },
   {
-    "threshold": 0.6029,
-    "sharpe": -0.24529822243732372,
-    "trade_freq": 0.2394578313253012
+    "threshold": 0.6013,
+    "sharpe": 0.637535577754862,
+    "trade_freq": 0.065625
   },
   {
-    "threshold": 0.6071,
-    "sharpe": -0.24529822243732372,
-    "trade_freq": 0.21686746987951808
+    "threshold": 0.6079,
+    "sharpe": 0.637535577754862,
+    "trade_freq": 0.05
   },
   {
-    "threshold": 0.6117,
-    "sharpe": -0.24529822243732372,
-    "trade_freq": 0.20481927710843373
-  },
-  {
-    "threshold": 0.6189,
-    "sharpe": -0.36503122924218556,
-    "trade_freq": 0.18373493975903615
-  },
-  {
-    "threshold": 0.6229,
-    "sharpe": -0.36503122924218556,
-    "trade_freq": 0.16566265060240964
-  },
-  {
-    "threshold": 0.6319,
-    "sharpe": -1.1136975753567238,
-    "trade_freq": 0.13403614457831325
-  },
-  {
-    "threshold": 0.6394,
-    "sharpe": -1.1136975753567238,
-    "trade_freq": 0.1144578313253012
-  },
-  {
-    "threshold": 0.6487,
-    "sharpe": -1.198354665068911,
-    "trade_freq": 0.09337349397590361
-  },
-  {
-    "threshold": 0.6578,
-    "sharpe": -1.198354665068911,
-    "trade_freq": 0.060240963855421686
-  },
-  {
-    "threshold": 0.6638,
-    "sharpe": -0.999361618492817,
-    "trade_freq": 0.0391566265060241
-  },
-  {
-    "threshold": 0.669,
-    "sharpe": -0.6179143806533246,
-    "trade_freq": 0.022590361445783132
-  },
-  {
-    "threshold": 0.6809,
+    "threshold": 0.6165,
     "sharpe": 0.0,
-    "trade_freq": 0.010542168674698794
+    "trade_freq": 0.040625
   },
   {
-    "threshold": 0.6896,
+    "threshold": 0.6222,
     "sharpe": 0.0,
-    "trade_freq": 0.006024096385542169
+    "trade_freq": 0.0296875
+  },
+  {
+    "threshold": 0.6276,
+    "sharpe": 0.0,
+    "trade_freq": 0.021875
+  },
+  {
+    "threshold": 0.6341,
+    "sharpe": 0.0,
+    "trade_freq": 0.0140625
+  },
+  {
+    "threshold": 0.6451,
+    "sharpe": 0.0,
+    "trade_freq": 0.003125
   }
 ]

@@ -266,6 +266,12 @@ export default function Page() {
           timing</span>: hold the index when the ensemble signal is in its top{" "}
           {100 - 70}% (threshold fixed on validation data), sit in cash otherwise.
         </p>
+        {s.threshold_rule_note && (
+          <div className="mb-4 rounded-lg border border-amber-500/40 bg-amber-500/5 px-4 py-3 text-xs leading-relaxed text-muted">
+            <span className="font-semibold text-amber-400">Selection caveat (read this):</span>{" "}
+            {s.threshold_rule_note}
+          </div>
+        )}
         {prim.avg_exposure === 0 && (
           <div className="mb-4 rounded-lg border border-edge bg-panel2/60 px-4 py-3 text-xs leading-relaxed text-muted">
             <span className="text-white">Honest out-of-sample outcome:</span> on this run the

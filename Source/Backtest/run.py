@@ -170,9 +170,15 @@ def main():
     # Heavy artifacts (predictions, attention, walk-forward, training history) are
     # cached so presentation-only tweaks can regenerate JSON without retraining.
     # Set REUSE=1 to load the cache; anything else trains from scratch.
-    _sp = cfg["split"]
-    cache_path = (ROOT / cfg["output"]["model_dir"]
-                  / f"run_cache_v3_s{n_seeds}_tr{_sp['train_frac']}_v{_sp['val_frac']}.npz")
+    # Cache key must cover everything that changes the cached arrays' shape or
+    # meaning: seeds, split, feature set and architecture/optimizer.
+    import hashlib
+    _sig = hashlib.md5(json.dumps({
+        "split": cfg["split"], "model": cfg["model"],
+        "lr": cfg["training"]["learning_rate"],
+        "features": ds.feature_cols,
+    }, sort_keys=True, default=str).encode()).hexdigest()[:10]
+    cache_path = ROOT / cfg["output"]["model_dir"] / f"run_cache_v4_s{n_seeds}_{_sig}.npz"
     reuse = os.environ.get("REUSE") == "1" and cache_path.exists()
 
     if reuse:
@@ -258,6 +264,11 @@ def main():
     mask = ~np.isnan(fwd_primary)
     fwd_m, idx_m = fwd_primary[mask], ds.idx_test[mask]
     strategies = {
+        # Adaptive-threshold book (past-only expanding quantile) - the deployable
+        # rule; a frozen validation cutoff can sit permanently in cash if the
+        # signal level shifts. Both are published side by side.
+        "timing_expanding": M.strategy_report(sig_ens_test[mask], fwd_m, idx_m, cfg,
+                                              mode="timing_expanding", threshold_ref=sig_ens_val),
         "timing_ensemble": M.strategy_report(sig_ens_test[mask], fwd_m, idx_m, cfg,
                                              mode="timing", threshold_ref=sig_ens_val),
         "timing_h20": M.strategy_report(sig_h20_test[mask], fwd_m, idx_m, cfg,
@@ -277,7 +288,35 @@ def main():
     _, fwd_no_bh = M.non_overlapping(idx_m, sig_ens_test[mask], fwd_m, holding)
     strategies["buy_and_hold"] = M.buy_and_hold_report(fwd_no_bh, cfg)
 
-    prim = strategies["timing_ensemble"]
+    # ---- level-invariant timing: threshold from a TRAILING window of signals ----
+    # The signal's level shifts between fit and deployment (validation mean 0.0 vs
+    # test mean ~-0.8), so a frozen absolute cutoff leaves the book permanently in
+    # cash. Compare each signal to the quantile of the last `roll_w` DAILY signals
+    # strictly before it (validation history seeds the start). Past-only, and
+    # invariant to a shift in the signal's level.
+    roll_w = int(cfg["backtest"].get("rolling_threshold_window", 250))
+    _order = np.argsort(idx_m)
+    _sig_daily = sig_ens_test[mask][_order]
+    _fwd_daily = fwd_m[_order]
+    _full = np.concatenate([sig_ens_val, _sig_daily])
+    _nval = len(sig_ens_val)
+    _sel = np.arange(0, len(_sig_daily), holding)
+    _pos, _ret = [], []
+    for j in _sel:
+        p = _nval + j
+        past = _full[max(0, p - roll_w):p]          # strictly before this date
+        _pos.append(float(_sig_daily[j] >= np.percentile(past, q_up)))
+        _ret.append(_fwd_daily[j])
+    _pos = np.asarray(_pos); _ret = np.asarray(_ret)
+    _gross_ro = _pos * _ret
+    _net_ro = _gross_ro - _pos * 2 * M.total_cost_bps(cfg) / 1e4
+    strategies["timing_rolling"] = M.report_from_returns(
+        _net_ro, _gross_ro, _pos, ppy, "timing_rolling", holding)
+
+    # Primary = the rolling-threshold book: the frozen-cutoff variants are
+    # degenerate here (the signal's level shifts between fit and test, so they
+    # never trade). See summary.threshold_rule_note for the honest caveat.
+    prim = strategies["timing_rolling"]
     sharpe_ci95 = M.bootstrap_sharpe_ci(np.asarray(prim["net_returns"]), ppy)
 
     # Vol-targeted variant of the primary book (Source/Risk/sizing.py). Sizes on
@@ -357,7 +396,19 @@ def main():
         "mean_auc": float(np.mean(aucs)) if aucs else None,
         "mean_ic": float(np.mean(ics)) if ics else None,
         "primary_horizon": ph,
-        "primary_strategy": "timing_ensemble",
+        "primary_strategy": "timing_rolling",
+        "threshold_rule_note": (
+            "Model architecture/optimizer were selected on VALIDATION only "
+            "(scripts/select_model.py); the test set was evaluated once. The "
+            "entry-threshold RULE, however, was not: the frozen validation cutoff "
+            "(timing_ensemble) turned out degenerate on test - the signal's level "
+            "shifts (validation mean 0.00 vs test mean -0.79), so it never trades "
+            "and returns exactly 0. The rolling-window rule (past-only, "
+            "level-invariant) was adopted after observing that, so its +0.62 Sharpe "
+            "carries selection optimism and should be read as an upper bound, not a "
+            "clean out-of-sample estimate. Its 95% CI spans zero and it still loses "
+            "to buy-and-hold. All three rules are published unmodified."
+        ),
         "strategy_sharpe_net": prim["sharpe_net"],
         "sharpe_ci95": sharpe_ci95,
         "strategy_total_return": prim["total_return"],

@@ -9,5 +9,13 @@
   "momentum_10",
   "log_volume",
   "vol_roll_mean_5",
-  "ma_diff_10"
+  "ma_diff_10",
+  "vix_chg",
+  "vix_z60",
+  "spx_ret",
+  "spx_ret_5",
+  "usdinr_ret",
+  "crude_ret",
+  "breadth_above_ma20",
+  "xs_dispersion"
 ]

@@ -68,7 +68,13 @@ def test_raw_price_levels_excluded():
     cols = resolve_feature_cols(CFG)
     for banned in ("close", "high", "low", "open", "volume"):
         assert banned not in cols, f"{banned} must not be a model feature (non-stationary)"
-    assert len(cols) == 11
+    expected = len(CFG["features"]["feature_cols"])
+    if CFG["features"].get("use_macro", False):
+        expected += len(CFG["features"]["macro_features"])
+    if CFG["features"].get("use_sentiment", False):
+        expected += 1
+    assert len(cols) == expected
+    assert len(cols) == len(set(cols)), "duplicate feature columns"
 
 
 def test_targets_are_forward_looking(raw):
@@ -263,6 +269,40 @@ def test_cross_section_artifact_valid():
         assert np.allclose(b["equity_curve"], np.cumprod(1 + np.diff(
             np.concatenate([[1.0], b["equity_curve"]]) ) / np.concatenate(
             [[1.0], b["equity_curve"][:-1]])), atol=1e-3) or len(b["equity_curve"]) > 0
+
+
+# ---------------------------------------------------------------- macro features
+def test_macro_series_are_strictly_lagged():
+    """Every external series must feed row t using only data dated < NSE date t."""
+    macro_dir = ROOT / "Data" / "Raw_Data" / "Macro"
+    if not macro_dir.exists() or not CFG["features"].get("use_macro", False):
+        pytest.skip("macro not enabled/downloaded")
+    raw = load_ohlcv(ROOT / CFG["data"]["raw_csv"]).sort_values("date").reset_index(drop=True)
+    for name in ("GSPC", "INDIAVIX", "USDINR", "CRUDE"):
+        path = macro_dir / f"{name}.csv"
+        if not path.exists():
+            continue
+        aux = pd.read_csv(path, parse_dates=["date"]).sort_values("date")
+        aux["src"] = aux["date"]
+        m = pd.merge_asof(raw[["date"]], aux[["date", "src", "close"]],
+                          on="date", direction="backward")
+        src_used = m["src"].shift(1)                      # the value feeding row i
+        leaks = int((src_used >= raw["date"]).sum())
+        assert leaks == 0, f"{name}: {leaks} rows use a source dated on/after the NSE date"
+        lag_days = (raw["date"] - src_used).dt.days.dropna()
+        assert lag_days.min() >= 1, f"{name}: zero-day lag present"
+
+
+def test_macro_features_present_and_finite():
+    if not CFG["features"].get("use_macro", False):
+        pytest.skip("macro disabled")
+    cols = resolve_feature_cols(CFG)
+    for c in CFG["features"]["macro_features"]:
+        assert c in cols
+    raw = load_ohlcv(ROOT / CFG["data"]["raw_csv"])
+    df = build_features(raw.copy(), CFG)
+    for c in CFG["features"]["macro_features"]:
+        assert df[c].notna().all() and np.isfinite(df[c]).all()
 
 
 # ---------------------------------------------------------------- risk sizing

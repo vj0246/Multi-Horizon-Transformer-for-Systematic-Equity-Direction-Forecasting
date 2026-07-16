@@ -29,6 +29,7 @@ export interface Summary {
   mean_ic: number | null;
   primary_horizon: number;
   primary_strategy: string;
+  threshold_rule_note?: string;
   strategy_sharpe_net: number;
   sharpe_ci95: number[];
   strategy_total_return: number;
