@@ -1,0 +1,4780 @@
+{
+  "start_equity": 100.0,
+  "equity": 122.61703087818273,
+  "bh_equity": 122.3762294840253,
+  "position": 1,
+  "days_held": 9,
+  "history": [
+    {
+      "date": "2023-10-19",
+      "close": 19624.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 99.7641
+    },
+    {
+      "date": "2023-10-20",
+      "close": 19542.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 99.347
+    },
+    {
+      "date": "2023-10-23",
+      "close": 19281.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.0207
+    },
+    {
+      "date": "2023-10-25",
+      "close": 19122.15,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 97.2094
+    },
+    {
+      "date": "2023-10-26",
+      "close": 18857.25,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 95.8627
+    },
+    {
+      "date": "2023-10-27",
+      "close": 19047.25,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 96.8286
+    },
+    {
+      "date": "2023-10-30",
+      "close": 19140.9,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 97.3047
+    },
+    {
+      "date": "2023-10-31",
+      "close": 19079.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 96.9931
+    },
+    {
+      "date": "2023-11-01",
+      "close": 18989.15,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 96.5332
+    },
+    {
+      "date": "2023-11-02",
+      "close": 19133.25,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 97.2658
+    },
+    {
+      "date": "2023-11-03",
+      "close": 19230.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 97.7607
+    },
+    {
+      "date": "2023-11-06",
+      "close": 19411.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.6816
+    },
+    {
+      "date": "2023-11-07",
+      "close": 19406.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.6559
+    },
+    {
+      "date": "2023-11-08",
+      "close": 19443.5,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.843
+    },
+    {
+      "date": "2023-11-09",
+      "close": 19395.3,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.5979
+    },
+    {
+      "date": "2023-11-10",
+      "close": 19425.35,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.7507
+    },
+    {
+      "date": "2023-11-13",
+      "close": 19443.55,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 98.8432
+    },
+    {
+      "date": "2023-11-15",
+      "close": 19675.45,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.0221
+    },
+    {
+      "date": "2023-11-16",
+      "close": 19765.2,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.4784
+    },
+    {
+      "date": "2023-11-17",
+      "close": 19731.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.3086
+    },
+    {
+      "date": "2023-11-20",
+      "close": 19694.0,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.1164
+    },
+    {
+      "date": "2023-11-21",
+      "close": 19783.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.5709
+    },
+    {
+      "date": "2023-11-22",
+      "close": 19811.85,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.7155
+    },
+    {
+      "date": "2023-11-23",
+      "close": 19802.0,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.6654
+    },
+    {
+      "date": "2023-11-24",
+      "close": 19794.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 100.6283
+    },
+    {
+      "date": "2023-11-28",
+      "close": 19889.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 101.1113
+    },
+    {
+      "date": "2023-11-29",
+      "close": 20096.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 102.1631
+    },
+    {
+      "date": "2023-11-30",
+      "close": 20133.15,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 102.3489
+    },
+    {
+      "date": "2023-12-01",
+      "close": 20267.9,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 103.0339
+    },
+    {
+      "date": "2023-12-04",
+      "close": 20686.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 105.1634
+    },
+    {
+      "date": "2023-12-05",
+      "close": 20855.1,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.019
+    },
+    {
+      "date": "2023-12-06",
+      "close": 20937.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.4389
+    },
+    {
+      "date": "2023-12-07",
+      "close": 20901.15,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.2531
+    },
+    {
+      "date": "2023-12-08",
+      "close": 20969.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.6
+    },
+    {
+      "date": "2023-12-11",
+      "close": 20997.1,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.7409
+    },
+    {
+      "date": "2023-12-12",
+      "close": 20906.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.2798
+    },
+    {
+      "date": "2023-12-13",
+      "close": 20926.35,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 106.3812
+    },
+    {
+      "date": "2023-12-14",
+      "close": 21182.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 107.6844
+    },
+    {
+      "date": "2023-12-15",
+      "close": 21456.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.077
+    },
+    {
+      "date": "2023-12-18",
+      "close": 21418.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 108.8838
+    },
+    {
+      "date": "2023-12-19",
+      "close": 21453.1,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.059
+    },
+    {
+      "date": "2023-12-20",
+      "close": 21150.15,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 107.5189
+    },
+    {
+      "date": "2023-12-21",
+      "close": 21255.05,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 108.0522
+    },
+    {
+      "date": "2023-12-22",
+      "close": 21349.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 108.5318
+    },
+    {
+      "date": "2023-12-26",
+      "close": 21441.35,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 108.9992
+    },
+    {
+      "date": "2023-12-27",
+      "close": 21654.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.0841
+    },
+    {
+      "date": "2023-12-28",
+      "close": 21778.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.7142
+    },
+    {
+      "date": "2023-12-29",
+      "close": 21731.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.4737
+    },
+    {
+      "date": "2024-01-01",
+      "close": 21741.9,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.5271
+    },
+    {
+      "date": "2024-01-02",
+      "close": 21665.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.1403
+    },
+    {
+      "date": "2024-01-03",
+      "close": 21517.35,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.3856
+    },
+    {
+      "date": "2024-01-04",
+      "close": 21658.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.1037
+    },
+    {
+      "date": "2024-01-05",
+      "close": 21710.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.369
+    },
+    {
+      "date": "2024-01-08",
+      "close": 21513.0,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.3635
+    },
+    {
+      "date": "2024-01-09",
+      "close": 21544.85,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.5254
+    },
+    {
+      "date": "2024-01-10",
+      "close": 21618.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.9008
+    },
+    {
+      "date": "2024-01-11",
+      "close": 21647.2,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.0457
+    },
+    {
+      "date": "2024-01-12",
+      "close": 21894.55,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.3031
+    },
+    {
+      "date": "2024-01-15",
+      "close": 22097.45,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.3346
+    },
+    {
+      "date": "2024-01-16",
+      "close": 22032.3,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.0034
+    },
+    {
+      "date": "2024-01-17",
+      "close": 21571.95,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.6632
+    },
+    {
+      "date": "2024-01-18",
+      "close": 21462.25,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.1055
+    },
+    {
+      "date": "2024-01-19",
+      "close": 21622.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.9196
+    },
+    {
+      "date": "2024-01-23",
+      "close": 21238.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 107.9696
+    },
+    {
+      "date": "2024-01-24",
+      "close": 21453.95,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.0633
+    },
+    {
+      "date": "2024-01-25",
+      "close": 21352.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 108.5481
+    },
+    {
+      "date": "2024-01-29",
+      "close": 21737.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.5053
+    },
+    {
+      "date": "2024-01-30",
+      "close": 21522.1,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.4097
+    },
+    {
+      "date": "2024-01-31",
+      "close": 21725.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.4448
+    },
+    {
+      "date": "2024-02-01",
+      "close": 21697.45,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.3012
+    },
+    {
+      "date": "2024-02-02",
+      "close": 21853.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.096
+    },
+    {
+      "date": "2024-02-05",
+      "close": 21771.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.6786
+    },
+    {
+      "date": "2024-02-06",
+      "close": 21929.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.4803
+    },
+    {
+      "date": "2024-02-07",
+      "close": 21930.5,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.4859
+    },
+    {
+      "date": "2024-02-08",
+      "close": 21717.95,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.4054
+    },
+    {
+      "date": "2024-02-09",
+      "close": 21782.5,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.7335
+    },
+    {
+      "date": "2024-02-12",
+      "close": 21616.05,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 109.8874
+    },
+    {
+      "date": "2024-02-13",
+      "close": 21743.25,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.534
+    },
+    {
+      "date": "2024-02-14",
+      "close": 21840.05,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.0261
+    },
+    {
+      "date": "2024-02-15",
+      "close": 21910.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.3855
+    },
+    {
+      "date": "2024-02-16",
+      "close": 22040.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.0461
+    },
+    {
+      "date": "2024-02-19",
+      "close": 22122.25,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.4607
+    },
+    {
+      "date": "2024-02-20",
+      "close": 22196.95,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.8404
+    },
+    {
+      "date": "2024-02-21",
+      "close": 22055.05,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.1191
+    },
+    {
+      "date": "2024-02-22",
+      "close": 22217.45,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.9446
+    },
+    {
+      "date": "2024-02-23",
+      "close": 22212.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.9205
+    },
+    {
+      "date": "2024-02-26",
+      "close": 22122.05,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.4597
+    },
+    {
+      "date": "2024-02-27",
+      "close": 22198.35,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.8475
+    },
+    {
+      "date": "2024-02-28",
+      "close": 21951.15,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.5909
+    },
+    {
+      "date": "2024-02-29",
+      "close": 21982.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.7518
+    },
+    {
+      "date": "2024-03-01",
+      "close": 22338.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.5613
+    },
+    {
+      "date": "2024-03-04",
+      "close": 22405.6,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.9011
+    },
+    {
+      "date": "2024-03-05",
+      "close": 22356.3,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.6505
+    },
+    {
+      "date": "2024-03-06",
+      "close": 22474.05,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.2491
+    },
+    {
+      "date": "2024-03-07",
+      "close": 22493.55,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.3482
+    },
+    {
+      "date": "2024-03-11",
+      "close": 22332.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.5303
+    },
+    {
+      "date": "2024-03-12",
+      "close": 22335.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.5458
+    },
+    {
+      "date": "2024-03-13",
+      "close": 21997.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.8275
+    },
+    {
+      "date": "2024-03-14",
+      "close": 22146.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.5847
+    },
+    {
+      "date": "2024-03-15",
+      "close": 22023.35,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.9579
+    },
+    {
+      "date": "2024-03-18",
+      "close": 22055.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.1224
+    },
+    {
+      "date": "2024-03-19",
+      "close": 21817.45,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 110.9112
+    },
+    {
+      "date": "2024-03-20",
+      "close": 21839.1,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.0212
+    },
+    {
+      "date": "2024-03-21",
+      "close": 22011.95,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.8999
+    },
+    {
+      "date": "2024-03-22",
+      "close": 22096.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.331
+    },
+    {
+      "date": "2024-03-26",
+      "close": 22004.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 111.8631
+    },
+    {
+      "date": "2024-03-27",
+      "close": 22123.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.4678
+    },
+    {
+      "date": "2024-03-28",
+      "close": 22326.9,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.501
+    },
+    {
+      "date": "2024-04-01",
+      "close": 22462.0,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.1878
+    },
+    {
+      "date": "2024-04-02",
+      "close": 22453.3,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.1436
+    },
+    {
+      "date": "2024-04-03",
+      "close": 22434.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.0488
+    },
+    {
+      "date": "2024-04-04",
+      "close": 22514.65,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.4555
+    },
+    {
+      "date": "2024-04-05",
+      "close": 22513.7,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.4506
+    },
+    {
+      "date": "2024-04-08",
+      "close": 22666.3,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 115.2264
+    },
+    {
+      "date": "2024-04-09",
+      "close": 22642.75,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 115.1067
+    },
+    {
+      "date": "2024-04-10",
+      "close": 22753.8,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 115.6712
+    },
+    {
+      "date": "2024-04-12",
+      "close": 22519.4,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 114.4796
+    },
+    {
+      "date": "2024-04-15",
+      "close": 22272.5,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 113.2245
+    },
+    {
+      "date": "2024-04-16",
+      "close": 22147.9,
+      "position": 0,
+      "equity": 100.0,
+      "bh_equity": 112.5911
+    },
+    {
+      "date": "2024-04-18",
+      "close": 21995.85,
+      "position": 1,
+      "equity": 99.9521,
+      "bh_equity": 111.8181
+    },
+    {
+      "date": "2024-04-19",
+      "close": 22147.0,
+      "position": 1,
+      "equity": 100.639,
+      "bh_equity": 112.5865
+    },
+    {
+      "date": "2024-04-22",
+      "close": 22336.4,
+      "position": 1,
+      "equity": 101.4996,
+      "bh_equity": 113.5493
+    },
+    {
+      "date": "2024-04-23",
+      "close": 22368.0,
+      "position": 1,
+      "equity": 101.6432,
+      "bh_equity": 113.71
+    },
+    {
+      "date": "2024-04-24",
+      "close": 22402.4,
+      "position": 1,
+      "equity": 101.7995,
+      "bh_equity": 113.8848
+    },
+    {
+      "date": "2024-04-25",
+      "close": 22570.35,
+      "position": 1,
+      "equity": 102.5627,
+      "bh_equity": 114.7386
+    },
+    {
+      "date": "2024-04-26",
+      "close": 22419.95,
+      "position": 1,
+      "equity": 101.8793,
+      "bh_equity": 113.9741
+    },
+    {
+      "date": "2024-04-29",
+      "close": 22643.4,
+      "position": 1,
+      "equity": 102.8947,
+      "bh_equity": 115.11
+    },
+    {
+      "date": "2024-04-30",
+      "close": 22604.85,
+      "position": 1,
+      "equity": 102.7195,
+      "bh_equity": 114.914
+    },
+    {
+      "date": "2024-05-02",
+      "close": 22648.2,
+      "position": 1,
+      "equity": 102.9165,
+      "bh_equity": 115.1344
+    },
+    {
+      "date": "2024-05-03",
+      "close": 22475.85,
+      "position": 1,
+      "equity": 102.1333,
+      "bh_equity": 114.2582
+    },
+    {
+      "date": "2024-05-06",
+      "close": 22442.7,
+      "position": 1,
+      "equity": 101.9827,
+      "bh_equity": 114.0897
+    },
+    {
+      "date": "2024-05-07",
+      "close": 22302.5,
+      "position": 1,
+      "equity": 101.3456,
+      "bh_equity": 113.377
+    },
+    {
+      "date": "2024-05-08",
+      "close": 22302.5,
+      "position": 1,
+      "equity": 101.3456,
+      "bh_equity": 113.377
+    },
+    {
+      "date": "2024-05-09",
+      "close": 21957.5,
+      "position": 1,
+      "equity": 99.7779,
+      "bh_equity": 111.6231
+    },
+    {
+      "date": "2024-05-10",
+      "close": 22055.2,
+      "position": 1,
+      "equity": 100.2218,
+      "bh_equity": 112.1198
+    },
+    {
+      "date": "2024-05-13",
+      "close": 22104.05,
+      "position": 1,
+      "equity": 100.4438,
+      "bh_equity": 112.3682
+    },
+    {
+      "date": "2024-05-14",
+      "close": 22217.85,
+      "position": 1,
+      "equity": 100.9609,
+      "bh_equity": 112.9467
+    },
+    {
+      "date": "2024-05-15",
+      "close": 22200.55,
+      "position": 1,
+      "equity": 100.8823,
+      "bh_equity": 112.8587
+    },
+    {
+      "date": "2024-05-16",
+      "close": 22403.85,
+      "position": 1,
+      "equity": 101.8061,
+      "bh_equity": 113.8922
+    },
+    {
+      "date": "2024-05-17",
+      "close": 22466.1,
+      "position": 1,
+      "equity": 102.089,
+      "bh_equity": 114.2087
+    },
+    {
+      "date": "2024-05-21",
+      "close": 22529.05,
+      "position": 1,
+      "equity": 102.3751,
+      "bh_equity": 114.5287
+    },
+    {
+      "date": "2024-05-22",
+      "close": 22597.8,
+      "position": 1,
+      "equity": 102.6875,
+      "bh_equity": 114.8782
+    },
+    {
+      "date": "2024-05-23",
+      "close": 22967.65,
+      "position": 1,
+      "equity": 104.3681,
+      "bh_equity": 116.7583
+    },
+    {
+      "date": "2024-05-24",
+      "close": 22957.1,
+      "position": 1,
+      "equity": 104.3202,
+      "bh_equity": 116.7047
+    },
+    {
+      "date": "2024-05-27",
+      "close": 22932.45,
+      "position": 1,
+      "equity": 104.2082,
+      "bh_equity": 116.5794
+    },
+    {
+      "date": "2024-05-28",
+      "close": 22888.15,
+      "position": 1,
+      "equity": 104.0069,
+      "bh_equity": 116.3542
+    },
+    {
+      "date": "2024-05-29",
+      "close": 22704.7,
+      "position": 1,
+      "equity": 103.1732,
+      "bh_equity": 115.4216
+    },
+    {
+      "date": "2024-05-30",
+      "close": 22488.65,
+      "position": 1,
+      "equity": 102.1915,
+      "bh_equity": 114.3233
+    },
+    {
+      "date": "2024-05-31",
+      "close": 22530.7,
+      "position": 1,
+      "equity": 102.3826,
+      "bh_equity": 114.5371
+    },
+    {
+      "date": "2024-06-03",
+      "close": 23263.9,
+      "position": 1,
+      "equity": 105.7143,
+      "bh_equity": 118.2644
+    },
+    {
+      "date": "2024-06-04",
+      "close": 21884.5,
+      "position": 1,
+      "equity": 99.4461,
+      "bh_equity": 111.252
+    },
+    {
+      "date": "2024-06-05",
+      "close": 22620.35,
+      "position": 1,
+      "equity": 102.7899,
+      "bh_equity": 114.9928
+    },
+    {
+      "date": "2024-06-06",
+      "close": 22821.4,
+      "position": 1,
+      "equity": 103.7035,
+      "bh_equity": 116.0149
+    },
+    {
+      "date": "2024-06-07",
+      "close": 23290.15,
+      "position": 1,
+      "equity": 105.8336,
+      "bh_equity": 118.3978
+    },
+    {
+      "date": "2024-06-10",
+      "close": 23259.2,
+      "position": 1,
+      "equity": 105.693,
+      "bh_equity": 118.2405
+    },
+    {
+      "date": "2024-06-11",
+      "close": 23264.85,
+      "position": 1,
+      "equity": 105.7186,
+      "bh_equity": 118.2692
+    },
+    {
+      "date": "2024-06-12",
+      "close": 23322.95,
+      "position": 1,
+      "equity": 105.9826,
+      "bh_equity": 118.5645
+    },
+    {
+      "date": "2024-06-13",
+      "close": 23398.9,
+      "position": 1,
+      "equity": 106.3278,
+      "bh_equity": 118.9506
+    },
+    {
+      "date": "2024-06-14",
+      "close": 23465.6,
+      "position": 1,
+      "equity": 106.6309,
+      "bh_equity": 119.2897
+    },
+    {
+      "date": "2024-06-18",
+      "close": 23557.9,
+      "position": 1,
+      "equity": 107.0503,
+      "bh_equity": 119.7589
+    },
+    {
+      "date": "2024-06-19",
+      "close": 23516.0,
+      "position": 1,
+      "equity": 106.8599,
+      "bh_equity": 119.5459
+    },
+    {
+      "date": "2024-06-20",
+      "close": 23567.0,
+      "position": 1,
+      "equity": 107.0916,
+      "bh_equity": 119.8052
+    },
+    {
+      "date": "2024-06-21",
+      "close": 23501.1,
+      "position": 1,
+      "equity": 106.7922,
+      "bh_equity": 119.4702
+    },
+    {
+      "date": "2024-06-24",
+      "close": 23537.85,
+      "position": 1,
+      "equity": 106.9592,
+      "bh_equity": 119.657
+    },
+    {
+      "date": "2024-06-25",
+      "close": 23721.3,
+      "position": 1,
+      "equity": 107.7928,
+      "bh_equity": 120.5896
+    },
+    {
+      "date": "2024-06-26",
+      "close": 23868.8,
+      "position": 1,
+      "equity": 108.4631,
+      "bh_equity": 121.3394
+    },
+    {
+      "date": "2024-06-27",
+      "close": 24044.5,
+      "position": 1,
+      "equity": 109.2615,
+      "bh_equity": 122.2326
+    },
+    {
+      "date": "2024-06-28",
+      "close": 24010.6,
+      "position": 1,
+      "equity": 109.1074,
+      "bh_equity": 122.0603
+    },
+    {
+      "date": "2024-07-01",
+      "close": 24141.95,
+      "position": 1,
+      "equity": 109.7043,
+      "bh_equity": 122.728
+    },
+    {
+      "date": "2024-07-02",
+      "close": 24123.85,
+      "position": 1,
+      "equity": 109.622,
+      "bh_equity": 122.636
+    },
+    {
+      "date": "2024-07-03",
+      "close": 24286.5,
+      "position": 1,
+      "equity": 110.3611,
+      "bh_equity": 123.4628
+    },
+    {
+      "date": "2024-07-04",
+      "close": 24302.15,
+      "position": 1,
+      "equity": 110.4323,
+      "bh_equity": 123.5424
+    },
+    {
+      "date": "2024-07-05",
+      "close": 24323.85,
+      "position": 1,
+      "equity": 110.5309,
+      "bh_equity": 123.6527
+    },
+    {
+      "date": "2024-07-08",
+      "close": 24320.55,
+      "position": 1,
+      "equity": 110.5159,
+      "bh_equity": 123.6359
+    },
+    {
+      "date": "2024-07-09",
+      "close": 24433.2,
+      "position": 1,
+      "equity": 111.0278,
+      "bh_equity": 124.2086
+    },
+    {
+      "date": "2024-07-10",
+      "close": 24324.45,
+      "position": 1,
+      "equity": 110.5336,
+      "bh_equity": 123.6558
+    },
+    {
+      "date": "2024-07-11",
+      "close": 24315.95,
+      "position": 1,
+      "equity": 110.495,
+      "bh_equity": 123.6126
+    },
+    {
+      "date": "2024-07-12",
+      "close": 24502.15,
+      "position": 1,
+      "equity": 111.3411,
+      "bh_equity": 124.5591
+    },
+    {
+      "date": "2024-07-15",
+      "close": 24586.7,
+      "position": 1,
+      "equity": 111.7253,
+      "bh_equity": 124.9889
+    },
+    {
+      "date": "2024-07-16",
+      "close": 24613.0,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 125.1226
+    },
+    {
+      "date": "2024-07-18",
+      "close": 24800.85,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 126.0776
+    },
+    {
+      "date": "2024-07-19",
+      "close": 24530.9,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 124.7053
+    },
+    {
+      "date": "2024-07-22",
+      "close": 24509.25,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 124.5952
+    },
+    {
+      "date": "2024-07-23",
+      "close": 24479.05,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 124.4417
+    },
+    {
+      "date": "2024-07-24",
+      "close": 24413.5,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 124.1085
+    },
+    {
+      "date": "2024-07-25",
+      "close": 24406.1,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 124.0708
+    },
+    {
+      "date": "2024-07-26",
+      "close": 24834.85,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 126.2504
+    },
+    {
+      "date": "2024-07-29",
+      "close": 24836.1,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 126.2568
+    },
+    {
+      "date": "2024-07-30",
+      "close": 24857.3,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 126.3646
+    },
+    {
+      "date": "2024-07-31",
+      "close": 24951.15,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 126.8417
+    },
+    {
+      "date": "2024-08-01",
+      "close": 25010.9,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 127.1454
+    },
+    {
+      "date": "2024-08-02",
+      "close": 24717.7,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 125.6549
+    },
+    {
+      "date": "2024-08-05",
+      "close": 24055.6,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 122.289
+    },
+    {
+      "date": "2024-08-06",
+      "close": 23992.55,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 121.9685
+    },
+    {
+      "date": "2024-08-07",
+      "close": 24297.5,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 123.5188
+    },
+    {
+      "date": "2024-08-08",
+      "close": 24117.0,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 122.6012
+    },
+    {
+      "date": "2024-08-09",
+      "close": 24367.5,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 123.8746
+    },
+    {
+      "date": "2024-08-12",
+      "close": 24347.0,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 123.7704
+    },
+    {
+      "date": "2024-08-13",
+      "close": 24139.0,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 122.713
+    },
+    {
+      "date": "2024-08-14",
+      "close": 24143.75,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 122.7372
+    },
+    {
+      "date": "2024-08-16",
+      "close": 24541.15,
+      "position": 0,
+      "equity": 111.7913,
+      "bh_equity": 124.7574
+    },
+    {
+      "date": "2024-08-19",
+      "close": 24572.65,
+      "position": 1,
+      "equity": 111.7377,
+      "bh_equity": 124.9175
+    },
+    {
+      "date": "2024-08-20",
+      "close": 24698.85,
+      "position": 1,
+      "equity": 112.3116,
+      "bh_equity": 125.5591
+    },
+    {
+      "date": "2024-08-21",
+      "close": 24770.2,
+      "position": 1,
+      "equity": 112.636,
+      "bh_equity": 125.9218
+    },
+    {
+      "date": "2024-08-22",
+      "close": 24811.5,
+      "position": 1,
+      "equity": 112.8238,
+      "bh_equity": 126.1317
+    },
+    {
+      "date": "2024-08-23",
+      "close": 24823.15,
+      "position": 1,
+      "equity": 112.8768,
+      "bh_equity": 126.191
+    },
+    {
+      "date": "2024-08-26",
+      "close": 25010.6,
+      "position": 1,
+      "equity": 113.7292,
+      "bh_equity": 127.1439
+    },
+    {
+      "date": "2024-08-27",
+      "close": 25017.75,
+      "position": 1,
+      "equity": 113.7617,
+      "bh_equity": 127.1802
+    },
+    {
+      "date": "2024-08-28",
+      "close": 25052.35,
+      "position": 1,
+      "equity": 113.919,
+      "bh_equity": 127.3561
+    },
+    {
+      "date": "2024-08-29",
+      "close": 25151.95,
+      "position": 1,
+      "equity": 114.3719,
+      "bh_equity": 127.8624
+    },
+    {
+      "date": "2024-08-30",
+      "close": 25235.9,
+      "position": 1,
+      "equity": 114.7537,
+      "bh_equity": 128.2892
+    },
+    {
+      "date": "2024-09-02",
+      "close": 25278.7,
+      "position": 1,
+      "equity": 114.9483,
+      "bh_equity": 128.5068
+    },
+    {
+      "date": "2024-09-03",
+      "close": 25279.85,
+      "position": 1,
+      "equity": 114.9535,
+      "bh_equity": 128.5126
+    },
+    {
+      "date": "2024-09-04",
+      "close": 25198.7,
+      "position": 1,
+      "equity": 114.5845,
+      "bh_equity": 128.1001
+    },
+    {
+      "date": "2024-09-05",
+      "close": 25145.1,
+      "position": 1,
+      "equity": 114.3408,
+      "bh_equity": 127.8276
+    },
+    {
+      "date": "2024-09-06",
+      "close": 24852.15,
+      "position": 1,
+      "equity": 113.0087,
+      "bh_equity": 126.3384
+    },
+    {
+      "date": "2024-09-09",
+      "close": 24936.4,
+      "position": 1,
+      "equity": 113.3918,
+      "bh_equity": 126.7667
+    },
+    {
+      "date": "2024-09-10",
+      "close": 25041.1,
+      "position": 1,
+      "equity": 113.8679,
+      "bh_equity": 127.2989
+    },
+    {
+      "date": "2024-09-11",
+      "close": 24918.45,
+      "position": 1,
+      "equity": 113.3102,
+      "bh_equity": 126.6754
+    },
+    {
+      "date": "2024-09-12",
+      "close": 25388.9,
+      "position": 1,
+      "equity": 115.4494,
+      "bh_equity": 129.067
+    },
+    {
+      "date": "2024-09-13",
+      "close": 25356.5,
+      "position": 1,
+      "equity": 115.3021,
+      "bh_equity": 128.9023
+    },
+    {
+      "date": "2024-09-16",
+      "close": 25383.75,
+      "position": 1,
+      "equity": 115.426,
+      "bh_equity": 129.0408
+    },
+    {
+      "date": "2024-09-17",
+      "close": 25418.55,
+      "position": 1,
+      "equity": 115.5842,
+      "bh_equity": 129.2177
+    },
+    {
+      "date": "2024-09-18",
+      "close": 25377.55,
+      "position": 1,
+      "equity": 115.3978,
+      "bh_equity": 129.0093
+    },
+    {
+      "date": "2024-09-19",
+      "close": 25415.8,
+      "position": 1,
+      "equity": 115.5717,
+      "bh_equity": 129.2038
+    },
+    {
+      "date": "2024-09-20",
+      "close": 25790.95,
+      "position": 1,
+      "equity": 117.2776,
+      "bh_equity": 131.1109
+    },
+    {
+      "date": "2024-09-23",
+      "close": 25939.05,
+      "position": 1,
+      "equity": 117.9511,
+      "bh_equity": 131.8638
+    },
+    {
+      "date": "2024-09-24",
+      "close": 25940.4,
+      "position": 1,
+      "equity": 117.9572,
+      "bh_equity": 131.8706
+    },
+    {
+      "date": "2024-09-25",
+      "close": 26004.15,
+      "position": 1,
+      "equity": 118.2471,
+      "bh_equity": 132.1947
+    },
+    {
+      "date": "2024-09-26",
+      "close": 26216.05,
+      "position": 1,
+      "equity": 119.2107,
+      "bh_equity": 133.2719
+    },
+    {
+      "date": "2024-09-27",
+      "close": 26178.95,
+      "position": 1,
+      "equity": 119.042,
+      "bh_equity": 133.0833
+    },
+    {
+      "date": "2024-09-30",
+      "close": 25810.85,
+      "position": 1,
+      "equity": 117.3681,
+      "bh_equity": 131.212
+    },
+    {
+      "date": "2024-10-01",
+      "close": 25796.9,
+      "position": 1,
+      "equity": 117.3047,
+      "bh_equity": 131.1411
+    },
+    {
+      "date": "2024-10-03",
+      "close": 25250.1,
+      "position": 1,
+      "equity": 114.8183,
+      "bh_equity": 128.3614
+    },
+    {
+      "date": "2024-10-04",
+      "close": 25014.6,
+      "position": 1,
+      "equity": 113.7474,
+      "bh_equity": 127.1642
+    },
+    {
+      "date": "2024-10-07",
+      "close": 24795.75,
+      "position": 1,
+      "equity": 112.7522,
+      "bh_equity": 126.0517
+    },
+    {
+      "date": "2024-10-08",
+      "close": 25013.15,
+      "position": 1,
+      "equity": 113.7408,
+      "bh_equity": 127.1568
+    },
+    {
+      "date": "2024-10-09",
+      "close": 24981.95,
+      "position": 1,
+      "equity": 113.5989,
+      "bh_equity": 126.9982
+    },
+    {
+      "date": "2024-10-10",
+      "close": 24998.45,
+      "position": 1,
+      "equity": 113.6739,
+      "bh_equity": 127.0821
+    },
+    {
+      "date": "2024-10-11",
+      "close": 24964.25,
+      "position": 1,
+      "equity": 113.5184,
+      "bh_equity": 126.9083
+    },
+    {
+      "date": "2024-10-14",
+      "close": 25127.95,
+      "position": 1,
+      "equity": 114.2628,
+      "bh_equity": 127.7404
+    },
+    {
+      "date": "2024-10-15",
+      "close": 25057.35,
+      "position": 1,
+      "equity": 113.9418,
+      "bh_equity": 127.3815
+    },
+    {
+      "date": "2024-10-16",
+      "close": 24971.3,
+      "position": 1,
+      "equity": 113.5505,
+      "bh_equity": 126.9441
+    },
+    {
+      "date": "2024-10-17",
+      "close": 24749.85,
+      "position": 1,
+      "equity": 112.5435,
+      "bh_equity": 125.8183
+    },
+    {
+      "date": "2024-10-18",
+      "close": 24854.05,
+      "position": 1,
+      "equity": 113.0173,
+      "bh_equity": 126.3481
+    },
+    {
+      "date": "2024-10-21",
+      "close": 24781.1,
+      "position": 1,
+      "equity": 112.6856,
+      "bh_equity": 125.9772
+    },
+    {
+      "date": "2024-10-22",
+      "close": 24472.1,
+      "position": 1,
+      "equity": 111.2805,
+      "bh_equity": 124.4064
+    },
+    {
+      "date": "2024-10-23",
+      "close": 24435.5,
+      "position": 1,
+      "equity": 111.1141,
+      "bh_equity": 124.2203
+    },
+    {
+      "date": "2024-10-24",
+      "close": 24399.4,
+      "position": 1,
+      "equity": 110.9499,
+      "bh_equity": 124.0368
+    },
+    {
+      "date": "2024-10-25",
+      "close": 24180.8,
+      "position": 1,
+      "equity": 109.9559,
+      "bh_equity": 122.9255
+    },
+    {
+      "date": "2024-10-28",
+      "close": 24339.15,
+      "position": 1,
+      "equity": 110.676,
+      "bh_equity": 123.7305
+    },
+    {
+      "date": "2024-10-29",
+      "close": 24466.85,
+      "position": 1,
+      "equity": 111.2566,
+      "bh_equity": 124.3797
+    },
+    {
+      "date": "2024-10-30",
+      "close": 24340.85,
+      "position": 1,
+      "equity": 110.6837,
+      "bh_equity": 123.7391
+    },
+    {
+      "date": "2024-10-31",
+      "close": 24205.35,
+      "position": 1,
+      "equity": 110.0675,
+      "bh_equity": 123.0503
+    },
+    {
+      "date": "2024-11-01",
+      "close": 24304.35,
+      "position": 1,
+      "equity": 110.5177,
+      "bh_equity": 123.5536
+    },
+    {
+      "date": "2024-11-04",
+      "close": 23995.35,
+      "position": 1,
+      "equity": 109.1126,
+      "bh_equity": 121.9828
+    },
+    {
+      "date": "2024-11-05",
+      "close": 24213.3,
+      "position": 1,
+      "equity": 110.1037,
+      "bh_equity": 123.0907
+    },
+    {
+      "date": "2024-11-06",
+      "close": 24484.05,
+      "position": 1,
+      "equity": 111.3348,
+      "bh_equity": 124.4671
+    },
+    {
+      "date": "2024-11-07",
+      "close": 24199.35,
+      "position": 1,
+      "equity": 110.0402,
+      "bh_equity": 123.0198
+    },
+    {
+      "date": "2024-11-08",
+      "close": 24148.2,
+      "position": 1,
+      "equity": 109.8077,
+      "bh_equity": 122.7598
+    },
+    {
+      "date": "2024-11-11",
+      "close": 24141.3,
+      "position": 1,
+      "equity": 109.7763,
+      "bh_equity": 122.7247
+    },
+    {
+      "date": "2024-11-12",
+      "close": 23883.45,
+      "position": 1,
+      "equity": 108.6038,
+      "bh_equity": 121.4139
+    },
+    {
+      "date": "2024-11-13",
+      "close": 23559.05,
+      "position": 1,
+      "equity": 107.1287,
+      "bh_equity": 119.7648
+    },
+    {
+      "date": "2024-11-14",
+      "close": 23532.7,
+      "position": 1,
+      "equity": 107.0088,
+      "bh_equity": 119.6308
+    },
+    {
+      "date": "2024-11-18",
+      "close": 23453.8,
+      "position": 1,
+      "equity": 106.6501,
+      "bh_equity": 119.2297
+    },
+    {
+      "date": "2024-11-19",
+      "close": 23518.5,
+      "position": 1,
+      "equity": 106.9443,
+      "bh_equity": 119.5586
+    },
+    {
+      "date": "2024-11-21",
+      "close": 23349.9,
+      "position": 1,
+      "equity": 106.1776,
+      "bh_equity": 118.7016
+    },
+    {
+      "date": "2024-11-22",
+      "close": 23907.25,
+      "position": 1,
+      "equity": 108.712,
+      "bh_equity": 121.5349
+    },
+    {
+      "date": "2024-11-25",
+      "close": 24221.9,
+      "position": 1,
+      "equity": 110.1428,
+      "bh_equity": 123.1345
+    },
+    {
+      "date": "2024-11-26",
+      "close": 24194.5,
+      "position": 1,
+      "equity": 110.0182,
+      "bh_equity": 122.9952
+    },
+    {
+      "date": "2024-11-27",
+      "close": 24274.9,
+      "position": 1,
+      "equity": 110.3838,
+      "bh_equity": 123.4039
+    },
+    {
+      "date": "2024-11-28",
+      "close": 23914.15,
+      "position": 1,
+      "equity": 108.7434,
+      "bh_equity": 121.57
+    },
+    {
+      "date": "2024-11-29",
+      "close": 24131.1,
+      "position": 1,
+      "equity": 109.7299,
+      "bh_equity": 122.6729
+    },
+    {
+      "date": "2024-12-02",
+      "close": 24276.05,
+      "position": 1,
+      "equity": 110.389,
+      "bh_equity": 123.4097
+    },
+    {
+      "date": "2024-12-03",
+      "close": 24457.15,
+      "position": 1,
+      "equity": 111.2125,
+      "bh_equity": 124.3304
+    },
+    {
+      "date": "2024-12-04",
+      "close": 24467.45,
+      "position": 1,
+      "equity": 111.2594,
+      "bh_equity": 124.3827
+    },
+    {
+      "date": "2024-12-05",
+      "close": 24708.4,
+      "position": 1,
+      "equity": 112.355,
+      "bh_equity": 125.6076
+    },
+    {
+      "date": "2024-12-06",
+      "close": 24677.8,
+      "position": 1,
+      "equity": 112.2159,
+      "bh_equity": 125.4521
+    },
+    {
+      "date": "2024-12-09",
+      "close": 24619.0,
+      "position": 1,
+      "equity": 111.9485,
+      "bh_equity": 125.1531
+    },
+    {
+      "date": "2024-12-10",
+      "close": 24610.05,
+      "position": 1,
+      "equity": 111.9078,
+      "bh_equity": 125.1077
+    },
+    {
+      "date": "2024-12-11",
+      "close": 24641.8,
+      "position": 1,
+      "equity": 112.0522,
+      "bh_equity": 125.2691
+    },
+    {
+      "date": "2024-12-12",
+      "close": 24548.7,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 124.7958
+    },
+    {
+      "date": "2024-12-13",
+      "close": 24768.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 125.9121
+    },
+    {
+      "date": "2024-12-16",
+      "close": 24668.25,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 125.4035
+    },
+    {
+      "date": "2024-12-17",
+      "close": 24336.0,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 123.7145
+    },
+    {
+      "date": "2024-12-18",
+      "close": 24198.85,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 123.0173
+    },
+    {
+      "date": "2024-12-19",
+      "close": 23951.7,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 121.7609
+    },
+    {
+      "date": "2024-12-20",
+      "close": 23587.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.9094
+    },
+    {
+      "date": "2024-12-23",
+      "close": 23753.45,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.753
+    },
+    {
+      "date": "2024-12-24",
+      "close": 23727.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.6219
+    },
+    {
+      "date": "2024-12-26",
+      "close": 23750.2,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.7365
+    },
+    {
+      "date": "2024-12-27",
+      "close": 23813.4,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 121.0578
+    },
+    {
+      "date": "2024-12-30",
+      "close": 23644.9,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.2012
+    },
+    {
+      "date": "2024-12-31",
+      "close": 23644.8,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.2007
+    },
+    {
+      "date": "2025-01-01",
+      "close": 23742.9,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.6994
+    },
+    {
+      "date": "2025-01-02",
+      "close": 24188.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 122.9654
+    },
+    {
+      "date": "2025-01-03",
+      "close": 24004.75,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 122.0305
+    },
+    {
+      "date": "2025-01-06",
+      "close": 23616.05,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.0546
+    },
+    {
+      "date": "2025-01-07",
+      "close": 23707.9,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.5215
+    },
+    {
+      "date": "2025-01-08",
+      "close": 23688.95,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.4251
+    },
+    {
+      "date": "2025-01-09",
+      "close": 23526.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.5993
+    },
+    {
+      "date": "2025-01-10",
+      "close": 23431.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.1164
+    },
+    {
+      "date": "2025-01-13",
+      "close": 23085.95,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.3597
+    },
+    {
+      "date": "2025-01-14",
+      "close": 23176.05,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.8178
+    },
+    {
+      "date": "2025-01-15",
+      "close": 23213.2,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.0066
+    },
+    {
+      "date": "2025-01-16",
+      "close": 23311.8,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.5079
+    },
+    {
+      "date": "2025-01-17",
+      "close": 23203.2,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.9558
+    },
+    {
+      "date": "2025-01-20",
+      "close": 23344.75,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.6754
+    },
+    {
+      "date": "2025-01-21",
+      "close": 23024.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.0481
+    },
+    {
+      "date": "2025-01-22",
+      "close": 23155.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.7125
+    },
+    {
+      "date": "2025-01-23",
+      "close": 23205.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.9667
+    },
+    {
+      "date": "2025-01-24",
+      "close": 23092.2,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.3915
+    },
+    {
+      "date": "2025-01-27",
+      "close": 22829.15,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.0543
+    },
+    {
+      "date": "2025-01-28",
+      "close": 22957.25,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.7055
+    },
+    {
+      "date": "2025-01-29",
+      "close": 23163.1,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.7519
+    },
+    {
+      "date": "2025-01-30",
+      "close": 23249.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.1912
+    },
+    {
+      "date": "2025-01-31",
+      "close": 23508.4,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.5073
+    },
+    {
+      "date": "2025-02-01",
+      "close": 23482.15,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.3739
+    },
+    {
+      "date": "2025-02-03",
+      "close": 23361.05,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.7582
+    },
+    {
+      "date": "2025-02-04",
+      "close": 23739.25,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.6808
+    },
+    {
+      "date": "2025-02-05",
+      "close": 23696.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.4625
+    },
+    {
+      "date": "2025-02-06",
+      "close": 23603.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.99
+    },
+    {
+      "date": "2025-02-07",
+      "close": 23559.95,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.7694
+    },
+    {
+      "date": "2025-02-10",
+      "close": 23381.6,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.8627
+    },
+    {
+      "date": "2025-02-11",
+      "close": 23071.8,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.2878
+    },
+    {
+      "date": "2025-02-12",
+      "close": 23045.25,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.1528
+    },
+    {
+      "date": "2025-02-13",
+      "close": 23031.4,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.0824
+    },
+    {
+      "date": "2025-02-14",
+      "close": 22929.25,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.5631
+    },
+    {
+      "date": "2025-02-17",
+      "close": 22959.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.7169
+    },
+    {
+      "date": "2025-02-18",
+      "close": 22945.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.6447
+    },
+    {
+      "date": "2025-02-19",
+      "close": 22932.9,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.5817
+    },
+    {
+      "date": "2025-02-20",
+      "close": 22913.15,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.4813
+    },
+    {
+      "date": "2025-02-21",
+      "close": 22795.9,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 115.8852
+    },
+    {
+      "date": "2025-02-24",
+      "close": 22553.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.6522
+    },
+    {
+      "date": "2025-02-25",
+      "close": 22547.55,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.6227
+    },
+    {
+      "date": "2025-02-27",
+      "close": 22545.05,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.61
+    },
+    {
+      "date": "2025-02-28",
+      "close": 22124.7,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 112.4731
+    },
+    {
+      "date": "2025-03-03",
+      "close": 22119.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 112.4457
+    },
+    {
+      "date": "2025-03-04",
+      "close": 22082.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 112.2594
+    },
+    {
+      "date": "2025-03-05",
+      "close": 22337.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 113.5539
+    },
+    {
+      "date": "2025-03-06",
+      "close": 22544.7,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.6082
+    },
+    {
+      "date": "2025-03-07",
+      "close": 22552.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.6479
+    },
+    {
+      "date": "2025-03-10",
+      "close": 22460.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.1792
+    },
+    {
+      "date": "2025-03-11",
+      "close": 22497.9,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.3703
+    },
+    {
+      "date": "2025-03-12",
+      "close": 22470.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.231
+    },
+    {
+      "date": "2025-03-13",
+      "close": 22397.2,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 113.8584
+    },
+    {
+      "date": "2025-03-17",
+      "close": 22508.75,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.4255
+    },
+    {
+      "date": "2025-03-18",
+      "close": 22834.3,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.0804
+    },
+    {
+      "date": "2025-03-19",
+      "close": 22907.6,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.4531
+    },
+    {
+      "date": "2025-03-20",
+      "close": 23190.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.892
+    },
+    {
+      "date": "2025-03-21",
+      "close": 23350.4,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.7041
+    },
+    {
+      "date": "2025-03-24",
+      "close": 23658.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.2696
+    },
+    {
+      "date": "2025-03-25",
+      "close": 23668.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 120.3219
+    },
+    {
+      "date": "2025-03-26",
+      "close": 23486.85,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.3977
+    },
+    {
+      "date": "2025-03-27",
+      "close": 23591.95,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.932
+    },
+    {
+      "date": "2025-03-28",
+      "close": 23519.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.563
+    },
+    {
+      "date": "2025-04-01",
+      "close": 23165.7,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 117.7651
+    },
+    {
+      "date": "2025-04-02",
+      "close": 23332.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.6123
+    },
+    {
+      "date": "2025-04-03",
+      "close": 23250.1,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.1942
+    },
+    {
+      "date": "2025-04-04",
+      "close": 22904.45,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.4371
+    },
+    {
+      "date": "2025-04-07",
+      "close": 22161.6,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 112.6607
+    },
+    {
+      "date": "2025-04-08",
+      "close": 22535.85,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 114.5632
+    },
+    {
+      "date": "2025-04-09",
+      "close": 22399.15,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 113.8683
+    },
+    {
+      "date": "2025-04-11",
+      "close": 22828.55,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 116.0512
+    },
+    {
+      "date": "2025-04-15",
+      "close": 23328.55,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 118.593
+    },
+    {
+      "date": "2025-04-16",
+      "close": 23437.2,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 119.1453
+    },
+    {
+      "date": "2025-04-17",
+      "close": 23851.65,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 121.2522
+    },
+    {
+      "date": "2025-04-21",
+      "close": 24125.55,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 122.6446
+    },
+    {
+      "date": "2025-04-22",
+      "close": 24167.25,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 122.8566
+    },
+    {
+      "date": "2025-04-23",
+      "close": 24328.95,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 123.6786
+    },
+    {
+      "date": "2025-04-24",
+      "close": 24246.7,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 123.2605
+    },
+    {
+      "date": "2025-04-25",
+      "close": 24039.35,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 122.2064
+    },
+    {
+      "date": "2025-04-28",
+      "close": 24328.5,
+      "position": 0,
+      "equity": 111.5754,
+      "bh_equity": 123.6764
+    },
+    {
+      "date": "2025-04-29",
+      "close": 24335.95,
+      "position": 1,
+      "equity": 111.522,
+      "bh_equity": 123.7142
+    },
+    {
+      "date": "2025-04-30",
+      "close": 24334.2,
+      "position": 1,
+      "equity": 111.5139,
+      "bh_equity": 123.7053
+    },
+    {
+      "date": "2025-05-02",
+      "close": 24346.7,
+      "position": 1,
+      "equity": 111.5712,
+      "bh_equity": 123.7689
+    },
+    {
+      "date": "2025-05-05",
+      "close": 24461.15,
+      "position": 1,
+      "equity": 112.0957,
+      "bh_equity": 124.3507
+    },
+    {
+      "date": "2025-05-06",
+      "close": 24379.6,
+      "position": 1,
+      "equity": 111.722,
+      "bh_equity": 123.9361
+    },
+    {
+      "date": "2025-05-07",
+      "close": 24414.4,
+      "position": 1,
+      "equity": 111.8815,
+      "bh_equity": 124.113
+    },
+    {
+      "date": "2025-05-08",
+      "close": 24273.8,
+      "position": 1,
+      "equity": 111.2372,
+      "bh_equity": 123.3983
+    },
+    {
+      "date": "2025-05-09",
+      "close": 24008.0,
+      "position": 1,
+      "equity": 110.0191,
+      "bh_equity": 122.0471
+    },
+    {
+      "date": "2025-05-12",
+      "close": 24924.7,
+      "position": 1,
+      "equity": 114.22,
+      "bh_equity": 126.7072
+    },
+    {
+      "date": "2025-05-13",
+      "close": 24578.35,
+      "position": 1,
+      "equity": 112.6328,
+      "bh_equity": 124.9465
+    },
+    {
+      "date": "2025-05-14",
+      "close": 24666.9,
+      "position": 1,
+      "equity": 113.0386,
+      "bh_equity": 125.3967
+    },
+    {
+      "date": "2025-05-15",
+      "close": 25062.1,
+      "position": 1,
+      "equity": 114.8496,
+      "bh_equity": 127.4057
+    },
+    {
+      "date": "2025-05-16",
+      "close": 25019.8,
+      "position": 1,
+      "equity": 114.6558,
+      "bh_equity": 127.1907
+    },
+    {
+      "date": "2025-05-19",
+      "close": 24945.45,
+      "position": 1,
+      "equity": 114.315,
+      "bh_equity": 126.8127
+    },
+    {
+      "date": "2025-05-20",
+      "close": 24683.9,
+      "position": 1,
+      "equity": 113.1165,
+      "bh_equity": 125.4831
+    },
+    {
+      "date": "2025-05-21",
+      "close": 24813.45,
+      "position": 1,
+      "equity": 113.7101,
+      "bh_equity": 126.1416
+    },
+    {
+      "date": "2025-05-22",
+      "close": 24609.7,
+      "position": 1,
+      "equity": 112.7764,
+      "bh_equity": 125.1059
+    },
+    {
+      "date": "2025-05-23",
+      "close": 24853.15,
+      "position": 1,
+      "equity": 113.8921,
+      "bh_equity": 126.3435
+    },
+    {
+      "date": "2025-05-26",
+      "close": 25001.15,
+      "position": 1,
+      "equity": 114.5703,
+      "bh_equity": 127.0958
+    },
+    {
+      "date": "2025-05-27",
+      "close": 24826.2,
+      "position": 1,
+      "equity": 113.7686,
+      "bh_equity": 126.2065
+    },
+    {
+      "date": "2025-05-28",
+      "close": 24752.45,
+      "position": 1,
+      "equity": 113.4306,
+      "bh_equity": 125.8315
+    },
+    {
+      "date": "2025-05-29",
+      "close": 24833.6,
+      "position": 1,
+      "equity": 113.8025,
+      "bh_equity": 126.2441
+    },
+    {
+      "date": "2025-05-30",
+      "close": 24750.7,
+      "position": 1,
+      "equity": 113.4226,
+      "bh_equity": 125.8227
+    },
+    {
+      "date": "2025-06-02",
+      "close": 24716.6,
+      "position": 1,
+      "equity": 113.2663,
+      "bh_equity": 125.6493
+    },
+    {
+      "date": "2025-06-03",
+      "close": 24542.5,
+      "position": 1,
+      "equity": 112.4685,
+      "bh_equity": 124.7643
+    },
+    {
+      "date": "2025-06-04",
+      "close": 24620.2,
+      "position": 1,
+      "equity": 112.8246,
+      "bh_equity": 125.1592
+    },
+    {
+      "date": "2025-06-05",
+      "close": 24750.9,
+      "position": 1,
+      "equity": 113.4235,
+      "bh_equity": 125.8237
+    },
+    {
+      "date": "2025-06-06",
+      "close": 25003.05,
+      "position": 1,
+      "equity": 114.579,
+      "bh_equity": 127.1055
+    },
+    {
+      "date": "2025-06-09",
+      "close": 25103.2,
+      "position": 1,
+      "equity": 115.038,
+      "bh_equity": 127.6146
+    },
+    {
+      "date": "2025-06-10",
+      "close": 25104.25,
+      "position": 1,
+      "equity": 115.0428,
+      "bh_equity": 127.62
+    },
+    {
+      "date": "2025-06-11",
+      "close": 25141.4,
+      "position": 1,
+      "equity": 115.213,
+      "bh_equity": 127.8088
+    },
+    {
+      "date": "2025-06-12",
+      "close": 24888.2,
+      "position": 1,
+      "equity": 114.0527,
+      "bh_equity": 126.5216
+    },
+    {
+      "date": "2025-06-13",
+      "close": 24718.6,
+      "position": 1,
+      "equity": 113.2755,
+      "bh_equity": 125.6595
+    },
+    {
+      "date": "2025-06-16",
+      "close": 24946.5,
+      "position": 1,
+      "equity": 114.3199,
+      "bh_equity": 126.818
+    },
+    {
+      "date": "2025-06-17",
+      "close": 24853.4,
+      "position": 1,
+      "equity": 113.8932,
+      "bh_equity": 126.3447
+    },
+    {
+      "date": "2025-06-18",
+      "close": 24812.05,
+      "position": 1,
+      "equity": 113.7037,
+      "bh_equity": 126.1345
+    },
+    {
+      "date": "2025-06-19",
+      "close": 24793.25,
+      "position": 1,
+      "equity": 113.6176,
+      "bh_equity": 126.039
+    },
+    {
+      "date": "2025-06-20",
+      "close": 25112.4,
+      "position": 1,
+      "equity": 115.0801,
+      "bh_equity": 127.6614
+    },
+    {
+      "date": "2025-06-23",
+      "close": 24971.9,
+      "position": 1,
+      "equity": 114.4363,
+      "bh_equity": 126.9472
+    },
+    {
+      "date": "2025-06-24",
+      "close": 25044.35,
+      "position": 1,
+      "equity": 114.7683,
+      "bh_equity": 127.3155
+    },
+    {
+      "date": "2025-06-25",
+      "close": 25244.75,
+      "position": 1,
+      "equity": 115.6866,
+      "bh_equity": 128.3342
+    },
+    {
+      "date": "2025-06-26",
+      "close": 25549.0,
+      "position": 1,
+      "equity": 117.0809,
+      "bh_equity": 129.8809
+    },
+    {
+      "date": "2025-06-27",
+      "close": 25637.8,
+      "position": 1,
+      "equity": 117.4878,
+      "bh_equity": 130.3323
+    },
+    {
+      "date": "2025-06-30",
+      "close": 25517.05,
+      "position": 1,
+      "equity": 116.9345,
+      "bh_equity": 129.7185
+    },
+    {
+      "date": "2025-07-01",
+      "close": 25541.8,
+      "position": 1,
+      "equity": 117.0479,
+      "bh_equity": 129.8443
+    },
+    {
+      "date": "2025-07-02",
+      "close": 25453.4,
+      "position": 1,
+      "equity": 116.6428,
+      "bh_equity": 129.3949
+    },
+    {
+      "date": "2025-07-03",
+      "close": 25405.3,
+      "position": 1,
+      "equity": 116.4224,
+      "bh_equity": 129.1504
+    },
+    {
+      "date": "2025-07-04",
+      "close": 25461.0,
+      "position": 1,
+      "equity": 116.6776,
+      "bh_equity": 129.4335
+    },
+    {
+      "date": "2025-07-07",
+      "close": 25461.3,
+      "position": 1,
+      "equity": 116.679,
+      "bh_equity": 129.4351
+    },
+    {
+      "date": "2025-07-08",
+      "close": 25522.5,
+      "position": 1,
+      "equity": 116.9594,
+      "bh_equity": 129.7462
+    },
+    {
+      "date": "2025-07-09",
+      "close": 25476.1,
+      "position": 1,
+      "equity": 116.7468,
+      "bh_equity": 129.5103
+    },
+    {
+      "date": "2025-07-10",
+      "close": 25355.25,
+      "position": 1,
+      "equity": 116.193,
+      "bh_equity": 128.8959
+    },
+    {
+      "date": "2025-07-11",
+      "close": 25149.85,
+      "position": 1,
+      "equity": 115.2517,
+      "bh_equity": 127.8518
+    },
+    {
+      "date": "2025-07-14",
+      "close": 25082.3,
+      "position": 1,
+      "equity": 114.9422,
+      "bh_equity": 127.5084
+    },
+    {
+      "date": "2025-07-15",
+      "close": 25195.8,
+      "position": 1,
+      "equity": 115.4623,
+      "bh_equity": 128.0854
+    },
+    {
+      "date": "2025-07-16",
+      "close": 25212.05,
+      "position": 1,
+      "equity": 115.5368,
+      "bh_equity": 128.168
+    },
+    {
+      "date": "2025-07-17",
+      "close": 25111.45,
+      "position": 1,
+      "equity": 115.0758,
+      "bh_equity": 127.6566
+    },
+    {
+      "date": "2025-07-18",
+      "close": 24968.4,
+      "position": 1,
+      "equity": 114.4202,
+      "bh_equity": 126.9294
+    },
+    {
+      "date": "2025-07-21",
+      "close": 25090.7,
+      "position": 1,
+      "equity": 114.9807,
+      "bh_equity": 127.5511
+    },
+    {
+      "date": "2025-07-22",
+      "close": 25060.9,
+      "position": 1,
+      "equity": 114.8441,
+      "bh_equity": 127.3996
+    },
+    {
+      "date": "2025-07-23",
+      "close": 25219.9,
+      "position": 1,
+      "equity": 115.5727,
+      "bh_equity": 128.2079
+    },
+    {
+      "date": "2025-07-24",
+      "close": 25062.1,
+      "position": 1,
+      "equity": 114.8496,
+      "bh_equity": 127.4057
+    },
+    {
+      "date": "2025-07-25",
+      "close": 24837.0,
+      "position": 1,
+      "equity": 113.8181,
+      "bh_equity": 126.2614
+    },
+    {
+      "date": "2025-07-28",
+      "close": 24680.9,
+      "position": 1,
+      "equity": 113.1027,
+      "bh_equity": 125.4678
+    },
+    {
+      "date": "2025-07-29",
+      "close": 24821.1,
+      "position": 1,
+      "equity": 113.7452,
+      "bh_equity": 126.1805
+    },
+    {
+      "date": "2025-07-30",
+      "close": 24855.05,
+      "position": 1,
+      "equity": 113.9008,
+      "bh_equity": 126.3531
+    },
+    {
+      "date": "2025-07-31",
+      "close": 24768.35,
+      "position": 1,
+      "equity": 113.5035,
+      "bh_equity": 125.9124
+    },
+    {
+      "date": "2025-08-01",
+      "close": 24565.35,
+      "position": 1,
+      "equity": 112.5732,
+      "bh_equity": 124.8804
+    },
+    {
+      "date": "2025-08-04",
+      "close": 24722.75,
+      "position": 1,
+      "equity": 113.2945,
+      "bh_equity": 125.6806
+    },
+    {
+      "date": "2025-08-05",
+      "close": 24649.55,
+      "position": 1,
+      "equity": 112.9591,
+      "bh_equity": 125.3085
+    },
+    {
+      "date": "2025-08-06",
+      "close": 24574.2,
+      "position": 1,
+      "equity": 112.6138,
+      "bh_equity": 124.9254
+    },
+    {
+      "date": "2025-08-07",
+      "close": 24596.15,
+      "position": 1,
+      "equity": 112.7144,
+      "bh_equity": 125.037
+    },
+    {
+      "date": "2025-08-08",
+      "close": 24363.3,
+      "position": 1,
+      "equity": 111.6473,
+      "bh_equity": 123.8533
+    },
+    {
+      "date": "2025-08-11",
+      "close": 24585.05,
+      "position": 1,
+      "equity": 112.6635,
+      "bh_equity": 124.9806
+    },
+    {
+      "date": "2025-08-12",
+      "close": 24487.4,
+      "position": 1,
+      "equity": 112.216,
+      "bh_equity": 124.4841
+    },
+    {
+      "date": "2025-08-13",
+      "close": 24619.35,
+      "position": 1,
+      "equity": 112.8207,
+      "bh_equity": 125.1549
+    },
+    {
+      "date": "2025-08-14",
+      "close": 24631.3,
+      "position": 1,
+      "equity": 112.8754,
+      "bh_equity": 125.2157
+    },
+    {
+      "date": "2025-08-18",
+      "close": 24876.95,
+      "position": 1,
+      "equity": 114.0011,
+      "bh_equity": 126.4645
+    },
+    {
+      "date": "2025-08-19",
+      "close": 24980.65,
+      "position": 1,
+      "equity": 114.4764,
+      "bh_equity": 126.9916
+    },
+    {
+      "date": "2025-08-20",
+      "close": 25050.55,
+      "position": 1,
+      "equity": 114.7967,
+      "bh_equity": 127.347
+    },
+    {
+      "date": "2025-08-21",
+      "close": 25083.75,
+      "position": 1,
+      "equity": 114.9488,
+      "bh_equity": 127.5157
+    },
+    {
+      "date": "2025-08-22",
+      "close": 24870.1,
+      "position": 1,
+      "equity": 113.9698,
+      "bh_equity": 126.4296
+    },
+    {
+      "date": "2025-08-25",
+      "close": 24967.75,
+      "position": 1,
+      "equity": 114.4172,
+      "bh_equity": 126.9261
+    },
+    {
+      "date": "2025-08-26",
+      "close": 24712.05,
+      "position": 1,
+      "equity": 113.2455,
+      "bh_equity": 125.6262
+    },
+    {
+      "date": "2025-08-28",
+      "close": 24500.9,
+      "position": 1,
+      "equity": 112.2779,
+      "bh_equity": 124.5528
+    },
+    {
+      "date": "2025-08-29",
+      "close": 24426.85,
+      "position": 1,
+      "equity": 111.9385,
+      "bh_equity": 124.1763
+    },
+    {
+      "date": "2025-09-01",
+      "close": 24625.05,
+      "position": 1,
+      "equity": 112.8468,
+      "bh_equity": 125.1839
+    },
+    {
+      "date": "2025-09-02",
+      "close": 24579.6,
+      "position": 1,
+      "equity": 112.6385,
+      "bh_equity": 124.9529
+    },
+    {
+      "date": "2025-09-03",
+      "close": 24715.05,
+      "position": 1,
+      "equity": 113.2592,
+      "bh_equity": 125.6414
+    },
+    {
+      "date": "2025-09-04",
+      "close": 24734.3,
+      "position": 1,
+      "equity": 113.3474,
+      "bh_equity": 125.7393
+    },
+    {
+      "date": "2025-09-05",
+      "close": 24741.0,
+      "position": 1,
+      "equity": 113.3781,
+      "bh_equity": 125.7733
+    },
+    {
+      "date": "2025-09-08",
+      "close": 24773.15,
+      "position": 1,
+      "equity": 113.5255,
+      "bh_equity": 125.9368
+    },
+    {
+      "date": "2025-09-09",
+      "close": 24868.6,
+      "position": 1,
+      "equity": 113.9629,
+      "bh_equity": 126.422
+    },
+    {
+      "date": "2025-09-10",
+      "close": 24973.1,
+      "position": 1,
+      "equity": 114.4418,
+      "bh_equity": 126.9532
+    },
+    {
+      "date": "2025-09-11",
+      "close": 25005.5,
+      "position": 1,
+      "equity": 114.5902,
+      "bh_equity": 127.118
+    },
+    {
+      "date": "2025-09-12",
+      "close": 25114.0,
+      "position": 1,
+      "equity": 115.0874,
+      "bh_equity": 127.6695
+    },
+    {
+      "date": "2025-09-15",
+      "close": 25069.2,
+      "position": 1,
+      "equity": 114.8821,
+      "bh_equity": 127.4418
+    },
+    {
+      "date": "2025-09-16",
+      "close": 25239.1,
+      "position": 1,
+      "equity": 115.6607,
+      "bh_equity": 128.3055
+    },
+    {
+      "date": "2025-09-17",
+      "close": 25330.25,
+      "position": 1,
+      "equity": 116.0784,
+      "bh_equity": 128.7689
+    },
+    {
+      "date": "2025-09-18",
+      "close": 25423.6,
+      "position": 1,
+      "equity": 116.5062,
+      "bh_equity": 129.2434
+    },
+    {
+      "date": "2025-09-19",
+      "close": 25327.05,
+      "position": 1,
+      "equity": 116.0638,
+      "bh_equity": 128.7526
+    },
+    {
+      "date": "2025-09-22",
+      "close": 25202.35,
+      "position": 1,
+      "equity": 115.4923,
+      "bh_equity": 128.1187
+    },
+    {
+      "date": "2025-09-23",
+      "close": 25169.5,
+      "position": 1,
+      "equity": 115.3418,
+      "bh_equity": 127.9517
+    },
+    {
+      "date": "2025-09-24",
+      "close": 25056.9,
+      "position": 1,
+      "equity": 114.8258,
+      "bh_equity": 127.3793
+    },
+    {
+      "date": "2025-09-25",
+      "close": 24890.85,
+      "position": 1,
+      "equity": 114.0648,
+      "bh_equity": 126.5351
+    },
+    {
+      "date": "2025-09-26",
+      "close": 24654.7,
+      "position": 1,
+      "equity": 112.9827,
+      "bh_equity": 125.3346
+    },
+    {
+      "date": "2025-09-29",
+      "close": 24634.9,
+      "position": 1,
+      "equity": 112.8919,
+      "bh_equity": 125.234
+    },
+    {
+      "date": "2025-09-30",
+      "close": 24611.1,
+      "position": 1,
+      "equity": 112.7829,
+      "bh_equity": 125.113
+    },
+    {
+      "date": "2025-10-01",
+      "close": 24836.3,
+      "position": 1,
+      "equity": 113.8149,
+      "bh_equity": 126.2578
+    },
+    {
+      "date": "2025-10-03",
+      "close": 24894.25,
+      "position": 1,
+      "equity": 114.0804,
+      "bh_equity": 126.5524
+    },
+    {
+      "date": "2025-10-06",
+      "close": 25077.65,
+      "position": 1,
+      "equity": 114.9209,
+      "bh_equity": 127.4847
+    },
+    {
+      "date": "2025-10-07",
+      "close": 25108.3,
+      "position": 1,
+      "equity": 115.0613,
+      "bh_equity": 127.6406
+    },
+    {
+      "date": "2025-10-08",
+      "close": 25046.15,
+      "position": 1,
+      "equity": 114.7765,
+      "bh_equity": 127.3246
+    },
+    {
+      "date": "2025-10-09",
+      "close": 25181.8,
+      "position": 1,
+      "equity": 115.3982,
+      "bh_equity": 128.0142
+    },
+    {
+      "date": "2025-10-10",
+      "close": 25285.35,
+      "position": 1,
+      "equity": 115.8727,
+      "bh_equity": 128.5406
+    },
+    {
+      "date": "2025-10-13",
+      "close": 25227.35,
+      "position": 1,
+      "equity": 115.6069,
+      "bh_equity": 128.2458
+    },
+    {
+      "date": "2025-10-14",
+      "close": 25145.5,
+      "position": 1,
+      "equity": 115.2318,
+      "bh_equity": 127.8297
+    },
+    {
+      "date": "2025-10-15",
+      "close": 25323.55,
+      "position": 1,
+      "equity": 116.0477,
+      "bh_equity": 128.7348
+    },
+    {
+      "date": "2025-10-16",
+      "close": 25585.3,
+      "position": 1,
+      "equity": 117.2472,
+      "bh_equity": 130.0654
+    },
+    {
+      "date": "2025-10-17",
+      "close": 25709.85,
+      "position": 1,
+      "equity": 117.818,
+      "bh_equity": 130.6986
+    },
+    {
+      "date": "2025-10-20",
+      "close": 25843.15,
+      "position": 1,
+      "equity": 118.4289,
+      "bh_equity": 131.3762
+    },
+    {
+      "date": "2025-10-21",
+      "close": 25868.6,
+      "position": 1,
+      "equity": 118.5455,
+      "bh_equity": 131.5056
+    },
+    {
+      "date": "2025-10-23",
+      "close": 25891.4,
+      "position": 1,
+      "equity": 118.65,
+      "bh_equity": 131.6215
+    },
+    {
+      "date": "2025-10-24",
+      "close": 25795.15,
+      "position": 1,
+      "equity": 118.2089,
+      "bh_equity": 131.1322
+    },
+    {
+      "date": "2025-10-27",
+      "close": 25966.05,
+      "position": 1,
+      "equity": 118.9921,
+      "bh_equity": 132.001
+    },
+    {
+      "date": "2025-10-28",
+      "close": 25936.2,
+      "position": 1,
+      "equity": 118.8553,
+      "bh_equity": 131.8493
+    },
+    {
+      "date": "2025-10-29",
+      "close": 26053.9,
+      "position": 1,
+      "equity": 119.3946,
+      "bh_equity": 132.4476
+    },
+    {
+      "date": "2025-10-30",
+      "close": 25877.85,
+      "position": 1,
+      "equity": 118.5879,
+      "bh_equity": 131.5526
+    },
+    {
+      "date": "2025-10-31",
+      "close": 25722.1,
+      "position": 1,
+      "equity": 117.8741,
+      "bh_equity": 130.7609
+    },
+    {
+      "date": "2025-11-03",
+      "close": 25763.35,
+      "position": 1,
+      "equity": 118.0632,
+      "bh_equity": 130.9706
+    },
+    {
+      "date": "2025-11-04",
+      "close": 25597.65,
+      "position": 1,
+      "equity": 117.3038,
+      "bh_equity": 130.1282
+    },
+    {
+      "date": "2025-11-06",
+      "close": 25509.7,
+      "position": 1,
+      "equity": 116.9008,
+      "bh_equity": 129.6811
+    },
+    {
+      "date": "2025-11-07",
+      "close": 25492.3,
+      "position": 1,
+      "equity": 116.8211,
+      "bh_equity": 129.5927
+    },
+    {
+      "date": "2025-11-10",
+      "close": 25574.35,
+      "position": 1,
+      "equity": 117.197,
+      "bh_equity": 130.0098
+    },
+    {
+      "date": "2025-11-11",
+      "close": 25694.95,
+      "position": 1,
+      "equity": 117.7497,
+      "bh_equity": 130.6228
+    },
+    {
+      "date": "2025-11-12",
+      "close": 25875.8,
+      "position": 1,
+      "equity": 118.5785,
+      "bh_equity": 131.5422
+    },
+    {
+      "date": "2025-11-13",
+      "close": 25879.15,
+      "position": 1,
+      "equity": 118.5938,
+      "bh_equity": 131.5592
+    },
+    {
+      "date": "2025-11-14",
+      "close": 25910.05,
+      "position": 1,
+      "equity": 118.7354,
+      "bh_equity": 131.7163
+    },
+    {
+      "date": "2025-11-17",
+      "close": 26013.45,
+      "position": 1,
+      "equity": 119.2093,
+      "bh_equity": 132.242
+    },
+    {
+      "date": "2025-11-18",
+      "close": 25910.05,
+      "position": 1,
+      "equity": 118.7354,
+      "bh_equity": 131.7163
+    },
+    {
+      "date": "2025-11-19",
+      "close": 26052.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.4413
+    },
+    {
+      "date": "2025-11-20",
+      "close": 26192.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.1504
+    },
+    {
+      "date": "2025-11-21",
+      "close": 26068.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.52
+    },
+    {
+      "date": "2025-11-24",
+      "close": 25959.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.9677
+    },
+    {
+      "date": "2025-11-25",
+      "close": 25884.8,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.588
+    },
+    {
+      "date": "2025-11-26",
+      "close": 26205.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.2173
+    },
+    {
+      "date": "2025-11-27",
+      "close": 26215.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.2694
+    },
+    {
+      "date": "2025-11-28",
+      "close": 26202.95,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.2053
+    },
+    {
+      "date": "2025-12-01",
+      "close": 26175.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.067
+    },
+    {
+      "date": "2025-12-02",
+      "close": 26032.2,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.3373
+    },
+    {
+      "date": "2025-12-03",
+      "close": 25986.0,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.1024
+    },
+    {
+      "date": "2025-12-04",
+      "close": 26033.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.3452
+    },
+    {
+      "date": "2025-12-05",
+      "close": 26186.45,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.1214
+    },
+    {
+      "date": "2025-12-08",
+      "close": 25960.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.9731
+    },
+    {
+      "date": "2025-12-09",
+      "close": 25839.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.3584
+    },
+    {
+      "date": "2025-12-10",
+      "close": 25758.0,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.9434
+    },
+    {
+      "date": "2025-12-11",
+      "close": 25898.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.6579
+    },
+    {
+      "date": "2025-12-12",
+      "close": 26046.95,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.4123
+    },
+    {
+      "date": "2025-12-15",
+      "close": 26027.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.3124
+    },
+    {
+      "date": "2025-12-16",
+      "close": 25860.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.4624
+    },
+    {
+      "date": "2025-12-17",
+      "close": 25818.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.2512
+    },
+    {
+      "date": "2025-12-18",
+      "close": 25815.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.2359
+    },
+    {
+      "date": "2025-12-19",
+      "close": 25966.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.0028
+    },
+    {
+      "date": "2025-12-22",
+      "close": 26172.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.05
+    },
+    {
+      "date": "2025-12-23",
+      "close": 26177.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.0742
+    },
+    {
+      "date": "2025-12-24",
+      "close": 26142.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.896
+    },
+    {
+      "date": "2025-12-26",
+      "close": 26042.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.3886
+    },
+    {
+      "date": "2025-12-29",
+      "close": 25942.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.8793
+    },
+    {
+      "date": "2025-12-30",
+      "close": 25938.85,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.8627
+    },
+    {
+      "date": "2025-12-31",
+      "close": 26129.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.8324
+    },
+    {
+      "date": "2026-01-01",
+      "close": 26146.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.9186
+    },
+    {
+      "date": "2026-01-02",
+      "close": 26328.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.8438
+    },
+    {
+      "date": "2026-01-05",
+      "close": 26250.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.446
+    },
+    {
+      "date": "2026-01-06",
+      "close": 26178.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 133.082
+    },
+    {
+      "date": "2026-01-07",
+      "close": 26140.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 132.8891
+    },
+    {
+      "date": "2026-01-08",
+      "close": 25876.85,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.5476
+    },
+    {
+      "date": "2026-01-09",
+      "close": 25683.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.5636
+    },
+    {
+      "date": "2026-01-12",
+      "close": 25790.25,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.1073
+    },
+    {
+      "date": "2026-01-13",
+      "close": 25732.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.8127
+    },
+    {
+      "date": "2026-01-14",
+      "close": 25665.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.4736
+    },
+    {
+      "date": "2026-01-16",
+      "close": 25694.35,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.6198
+    },
+    {
+      "date": "2026-01-19",
+      "close": 25585.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.0664
+    },
+    {
+      "date": "2026-01-20",
+      "close": 25232.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 128.2719
+    },
+    {
+      "date": "2026-01-21",
+      "close": 25157.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 127.8907
+    },
+    {
+      "date": "2026-01-22",
+      "close": 25289.9,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 128.5637
+    },
+    {
+      "date": "2026-01-23",
+      "close": 25048.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 127.3373
+    },
+    {
+      "date": "2026-01-27",
+      "close": 25175.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 127.9817
+    },
+    {
+      "date": "2026-01-28",
+      "close": 25342.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 128.8324
+    },
+    {
+      "date": "2026-01-29",
+      "close": 25418.9,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.2195
+    },
+    {
+      "date": "2026-01-30",
+      "close": 25320.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 128.7201
+    },
+    {
+      "date": "2026-02-02",
+      "close": 25088.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 127.5394
+    },
+    {
+      "date": "2026-02-03",
+      "close": 25727.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.7886
+    },
+    {
+      "date": "2026-02-04",
+      "close": 25776.0,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.0349
+    },
+    {
+      "date": "2026-02-05",
+      "close": 25642.8,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.3577
+    },
+    {
+      "date": "2026-02-06",
+      "close": 25693.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.6165
+    },
+    {
+      "date": "2026-02-09",
+      "close": 25867.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.499
+    },
+    {
+      "date": "2026-02-10",
+      "close": 25935.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.8439
+    },
+    {
+      "date": "2026-02-11",
+      "close": 25953.85,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.939
+    },
+    {
+      "date": "2026-02-12",
+      "close": 25807.2,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.1935
+    },
+    {
+      "date": "2026-02-13",
+      "close": 25471.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.4849
+    },
+    {
+      "date": "2026-02-16",
+      "close": 25682.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.5608
+    },
+    {
+      "date": "2026-02-17",
+      "close": 25725.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.7776
+    },
+    {
+      "date": "2026-02-18",
+      "close": 25819.35,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 131.2552
+    },
+    {
+      "date": "2026-02-19",
+      "close": 25454.35,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.3997
+    },
+    {
+      "date": "2026-02-20",
+      "close": 25571.25,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.994
+    },
+    {
+      "date": "2026-02-23",
+      "close": 25713.0,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 130.7146
+    },
+    {
+      "date": "2026-02-24",
+      "close": 25424.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.2488
+    },
+    {
+      "date": "2026-02-25",
+      "close": 25482.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.5428
+    },
+    {
+      "date": "2026-02-26",
+      "close": 25496.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 129.6143
+    },
+    {
+      "date": "2026-02-27",
+      "close": 25178.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 127.9982
+    },
+    {
+      "date": "2026-03-02",
+      "close": 24865.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 126.4073
+    },
+    {
+      "date": "2026-03-04",
+      "close": 24480.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 124.4491
+    },
+    {
+      "date": "2026-03-05",
+      "close": 24765.9,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 125.8999
+    },
+    {
+      "date": "2026-03-06",
+      "close": 24450.45,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 124.2963
+    },
+    {
+      "date": "2026-03-09",
+      "close": 24028.05,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.149
+    },
+    {
+      "date": "2026-03-10",
+      "close": 24261.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.3363
+    },
+    {
+      "date": "2026-03-11",
+      "close": 23866.85,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.3295
+    },
+    {
+      "date": "2026-03-12",
+      "close": 23639.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.172
+    },
+    {
+      "date": "2026-03-13",
+      "close": 23151.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 117.6909
+    },
+    {
+      "date": "2026-03-16",
+      "close": 23408.8,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 119.001
+    },
+    {
+      "date": "2026-03-17",
+      "close": 23581.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 119.8771
+    },
+    {
+      "date": "2026-03-18",
+      "close": 23777.8,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.8768
+    },
+    {
+      "date": "2026-03-19",
+      "close": 23002.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 116.9337
+    },
+    {
+      "date": "2026-03-20",
+      "close": 23114.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 117.5049
+    },
+    {
+      "date": "2026-03-23",
+      "close": 22512.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 114.4453
+    },
+    {
+      "date": "2026-03-24",
+      "close": 22912.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 116.4775
+    },
+    {
+      "date": "2026-03-25",
+      "close": 23306.45,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 118.4807
+    },
+    {
+      "date": "2026-03-27",
+      "close": 22819.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 116.0057
+    },
+    {
+      "date": "2026-03-30",
+      "close": 22331.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 113.5239
+    },
+    {
+      "date": "2026-04-01",
+      "close": 22679.4,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 115.293
+    },
+    {
+      "date": "2026-04-02",
+      "close": 22713.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 115.4643
+    },
+    {
+      "date": "2026-04-06",
+      "close": 22968.25,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 116.7614
+    },
+    {
+      "date": "2026-04-07",
+      "close": 23123.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 117.5514
+    },
+    {
+      "date": "2026-04-08",
+      "close": 23997.35,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.9929
+    },
+    {
+      "date": "2026-04-09",
+      "close": 23775.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.8631
+    },
+    {
+      "date": "2026-04-10",
+      "close": 24050.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.2636
+    },
+    {
+      "date": "2026-04-13",
+      "close": 23842.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.2065
+    },
+    {
+      "date": "2026-04-15",
+      "close": 24231.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.1822
+    },
+    {
+      "date": "2026-04-16",
+      "close": 24196.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.0066
+    },
+    {
+      "date": "2026-04-17",
+      "close": 24353.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.8037
+    },
+    {
+      "date": "2026-04-20",
+      "close": 24364.85,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.8611
+    },
+    {
+      "date": "2026-04-21",
+      "close": 24576.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 124.9376
+    },
+    {
+      "date": "2026-04-22",
+      "close": 24378.1,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.9285
+    },
+    {
+      "date": "2026-04-23",
+      "close": 24173.05,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.8861
+    },
+    {
+      "date": "2026-04-24",
+      "close": 23897.95,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.4876
+    },
+    {
+      "date": "2026-04-27",
+      "close": 24092.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.4776
+    },
+    {
+      "date": "2026-04-28",
+      "close": 23995.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.9845
+    },
+    {
+      "date": "2026-04-29",
+      "close": 24177.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.9095
+    },
+    {
+      "date": "2026-04-30",
+      "close": 23997.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.9939
+    },
+    {
+      "date": "2026-05-04",
+      "close": 24119.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.6129
+    },
+    {
+      "date": "2026-05-05",
+      "close": 24032.8,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.1731
+    },
+    {
+      "date": "2026-05-06",
+      "close": 24330.95,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.6888
+    },
+    {
+      "date": "2026-05-07",
+      "close": 24326.65,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 123.667
+    },
+    {
+      "date": "2026-05-08",
+      "close": 24176.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.9019
+    },
+    {
+      "date": "2026-05-11",
+      "close": 23815.85,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.0703
+    },
+    {
+      "date": "2026-05-12",
+      "close": 23379.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 118.8523
+    },
+    {
+      "date": "2026-05-13",
+      "close": 23412.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 119.0203
+    },
+    {
+      "date": "2026-05-14",
+      "close": 23689.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.4284
+    },
+    {
+      "date": "2026-05-15",
+      "close": 23643.5,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.1941
+    },
+    {
+      "date": "2026-05-18",
+      "close": 23649.95,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.2269
+    },
+    {
+      "date": "2026-05-19",
+      "close": 23618.0,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.0645
+    },
+    {
+      "date": "2026-05-20",
+      "close": 23659.0,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.2729
+    },
+    {
+      "date": "2026-05-21",
+      "close": 23654.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.251
+    },
+    {
+      "date": "2026-05-22",
+      "close": 23719.3,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 120.5794
+    },
+    {
+      "date": "2026-05-25",
+      "close": 24031.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 122.1675
+    },
+    {
+      "date": "2026-05-26",
+      "close": 23913.7,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.5677
+    },
+    {
+      "date": "2026-05-27",
+      "close": 23907.15,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 121.5344
+    },
+    {
+      "date": "2026-05-29",
+      "close": 23547.75,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 119.7073
+    },
+    {
+      "date": "2026-06-01",
+      "close": 23382.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 118.8678
+    },
+    {
+      "date": "2026-06-02",
+      "close": 23483.55,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 119.381
+    },
+    {
+      "date": "2026-06-03",
+      "close": 23405.6,
+      "position": 0,
+      "equity": 119.3317,
+      "bh_equity": 118.9847
+    },
+    {
+      "date": "2026-06-04",
+      "close": 23416.55,
+      "position": 1,
+      "equity": 119.2746,
+      "bh_equity": 119.0404
+    },
+    {
+      "date": "2026-06-05",
+      "close": 23366.7,
+      "position": 1,
+      "equity": 119.0207,
+      "bh_equity": 118.7869
+    },
+    {
+      "date": "2026-06-08",
+      "close": 23123.0,
+      "position": 1,
+      "equity": 117.7794,
+      "bh_equity": 117.5481
+    },
+    {
+      "date": "2026-06-09",
+      "close": 23242.1,
+      "position": 1,
+      "equity": 118.386,
+      "bh_equity": 118.1535
+    },
+    {
+      "date": "2026-06-10",
+      "close": 23214.95,
+      "position": 1,
+      "equity": 118.2477,
+      "bh_equity": 118.0155
+    },
+    {
+      "date": "2026-06-11",
+      "close": 23161.6,
+      "position": 1,
+      "equity": 117.976,
+      "bh_equity": 117.7443
+    },
+    {
+      "date": "2026-06-12",
+      "close": 23622.9,
+      "position": 1,
+      "equity": 120.3257,
+      "bh_equity": 120.0894
+    },
+    {
+      "date": "2026-06-15",
+      "close": 23853.9,
+      "position": 1,
+      "equity": 121.5023,
+      "bh_equity": 121.2637
+    },
+    {
+      "date": "2026-06-16",
+      "close": 23989.15,
+      "position": 1,
+      "equity": 122.1912,
+      "bh_equity": 121.9512
+    },
+    {
+      "date": "2026-06-17",
+      "close": 24085.7,
+      "position": 1,
+      "equity": 122.683,
+      "bh_equity": 122.4421
+    },
+    {
+      "date": "2026-06-18",
+      "close": 24168.0,
+      "position": 1,
+      "equity": 123.1022,
+      "bh_equity": 122.8604
+    },
+    {
+      "date": "2026-06-19",
+      "close": 24013.1,
+      "position": 1,
+      "equity": 122.3132,
+      "bh_equity": 122.073
+    },
+    {
+      "date": "2026-06-22",
+      "close": 24102.9,
+      "position": 1,
+      "equity": 122.7706,
+      "bh_equity": 122.5295
+    },
+    {
+      "date": "2026-06-23",
+      "close": 23824.1,
+      "position": 1,
+      "equity": 121.3505,
+      "bh_equity": 121.1122
+    },
+    {
+      "date": "2026-06-24",
+      "close": 24021.65,
+      "position": 1,
+      "equity": 122.3567,
+      "bh_equity": 122.1165
+    },
+    {
+      "date": "2026-06-25",
+      "close": 24056.0,
+      "position": 1,
+      "equity": 122.5317,
+      "bh_equity": 122.2911
+    },
+    {
+      "date": "2026-06-29",
+      "close": 23946.25,
+      "position": 1,
+      "equity": 121.9727,
+      "bh_equity": 121.7332
+    },
+    {
+      "date": "2026-06-30",
+      "close": 23865.75,
+      "position": 1,
+      "equity": 121.5627,
+      "bh_equity": 121.3239
+    },
+    {
+      "date": "2026-07-01",
+      "close": 24005.85,
+      "position": 1,
+      "equity": 122.2763,
+      "bh_equity": 122.0361
+    },
+    {
+      "date": "2026-07-02",
+      "close": 24175.7,
+      "position": 1,
+      "equity": 123.1414,
+      "bh_equity": 122.8996
+    },
+    {
+      "date": "2026-07-03",
+      "close": 24270.85,
+      "position": 1,
+      "equity": 123.6261,
+      "bh_equity": 123.3833
+    },
+    {
+      "date": "2026-07-06",
+      "close": 24430.35,
+      "position": 1,
+      "equity": 124.4385,
+      "bh_equity": 124.1941
+    },
+    {
+      "date": "2026-07-07",
+      "close": 24398.7,
+      "position": 1,
+      "equity": 124.2773,
+      "bh_equity": 124.0332
+    },
+    {
+      "date": "2026-07-08",
+      "close": 23882.05,
+      "position": 1,
+      "equity": 121.6457,
+      "bh_equity": 121.4068
+    },
+    {
+      "date": "2026-07-09",
+      "close": 23962.8,
+      "position": 1,
+      "equity": 122.057,
+      "bh_equity": 121.8173
+    },
+    {
+      "date": "2026-07-10",
+      "close": 24206.9,
+      "position": 1,
+      "equity": 123.3003,
+      "bh_equity": 123.0582
+    },
+    {
+      "date": "2026-07-13",
+      "close": 24211.0,
+      "position": 1,
+      "equity": 123.3212,
+      "bh_equity": 123.079
+    },
+    {
+      "date": "2026-07-14",
+      "close": 24052.05,
+      "position": 1,
+      "equity": 122.5116,
+      "bh_equity": 122.271
+    },
+    {
+      "date": "2026-07-15",
+      "close": 24078.5,
+      "position": 1,
+      "equity": 122.6463,
+      "bh_equity": 122.4055
+    },
+    {
+      "date": "2026-07-16",
+      "close": 24072.75,
+      "position": 1,
+      "equity": 122.617,
+      "bh_equity": 122.3762
+    }
+  ],
+  "trades": [
+    {
+      "date": "2024-04-18",
+      "action": "BUY",
+      "price": 21995.849609375,
+      "equity": 99.9521
+    },
+    {
+      "date": "2024-07-16",
+      "action": "SELL",
+      "price": 24613.0,
+      "equity": 111.7913
+    },
+    {
+      "date": "2024-08-19",
+      "action": "BUY",
+      "price": 24572.650390625,
+      "equity": 111.7377
+    },
+    {
+      "date": "2024-12-12",
+      "action": "SELL",
+      "price": 24548.69921875,
+      "equity": 111.5754
+    },
+    {
+      "date": "2025-04-29",
+      "action": "BUY",
+      "price": 24335.94921875,
+      "equity": 111.522
+    },
+    {
+      "date": "2025-11-19",
+      "action": "SELL",
+      "price": 26052.650390625,
+      "equity": 119.3317
+    },
+    {
+      "date": "2026-06-04",
+      "action": "BUY",
+      "price": 23416.55078125,
+      "equity": 119.2746
+    }
+  ],
+  "last_date": "2026-07-16",
+  "meta": {
+    "strategy": "timing_rolling (primary)",
+    "horizon": 20,
+    "cost_roundtrip_bps": 9.58,
+    "seeded_from": "frozen model trained through 2023-10-18 (all later days are OOS)",
+    "instrument": "Nifty 50 futures (paper)",
+    "model_trained_through": "2023-10-18"
+  }
+}
