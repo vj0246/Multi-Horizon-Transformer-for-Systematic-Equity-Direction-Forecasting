@@ -1,68 +1,95 @@
-"""India-specific transaction cost model for the Nifty 50 backtest.
+"""Comprehensive India transaction-cost model (FY2024-25 regime).
 
-The Nifty 50 is an index, not a tradable security, so a real directional
-strategy trades either **index futures** (default here - allows the short leg
-the quantile long-short needs) or a **delivery ETF** (long-only). This module
-itemizes every statutory Indian charge for a full round trip (one buy leg + one
-sell leg) and returns the total in basis points.
+Every statutory charge an Indian trader actually pays, itemized for a full round
+trip (one buy leg + one sell leg), returned in basis points of notional. Rates
+are the post-Oct-2024 F&O regime at a discount broker (Zerodha-style flat/near-
+zero brokerage); they are modeled averages, not a broker-exact contract note.
 
-Rates reflect the Indian regime as of FY2024-25 (post the Oct-2024 F&O STT
-hike). They are configurable in config.yaml under `backtest.india`. All figures
-are per-notional basis points unless stated. These are modeled estimates, not a
-broker-exact contract note.
+Per-side statutory rates (bps of turnover), sourced from the NSE/SEBI schedule
+and broker charge lists:
+
+  instrument   brokerage   exchange_txn   STT(buy/sell)   stamp(buy)   SEBI
+  delivery     0.0         0.297          10.0 / 10.0     1.5          0.01
+  intraday     0.4         0.297          0.0  / 2.5      0.3          0.01
+  futures      0.4         0.173          0.0  / 2.0      0.2          0.01
+  options*     flat/lot    3.503(prem)    0.0  / 10.0     0.3          0.01
+
+  STT: delivery 0.1% both sides; intraday 0.025% sell; futures 0.02% sell
+       (raised from 0.0125% Oct-2024); options 0.1% on premium sell.
+  Exchange txn (NSE): delivery/intraday 0.00297%; futures 0.00173%;
+       options 0.03503% of PREMIUM.
+  Stamp duty (buy only, 2020 uniform): delivery 0.015%; intraday 0.003%;
+       futures 0.002%; options 0.003%.
+  SEBI turnover: 0.0001% (Rs 10/crore) all segments.
+  GST: 18% on (brokerage + exchange txn + SEBI).
+  DP charge: delivery SELL only, ~Rs 15.93 flat per scrip incl GST -> added in
+       bps only when a notional is supplied (backtest.india.notional_inr).
+
+*Options are premium-based, a different notional base, so their bps figure is
+ approximate; the tradable strategies here use futures / delivery.
+
+Prior versions of this file carried a 10x error: futures stamp at 2.0 bps rather
+than 0.2 bps (0.002%). Fixed here; it lowers the futures round trip ~1.8 bps.
 """
 from __future__ import annotations
 
-# Instrument-dependent statutory charges (basis points).
-#   STT  - Securities Transaction Tax
-#   Stamp duty - charged on the BUY leg only (uniform 2020 regime)
+# Per-side statutory charges in basis points (except stt split buy/sell).
 INSTRUMENTS = {
-    "futures": {           # NSE index futures
-        "stt_buy_bps": 0.0,
-        "stt_sell_bps": 2.0,   # 0.02% on sell (raised from 0.0125% in Oct 2024)
-        "stamp_buy_bps": 2.0,  # 0.002% on buy
+    "delivery": {
+        "brokerage_bps": 0.0, "exchange_txn_bps": 0.297, "sebi_bps": 0.01,
+        "stt_buy_bps": 10.0, "stt_sell_bps": 10.0, "stamp_buy_bps": 1.5,
+        "default_slippage_bps": 4.0, "dp_on_sell": True,
     },
-    "delivery": {          # Nifty ETF held to delivery (long-only)
-        "stt_buy_bps": 10.0,   # 0.1% on both buy and sell
-        "stt_sell_bps": 10.0,
-        "stamp_buy_bps": 1.5,  # 0.015% on buy
+    "intraday": {
+        "brokerage_bps": 0.4, "exchange_txn_bps": 0.297, "sebi_bps": 0.01,
+        "stt_buy_bps": 0.0, "stt_sell_bps": 2.5, "stamp_buy_bps": 0.3,
+        "default_slippage_bps": 3.0, "dp_on_sell": False,
+    },
+    "futures": {
+        "brokerage_bps": 0.4, "exchange_txn_bps": 0.173, "sebi_bps": 0.01,
+        "stt_buy_bps": 0.0, "stt_sell_bps": 2.0, "stamp_buy_bps": 0.2,
+        "default_slippage_bps": 3.0, "dp_on_sell": False,
+    },
+    "options": {
+        "brokerage_bps": 0.4, "exchange_txn_bps": 3.503, "sebi_bps": 0.01,
+        "stt_buy_bps": 0.0, "stt_sell_bps": 10.0, "stamp_buy_bps": 0.3,
+        "default_slippage_bps": 25.0, "dp_on_sell": False,
     },
 }
+DP_CHARGE_INR = 15.93            # per-scrip delivery-sell demat charge incl GST
 
 
 def india_cost_breakdown(cfg: dict, instrument: str | None = None) -> dict:
     """Round-trip Indian cost breakdown (buy leg + sell leg), in basis points.
 
-    Returns each component plus `roundtrip_bps` (full open+close) and
-    `per_side_bps` (roundtrip / 2, the value the backtester charges per position
-    via metrics.apply_costs, which doubles it back to a round trip).
-
-    `instrument` overrides the configured one (the cross-sectional track prices
-    its long-short legs as single-stock futures and its long-only variant as
-    delivery, in one run).
+    Statutory rates come from INSTRUMENTS; slippage and GST% (and an optional
+    notional for the flat DP charge) come from config `backtest.india`. Returns
+    each component plus `roundtrip_bps` (open+close) and `per_side_bps`
+    (roundtrip / 2, what metrics.apply_costs charges per position and doubles).
     """
-    ind = cfg["backtest"]["india"]
+    ind = cfg["backtest"].get("india", {})
     inst = instrument or ind.get("instrument", "futures")
     if inst not in INSTRUMENTS:
         raise ValueError(f"Unknown instrument '{inst}'. Use one of {list(INSTRUMENTS)}.")
-    stat = INSTRUMENTS[inst]
+    s = INSTRUMENTS[inst]
 
-    brokerage_bps = float(ind.get("brokerage_bps", 0.3))
-    slippage_bps = float(ind.get("slippage_bps", 3.0))
-    exch_bps = float(ind.get("exchange_txn_bps", 0.19))
-    sebi_bps = float(ind.get("sebi_bps", 0.01))
+    # slippage: config overrides the instrument default; GST% configurable
+    slippage_bps = float(ind.get("slippage_bps", s["default_slippage_bps"]))
     gst_pct = float(ind.get("gst_pct", 18.0)) / 100.0
 
-    # Two legs (buy + sell) for the round trip.
-    brokerage = brokerage_bps * 2
-    exchange = exch_bps * 2
-    sebi = sebi_bps * 2
+    brokerage = s["brokerage_bps"] * 2
+    exchange = s["exchange_txn_bps"] * 2
+    sebi = s["sebi_bps"] * 2
     slippage = slippage_bps * 2
-    stt = stat["stt_buy_bps"] + stat["stt_sell_bps"]
-    stamp = stat["stamp_buy_bps"]                 # buy leg only
-    gst = gst_pct * (brokerage + exchange)        # GST applies to brokerage + exchange charges
+    stt = s["stt_buy_bps"] + s["stt_sell_bps"]
+    stamp = s["stamp_buy_bps"]                       # buy leg only
+    gst = gst_pct * (brokerage + exchange + sebi)    # GST on brokerage+txn+SEBI
 
-    roundtrip = brokerage + exchange + sebi + slippage + stt + stamp + gst
+    dp = 0.0
+    if s.get("dp_on_sell") and ind.get("notional_inr"):
+        dp = DP_CHARGE_INR / float(ind["notional_inr"]) * 1e4   # flat -> bps
+
+    roundtrip = brokerage + exchange + sebi + slippage + stt + stamp + gst + dp
     return {
         "instrument": inst,
         "brokerage_bps": round(brokerage, 4),
@@ -71,6 +98,7 @@ def india_cost_breakdown(cfg: dict, instrument: str | None = None) -> dict:
         "stt_bps": round(stt, 4),
         "stamp_duty_bps": round(stamp, 4),
         "gst_bps": round(gst, 4),
+        "dp_charge_bps": round(dp, 4),
         "slippage_bps": round(slippage, 4),
         "roundtrip_bps": round(roundtrip, 4),
         "per_side_bps": round(roundtrip / 2, 4),

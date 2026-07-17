@@ -154,13 +154,17 @@ def test_cross_section_date_split_no_leakage():
 def test_india_cost_breakdown():
     fut = india_cost_breakdown(CFG, instrument="futures")
     parts = (fut["brokerage_bps"] + fut["exchange_txn_bps"] + fut["sebi_bps"]
-             + fut["slippage_bps"] + fut["stt_bps"] + fut["stamp_duty_bps"] + fut["gst_bps"])
-    assert abs(parts - fut["roundtrip_bps"]) < 1e-6
-    assert abs(fut["per_side_bps"] - fut["roundtrip_bps"] / 2) < 1e-6
-    assert fut["stt_bps"] == 2.0 and fut["stamp_duty_bps"] == 2.0     # futures regime
+             + fut["slippage_bps"] + fut["stt_bps"] + fut["stamp_duty_bps"]
+             + fut["gst_bps"] + fut["dp_charge_bps"])
+    assert abs(parts - fut["roundtrip_bps"]) < 1e-3
+    assert abs(fut["per_side_bps"] - fut["roundtrip_bps"] / 2) < 1e-3   # both rounded to 4dp
+    # futures: STT 0.02% sell -> 2.0 bps; stamp 0.002% buy -> 0.2 bps (NOT 2.0)
+    assert fut["stt_bps"] == 2.0 and fut["stamp_duty_bps"] == 0.2
     dlv = india_cost_breakdown(CFG, instrument="delivery")
     assert dlv["stt_bps"] == 20.0                                    # 0.1% both sides
-    assert dlv["roundtrip_bps"] > fut["roundtrip_bps"]               # delivery heavier
+    assert dlv["roundtrip_bps"] > fut["roundtrip_bps"]               # delivery heavier (STT)
+    intr = india_cost_breakdown(CFG, instrument="intraday")
+    assert intr["stt_bps"] == 2.5 and intr["roundtrip_bps"] < dlv["roundtrip_bps"]
 
 
 # ---------------------------------------------------------------- metrics math
@@ -355,6 +359,61 @@ def test_api_imports_and_serves():
     client = TestClient(app)
     h = client.get("/health")
     assert h.status_code == 200 and h.json()["status"] == "ok"
+
+
+# ---------------------------------------------------------------- evaluation suite
+def test_auc_se_accounts_for_label_overlap():
+    """The single easiest way to fake an edge here: treat overlapping labels as
+    i.i.d. An h-day label sampled daily carries ~n/h independent observations, so
+    the SE must inflate ~sqrt(h)."""
+    from Source.Evaluation.suite import _auc_se, auc_pvalue
+    rng = np.random.default_rng(0)
+    y = (rng.random(640) > 0.5).astype(int)
+    se_iid = _auc_se(0.57, y, overlap=1)
+    se_ov = _auc_se(0.57, y, overlap=20)
+    assert se_ov > se_iid
+    assert 3.5 < se_ov / se_iid < 5.5, "overlap=20 should inflate SE by ~sqrt(20)"
+    # and the p-value must become correspondingly unimpressed
+    assert auc_pvalue(0.57, y, overlap=20) > auc_pvalue(0.57, y, overlap=1)
+    assert auc_pvalue(0.57, y, overlap=20) > 0.05, "0.57 must NOT be significant once overlap is honoured"
+
+
+def test_deflated_sharpe_penalises_more_trials():
+    from Source.Evaluation.suite import deflated_sharpe
+    few = deflated_sharpe(0.62, n_obs=32, n_trials=1)
+    many = deflated_sharpe(0.62, n_obs=32, n_trials=100)
+    assert many["dsr"] < few["dsr"], "more trials must deflate the Sharpe"
+    assert many["expected_max_sharpe_from_noise"] > few["expected_max_sharpe_from_noise"]
+
+
+def test_multiple_testing_corrections_are_stricter_than_raw():
+    from Source.Evaluation.suite import multiple_testing
+    p = [0.01, 0.04, 0.2, 0.5, 0.9]
+    mt = multiple_testing(p, alpha=0.05)
+    assert mt["n_significant_uncorrected"] == 2
+    assert mt["n_significant_bonferroni"] <= mt["n_significant_bh"] <= mt["n_significant_uncorrected"]
+    assert mt["bonferroni_threshold"] == 0.05 / 5
+
+
+def test_financial_metrics_math():
+    from Source.Evaluation.suite import financial_metrics
+    r = np.array([0.02, -0.01, 0.03, -0.02, 0.01])
+    f = financial_metrics(r, periods_per_year=12.6)
+    assert abs(f["sharpe"] - r.mean() / r.std() * np.sqrt(12.6)) < 1e-9
+    assert f["max_drawdown"] <= 0
+    assert abs(f["profit_factor"] - (r[r > 0].sum() / -r[r < 0].sum())) < 1e-9
+    assert f["sortino"] > f["sharpe"]        # downside vol < total vol for this series
+    assert abs(f["total_return"] - (np.cumprod(1 + r)[-1] - 1)) < 1e-12
+
+
+def test_error_metrics_mape_is_null_for_binary():
+    from Source.Evaluation.suite import error_metrics
+    y = np.array([0.0, 1.0, 0.0, 1.0])
+    p = np.array([0.4, 0.6, 0.3, 0.8])
+    e = error_metrics(y, p)
+    assert e["mape"] is None, "MAPE divides by y=0; must not be fabricated for binary targets"
+    assert abs(e["mse"] - np.mean((p - y) ** 2)) < 1e-12
+    assert abs(e["rmse"] - np.sqrt(e["mse"])) < 1e-12
 
 
 if __name__ == "__main__":
