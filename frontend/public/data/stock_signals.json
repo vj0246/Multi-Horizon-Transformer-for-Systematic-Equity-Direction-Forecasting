@@ -2491,13 +2491,13 @@
       "key": "balanced",
       "label": "Balanced",
       "construction": "Long the top 17 names by signal (top 20%)",
-      "sharpe": 0.48517041548940903,
+      "sharpe": 0.4886192629051476,
       "sharpe_ci95": [
-        -0.699477484009807,
-        1.9421869560584668
+        -0.6960510957070977,
+        1.9464731806047435
       ],
-      "total_return": 0.1892077571193853,
-      "max_drawdown": -0.2757945428936422,
+      "total_return": 0.1909751208540924,
+      "max_drawdown": -0.2751611970765362,
       "long": [
         "TORNTPHARM",
         "VEDL",
@@ -2523,13 +2523,13 @@
       "key": "aggressive",
       "label": "Aggressive",
       "construction": "Long top 17 / short bottom 17 (market-neutral spread)",
-      "sharpe": -0.8860879314577218,
+      "sharpe": -0.8446317815852735,
       "sharpe_ci95": [
-        -2.375077523345294,
-        0.3607573778292802
+        -2.3239140206338686,
+        0.4014060153285157
       ],
-      "total_return": -0.21264617621926774,
-      "max_drawdown": -0.2640261912713744,
+      "total_return": -0.20422208519778184,
+      "max_drawdown": -0.2589883355549396,
       "long": [
         "TORNTPHARM",
         "VEDL",
