@@ -42,6 +42,8 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 `Source/device.py` logs the device and, with `training.require_gpu: true`, aborts rather than silently using CPU. `config.yaml` `training.require_gpu` enforces GPU-only runs.
 
 ## Directory Map
+- `Source/Paper/` — paper trading. `engine.py` = long/flat book marked daily (costs, equity, trades); `run.py --refresh` = fetch fresh data, score OOS days with the FROZEN model (`Data/Processed_Data/paper_model/`, from `scripts/save_paper_model.py`), write `frontend/public/data/paper_trading.json`. Daily cron: `.github/workflows/paper_trading.yml` (commits update -> Vercel auto-deploys). Frozen model = trained through validation cutoff only, so all later days are true OOS.
+- `Source/Evaluation/` — metric suite (classification/error/financial/statistical, overlap-corrected AUC SE, deflated Sharpe, multiple-testing) + per-model registry (`Data/Evaluation/`). `scripts/evaluate_models.py`, `scripts/conviction_strategy.py`, `scripts/gbdt_baseline.py`.
 - `Source/Risk/sizing.py` — vol-targeted position sizing (lagged trailing vol, no look-ahead); run.py emits a `risk_targeted` strategy variant. Config `risk:`.
 - `Source/Api/main.py` — read-only FastAPI over the artifacts (`uvicorn Source.Api.main:app`). Never trains.
 - `Source/Ingestion/fetch_fundamentals.py` — CURRENT fundamentals snapshot (yfinance). Display/context only; NOT model features (current fundamentals as history = leakage).

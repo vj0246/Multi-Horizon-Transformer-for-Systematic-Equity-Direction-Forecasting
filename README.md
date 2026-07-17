@@ -22,6 +22,8 @@ Training uses strict temporal split (70/15/15 — no look-ahead leakage), Standa
 
 A static Next.js dashboard (in `frontend/`) visualizes the **real, regenerated** backtest results — per-horizon AUC/IC, the cost-aware equity curve, walk-forward folds, the cross-sectional track, attention distribution, and training history. Every number is produced by an actual training run, not hand-authored. An **interactive Sharpe explorer** lets you drag the transaction cost and watch each strategy's net Sharpe and equity recompute live in the browser from the raw per-trade returns — making explicit how sensitive every ratio is to cost assumptions.
 
+**Live paper trading.** A frozen model (trained only through the validation cutoff) paper-trades the primary strategy forward on real NSE closes, charged the full India futures cost stack — every day after the cutoff is a true out-of-sample read. A weekday GitHub Action (`.github/workflows/paper_trading.yml`) re-downloads the data, steps the book, and commits the update, so the site's **Paper Trading** section advances on its own. It is not tuned to look good: it under-performs simply holding the index, exactly as the no-edge finding predicts. Honest forward proof, not a profit demo. `python -m Source.Paper.run --refresh`.
+
 ### Reproduce end-to-end
 
 ```bash
