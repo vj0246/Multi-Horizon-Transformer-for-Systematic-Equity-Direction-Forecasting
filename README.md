@@ -43,7 +43,16 @@ Mean test AUC is **0.5033** and mean IC **+0.021** — marginally above coin-fli
 
 For scale: 0.5033 is a *whisper*, not an edge. Published work on daily index direction lives at 0.50-0.55; anything above 0.6 is usually leakage. The earlier version of this project showed AUC 0.565 and Sharpe 1.5 — that was **artifact** (raw price levels, test-tuned thresholds, single-seed luck), and removing those honestly *dropped* AUC to 0.485. Adding real information brought it back over 0.5 legitimately.
 
-**Trading it is a different story.** After India futures costs (~11.2 bps round-trip: STT, stamp, exchange + SEBI, brokerage, GST, slippage — `Source/Backtest/costs.py`), the rolling-threshold timing book returns **+11.0%** at **Sharpe +0.62** (31% time in market, -9.4% max drawdown) — but its bootstrap **95% CI is [-0.58, 1.93]**, i.e. not distinguishable from zero, and **buy-and-hold beats it** (+30.2%, Sharpe +0.94). 8-fold walk-forward Sharpe is **+0.28 ± 0.36**.
+**Trading it is a different story.** After India futures costs (**9.58 bps** round-trip: STT, stamp, exchange + SEBI, brokerage, GST, slippage — `Source/Backtest/costs.py`, comprehensive per-instrument model), the rolling-threshold timing book returns **~+11%** at **Sharpe ~+0.63** (31% time in market, -9.4% max drawdown) — but its bootstrap **95% CI spans zero**, and **buy-and-hold beats it** (+30.2%, Sharpe +0.94). 8-fold walk-forward Sharpe is **+0.28 ± 0.36**.
+
+### Honesty framework — how these numbers are kept from lying
+`Source/Evaluation/` scores every model with the full metric suite (classification, error, financial, statistical) and refuses the two tricks that manufacture fake edges at this sample size:
+
+- **Overlap-corrected significance.** A 20-day label sampled daily overlaps its neighbours ~20×, so the ~2,984 windows carry only ~**150 independent observations**. The AUC standard error is computed on the effective n, not the raw n — which inflates it ~√20. Under that correct SE the best horizon (0.571) sits 0.66σ from chance, and **0 of 20 horizons survive Bonferroni or Benjamini-Hochberg** (min p = 0.194). The naïve i.i.d. SE had falsely flagged 2 as significant — the framework caught that bug in itself, and it is now a regression test.
+- **Deflated Sharpe Ratio** (Bailey & López de Prado) discounts the Sharpe for the ~16 configurations tried across the project. The timing book's DSR is **0.916**, below the 0.95 bar — not a deflation-surviving edge.
+- **Diebold–Mariano vs a naïve always-up forecast: p = 0.215** — the model does not forecast significantly better than the majority class.
+
+**Conviction strategy** (`scripts/conviction_strategy.py`): the agent abstains unless its calibrated probability is far from 0.5, trading only high-conviction reads (threshold set on validation). Skill is measured as *accuracy above the majority baseline*, not Sharpe — because a positive Sharpe from a long bias in a bull market is beta, not alpha. Best reliable (≥30-trade) result: **accuracy edge +0.000 — no skill above baseline**. Confidence gating does not extract an edge either. GBDT baselines (`scripts/gbdt_baseline.py`) land at the same ~0.50, on both the index and the 86k-row panel. Every model family, data scale, and feature set converges on chance: the binding constraint is the ~150 effective samples, not the architecture.
 
 ### The per-horizon structure does not survive a clean protocol
 
@@ -484,7 +493,7 @@ A plain mean over time steps discards the temporal-order information the positio
 - `config.yaml` now holds every hyperparameter (windows, split, model, costs)
 - `Source/Features/Returns.py` and `Volatility.py` are implemented, not stubs
 - The notebook logic is extracted into a reproducible pipeline (`Source/Pipeline`, `Source/Models`, `Source/Backtest`) runnable with one command
-- An **itemized India cost model** (`Source/Backtest/costs.py`) charges STT, stamp duty, exchange + SEBI fees, brokerage, GST, and slippage — ~11.2 bps round-trip for Nifty futures
+- A **comprehensive India cost model** (`Source/Backtest/costs.py`) charges STT, stamp duty, exchange + SEBI fees, brokerage, GST, slippage and DP charges per instrument (delivery/intraday/futures/options) — **9.58 bps** round-trip for Nifty futures (an audit fixed a 10× stamp-duty error)
 - A **buy-and-hold Nifty benchmark**: results are judged as excess over passively holding the index
 - The primary strategy is **long/flat market timing** — quantile long-short is a cross-sectional construct, meaningless on a single index, kept only as a reference row
 - Model inputs restricted to the **11 stationary features**; raw OHLCV levels excluded (non-stationary out-of-sample)
