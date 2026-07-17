@@ -1,0 +1,53 @@
+name: paper-trading
+
+# Steps the paper book forward once per weekday, after the NSE close (~15:30 IST
+# = 10:00 UTC; run at 11:30 UTC to let data settle). It re-downloads ^NSEI +
+# macro + universe, scores the new days with the FROZEN model committed under
+# Data/Processed_Data/paper_model/, marks the book to market, and commits the
+# updated paper_trading.json. The push triggers the Vercel git deploy, so the
+# live site's Paper Trading section advances on its own. Free (GitHub-hosted).
+
+on:
+  schedule:
+    - cron: "30 11 * * 1-5"      # 11:30 UTC, Mon-Fri
+  workflow_dispatch: {}          # allow manual runs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper-trading
+  cancel-in-progress: false
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install deps (CPU TensorFlow)
+        run: |
+          python -m pip install --upgrade pip
+          pip install "tensorflow-cpu==2.21.0" numpy pandas scipy scikit-learn pyyaml yfinance joblib
+
+      - name: Step the paper book
+        env:
+          TF_CPP_MIN_LOG_LEVEL: "2"
+        run: python -m Source.Paper.run --refresh
+
+      - name: Commit the update
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add frontend/public/data/paper_trading.json Data/Paper/state.json "Data/Raw_Data/^NSEI_daily.csv"
+          if git diff --cached --quiet; then
+            echo "no change today"
+          else
+            git commit -m "chore(paper): daily paper-trading update [skip ci]"
+            git push
+          fi

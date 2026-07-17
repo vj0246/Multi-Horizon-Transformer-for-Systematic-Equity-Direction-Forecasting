@@ -416,6 +416,46 @@ def test_error_metrics_mape_is_null_for_binary():
     assert abs(e["rmse"] - np.sqrt(e["mse"])) < 1e-12
 
 
+# ---------------------------------------------------------------- paper trading
+def test_paper_engine_costs_and_marking():
+    from Source.Paper import engine
+    st = engine.new_state(100.0)
+    # day 1: flat -> go long, charges one side of cost
+    engine.step(st, "2025-01-01", 100.0, None, 1, per_side_bps=5.0, holding_period=2)
+    assert st["position"] == 1
+    assert abs(st["equity"] - 100.0 * (1 - 5e-4)) < 1e-9   # entry cost only, no return yet
+    # day 2: +10% move accrues to the long book; buy-hold too
+    engine.step(st, "2025-01-02", 110.0, 100.0, 1, 5.0, 2)
+    assert abs(st["equity"] - 100.0 * (1 - 5e-4) * 1.10) < 1e-6
+    assert abs(st["bh_equity"] - 110.0) < 1e-6
+    # re-running the same date is idempotent
+    eq = st["equity"]
+    engine.step(st, "2025-01-02", 110.0, 100.0, 1, 5.0, 2)
+    assert st["equity"] == eq
+
+
+def test_paper_engine_flat_earns_nothing_but_bh_does():
+    from Source.Paper import engine
+    st = engine.new_state(100.0)
+    engine.step(st, "d1", 100.0, None, 0, 5.0, 5)         # stay flat
+    engine.step(st, "d2", 120.0, 100.0, 0, 5.0, 5)        # +20% market move
+    assert st["equity"] == 100.0                          # cash earns nothing
+    assert abs(st["bh_equity"] - 120.0) < 1e-9            # benchmark captures it
+    assert st["position"] == 0
+
+
+def test_paper_artifact_valid_if_present():
+    p = ROOT / "frontend" / "public" / "data" / "paper_trading.json"
+    if not p.exists():
+        pytest.skip("paper_trading.json not generated")
+    import json
+    d = json.loads(p.read_text(encoding="utf-8"))
+    assert "NOT investment advice" in d["disclaimer"] or "Not investment advice" in d["disclaimer"]
+    assert len(d["equity_curve"]) > 0
+    for row in d["equity_curve"][:50]:
+        assert row["position"] in (0, 1) and row["strategy"] > 0 and row["buy_hold"] > 0
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

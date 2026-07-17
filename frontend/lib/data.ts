@@ -14,6 +14,7 @@ import features from "@/public/data/features.json";
 import calibration from "@/public/data/calibration.json";
 import crossSection from "@/public/data/cross_section.json";
 import stockSignals from "@/public/data/stock_signals.json";
+import paperTrading from "@/public/data/paper_trading.json";
 
 export interface Summary {
   ticker: string;
@@ -157,7 +158,22 @@ export const data = {
   calibration: calibration as { horizon: number; pre: CalibrationBin[]; post: CalibrationBin[] },
   crossSection: crossSection as unknown as CrossSection,
   stockSignals: stockSignals as unknown as StockSignals,
+  paperTrading: paperTrading as unknown as PaperTrading,
 };
+
+export interface PaperTrading {
+  as_of: string;
+  meta: { strategy?: string; horizon?: number; cost_roundtrip_bps?: number;
+          seeded_from?: string; instrument?: string };
+  summary: {
+    n_days: number; total_return: number; buy_hold_return: number;
+    excess_return: number; sharpe: number; max_drawdown: number;
+    n_trades: number; current_position: string; time_in_market: number;
+  };
+  disclaimer: string;
+  equity_curve: { date: string; strategy: number; buy_hold: number; position: number }[];
+  trades: { date: string; action: string; price: number; equity: number }[];
+}
 
 export interface StockRow {
   ticker: string;

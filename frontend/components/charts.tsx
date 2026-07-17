@@ -558,6 +558,32 @@ export function SharpeExplorer() {
   );
 }
 
+export function PaperEquity() {
+  const d = data.paperTrading.equity_curve.map((r) => ({
+    date: r.date, strategy: r.strategy, buyhold: r.buy_hold, pos: r.position,
+  }));
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <AreaChart data={d} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+        <defs>
+          <linearGradient id="pe" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#4ade80" stopOpacity={0.35} />
+            <stop offset="100%" stopColor="#4ade80" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid stroke={GRID} vertical={false} />
+        <XAxis dataKey="date" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} minTickGap={70} />
+        <YAxis tick={AX} tickLine={false} axisLine={false} domain={["auto", "auto"]} width={44} />
+        <Tooltip {...tip} formatter={(v: number) => v?.toFixed(2)} />
+        <Legend wrapperStyle={{ fontSize: 11 }} />
+        <ReferenceLine y={100} stroke="#8b98ad" strokeDasharray="3 3" />
+        <Area type="monotone" dataKey="strategy" name="paper strategy" stroke="#4ade80" strokeWidth={2} fill="url(#pe)" />
+        <Area type="monotone" dataKey="buyhold" name="buy & hold" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
+}
+
 export function PriceChart() {
   const d = data.price;
   return (

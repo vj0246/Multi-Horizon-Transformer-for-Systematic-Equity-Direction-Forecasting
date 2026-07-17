@@ -10,6 +10,7 @@ import {
   EquityCurve,
   HorizonAUC,
   HorizonIC,
+  PaperEquity,
   PriceChart,
   SharpeExplorer,
   StockSignals,
@@ -22,6 +23,7 @@ const s = data.summary;
 
 const NAV = [
   ["overview", "Overview"],
+  ["paper", "Paper Trading"],
   ["architecture", "Architecture"],
   ["results", "Results"],
   ["backtest", "Backtest"],
@@ -151,6 +153,40 @@ export default function Page() {
             <PriceChart />
           </Panel>
         </div>
+      </Section>
+
+      {/* Paper trading */}
+      <Section id="paper" eyebrow="Live" title="Paper trading — the strategy, forward, on real prices">
+        {(() => {
+          const pt = data.paperTrading;
+          const s = pt.summary;
+          return (
+            <>
+              <div className="mb-5 rounded-lg border border-danger/40 bg-danger/5 px-4 py-3 text-xs leading-relaxed text-muted">
+                <span className="font-semibold text-danger">Paper trading — simulated, no real money.</span>{" "}
+                {pt.disclaimer.replace("PAPER TRADING - simulated, no real money. ", "")}
+              </div>
+              <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <Stat label="Paper return" value={fmtPct(s.total_return, 1)} sub={`${s.n_days} trading days`} tone={s.total_return >= 0 ? "good" : "bad"} />
+                <Stat label="vs Buy & Hold" value={fmtPct(s.excess_return, 1)} sub={`BH ${fmtPct(s.buy_hold_return, 1)}`} tone={s.excess_return >= 0 ? "good" : "bad"} />
+                <Stat label="Sharpe" value={fmtSigned(s.sharpe, 2)} sub={`${s.n_trades} round-trips`} tone={s.sharpe >= 0 ? "good" : "bad"} />
+                <Stat label="Position now" value={s.current_position} sub={`${fmtPct(s.time_in_market, 0)} time in market`} />
+              </div>
+              <Panel
+                title={`Paper equity (start = 100) vs buy-and-hold`}
+                subtitle={`${pt.meta.strategy ?? "primary strategy"} · ${pt.meta.cost_roundtrip_bps}bps round-trip · seeded from ${pt.meta.seeded_from ?? "out-of-sample predictions"} · as of ${pt.as_of}`}
+              >
+                <PaperEquity />
+              </Panel>
+              <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted">
+                This trades the exact primary strategy forward, out-of-sample, on real Nifty
+                closes with the full India futures cost stack. It is not tuned to look good —
+                it under-performs simply holding the index, which is what the no-edge finding
+                predicts. That is the point: honest forward proof, updated as new data arrives.
+              </p>
+            </>
+          );
+        })()}
       </Section>
 
       {/* Architecture */}
