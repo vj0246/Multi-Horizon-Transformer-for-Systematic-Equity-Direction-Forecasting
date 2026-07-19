@@ -1,5 +1,5 @@
 import { data, fmtNum, fmtPct, fmtSigned } from "@/lib/data";
-import { Panel, Section, Stat } from "@/components/ui";
+import { Callout, Panel, Section, Spec, Stat } from "@/components/ui";
 import {
   AttentionChart,
   CalibrationChart,
@@ -34,6 +34,7 @@ const NAV = [
   ["crosssection", "Cross-Section"],
   ["signals", "Stock Signals"],
   ["attention", "Attention"],
+  ["docs", "Docs"],
   ["method", "Method"],
 ];
 
@@ -65,12 +66,20 @@ export default function Page() {
               </a>
             ))}
           </nav>
-          <a
-            href="https://github.com"
-            className="rounded-md border border-edge px-3 py-1 text-xs text-muted hover:text-white"
-          >
-            {s.ticker}
-          </a>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://github.com/vj0246/Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting/tree/main/Documentation"
+              className="hidden rounded-md border border-edge px-3 py-1 text-xs text-muted transition-colors hover:border-edge2 hover:text-white sm:block"
+            >
+              Docs
+            </a>
+            <a
+              href="https://github.com/vj0246/Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting"
+              className="rounded-md border border-edge px-3 py-1 text-xs text-muted transition-colors hover:border-edge2 hover:text-white"
+            >
+              GitHub
+            </a>
+          </div>
         </div>
       </header>
 
@@ -81,17 +90,40 @@ export default function Page() {
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
             {s.date_start} → {s.date_end} · {s.n_trading_days.toLocaleString()} trading days
           </div>
-          <h1 className="max-w-3xl text-3xl font-bold leading-tight text-white md:text-5xl">
+          <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-white md:text-5xl">
             Multi-Horizon Transformer for{" "}
-            <span className="text-accent">Nifty 50</span> Direction Forecasting
+            <span className="bg-gradient-to-r from-accent to-accent2 bg-clip-text text-transparent">
+              Nifty 50
+            </span>{" "}
+            Direction Forecasting
           </h1>
-          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted md:text-base">
+          <p className="mt-4 max-w-2xl text-base font-medium text-white/90 md:text-lg">
+            Multi-horizon Transformer for Nifty 50 direction, with rigorous evidence it
+            has no edge.
+          </p>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted md:text-base">
             A single Transformer encoder predicts whether the Nifty 50 index will close
             higher — simultaneously across {s.horizons} forward horizons (1 to {s.horizons}{" "}
             days). Trained on {s.n_features} engineered features over{" "}
             {s.n_samples.toLocaleString()} sequences with a strict temporal split. Every
             number below comes from a real trained model on held-out test data.
           </p>
+
+          <div className="mt-6 flex flex-wrap gap-2 text-xs">
+            {[
+              ["Transformer encoder", "2 blocks · 4 heads · d64"],
+              ["No look-ahead", "8 audited leakage rules"],
+              ["Real India costs", `${s.roundtrip_cost_bps.toFixed(2)}bps round-trip`],
+              ["Live paper trading", "updated every weekday"],
+            ].map(([k, v]) => (
+              <span
+                key={k}
+                className="rounded-full border border-edge bg-panel/70 px-3 py-1 text-muted"
+              >
+                <span className="text-white">{k}</span> · {v}
+              </span>
+            ))}
+          </div>
 
           <div className="mt-9 grid grid-cols-2 gap-3 md:grid-cols-4">
             <Stat
@@ -118,6 +150,20 @@ export default function Page() {
               sub="long/flat timing equity"
               tone="default"
             />
+          </div>
+
+          <div className="mt-6 max-w-3xl">
+            <Callout tone="warn" title="The honest verdict — read this first">
+              This model has <span className="text-white">no statistically detectable edge</span>.
+              Mean AUC is {fmtNum(meanAuc, 4)} against a 0.50 coin flip, and{" "}
+              <span className="text-white">
+                {data.predictions.verdict.n_actionable} of {data.predictions.verdict.n_horizons}
+              </span>{" "}
+              horizons survive multiple-testing correction. The site is published as a
+              negative result: the contribution is the measurement apparatus — leakage
+              audits, overlap-corrected intervals, deflated Sharpe — not alpha. Nothing
+              here should be traded.
+            </Callout>
           </div>
         </div>
       </div>
@@ -317,9 +363,10 @@ export default function Page() {
       </Section>
 
       {/* Results */}
-      <Section id="results" eyebrow="Results" title="Per-horizon predictive skill (test set)">
+      <Section id="results" eyebrow="Results" title="Per-horizon predictive skill (test set)"
+        lede="AUC measures ranking ability independent of any threshold; 0.50 is a coin flip. Read these beside the confidence intervals in the Predictions section — a bar above 0.50 is not evidence of skill on its own.">
         <div className="grid gap-4 lg:grid-cols-2">
-          <Panel title="ROC-AUC by horizon" subtitle="green = above 0.5 coin-flip baseline">
+          <Panel title="ROC-AUC by horizon" subtitle="teal = above the 0.50 coin-flip baseline · rose = below">
             <HorizonAUC />
           </Panel>
           <Panel title="Information Coefficient by horizon" subtitle="Spearman rank corr: signal vs realized forward return">
@@ -354,7 +401,8 @@ export default function Page() {
       </Section>
 
       {/* Backtest */}
-      <Section id="backtest" eyebrow="Backtest" title="Long/flat timing backtest — calibrated 20-horizon ensemble">
+      <Section id="backtest" eyebrow="Backtest" title="Long/flat timing backtest — calibrated 20-horizon ensemble"
+        lede="All 20 logits are z-scored on validation statistics and averaged into one signal. The strategy goes long when that signal clears a trailing percentile, and is charged the full India futures cost stack on every switch.">
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
           On a single index, long-short quantile spreads are a cross-sectional idea that
           does not transfer; the honest framing is <span className="text-white">market
@@ -512,7 +560,8 @@ export default function Page() {
       </Section>
 
       {/* Walk-forward */}
-      <Section id="walkforward" eyebrow="Robustness" title="Walk-forward validation">
+      <Section id="walkforward" eyebrow="Robustness" title="Walk-forward validation"
+        lede="Eight expanding-window folds, each retrained from scratch. If an edge were real and stable, fold Sharpes would cluster above zero. The spread across folds is the honest measure of regime robustness.">
         <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted">
           The single split can get lucky. Here the model is retrained from scratch on an
           expanding window and evaluated out-of-sample on the next block —{" "}
@@ -665,6 +714,38 @@ export default function Page() {
           <Panel title="Training history" subtitle="binary cross-entropy loss · early stopping restores best weights">
             <TrainingHistory />
           </Panel>
+        </div>
+      </Section>
+
+
+      {/* Documentation */}
+      <Section
+        id="docs"
+        eyebrow="Documentation"
+        title="Read the whole thing"
+        lede="Every file, every metric formula, every leakage rule and every number is documented in the repository — written so someone who has never seen the project can reproduce it end to end."
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            ["Overview", "What it is, what it found, why the finding is negative", "01-overview.md"],
+            ["Getting Started", "Install, run, regenerate artifacts, WSL2 GPU setup", "02-getting-started.md"],
+            ["Data", "Sources, schemas and the eight audited leakage rules", "03-data.md"],
+            ["Architecture", "Pipeline and model diagrams, layer by layer", "04-architecture.md"],
+            ["File Reference", "Every file in the repo and how to run it", "05-file-reference.md"],
+            ["Evaluation", "Every metric, plus three bugs that faked skill", "06-evaluation.md"],
+            ["Results", "The numbers, with confidence intervals", "07-results.md"],
+            ["Instrument Choice", "Why the index, and whether a single stock is better", "08-instrument-choice.md"],
+            ["Research Gaps", "Literature critique vs what is implemented", "09-research-gaps.md"],
+          ].map(([title, desc, file]) => (
+            <a
+              key={file}
+              href={`https://github.com/vj0246/Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting/blob/main/Documentation/${file}`}
+              className="panel block p-4 transition-colors hover:border-edge2"
+            >
+              <div className="text-sm font-semibold text-white">{title}</div>
+              <div className="mt-1 text-xs leading-relaxed text-muted">{desc}</div>
+            </a>
+          ))}
         </div>
       </Section>
 

@@ -19,17 +19,17 @@ import {
 } from "recharts";
 import { data, type StrategyReport } from "@/lib/data";
 
-const AX = { stroke: "#8b98ad", fontSize: 11 };
-const GRID = "#232c3d";
+const AX = { stroke: "#94a3b8", fontSize: 11 };
+const GRID = "#1e2839";
 
 const tip = {
   contentStyle: {
-    background: "#0f1420",
-    border: "1px solid #232c3d",
+    background: "#0e131d",
+    border: "1px solid #1e2839",
     borderRadius: 8,
     fontSize: 12,
   },
-  labelStyle: { color: "#e6edf5" },
+  labelStyle: { color: "#e8eef7" },
 };
 
 export function HorizonAUC() {
@@ -41,10 +41,10 @@ export function HorizonAUC() {
         <XAxis dataKey="h" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis domain={[0.4, 0.65]} tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(4)} />
-        <ReferenceLine y={0.5} stroke="#f87171" strokeDasharray="4 4" />
+        <ReferenceLine y={0.5} stroke="#fb7185" strokeDasharray="4 4" />
         <Bar dataKey="auc" radius={[3, 3, 0, 0]}>
           {d.map((row, i) => (
-            <Cell key={i} fill={row.auc >= 0.5 ? "#4ade80" : "#f87171"} />
+            <Cell key={i} fill={row.auc >= 0.5 ? "#2dd4bf" : "#fb7185"} />
           ))}
         </Bar>
       </BarChart>
@@ -61,10 +61,10 @@ export function HorizonIC() {
         <XAxis dataKey="h" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(4)} />
-        <ReferenceLine y={0} stroke="#8b98ad" />
+        <ReferenceLine y={0} stroke="#94a3b8" />
         <Bar dataKey="ic" radius={[3, 3, 0, 0]}>
           {d.map((row, i) => (
-            <Cell key={i} fill={row.ic >= 0 ? "#38bdf8" : "#f87171"} />
+            <Cell key={i} fill={row.ic >= 0 ? "#a78bfa" : "#fb7185"} />
           ))}
         </Bar>
       </BarChart>
@@ -81,19 +81,19 @@ export function EquityCurve() {
       <AreaChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
         <defs>
           <linearGradient id="eq" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4ade80" stopOpacity={0.4} />
-            <stop offset="100%" stopColor="#4ade80" stopOpacity={0} />
+            <stop offset="0%" stopColor="#2dd4bf" stopOpacity={0.4} />
+            <stop offset="100%" stopColor="#2dd4bf" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke={GRID} vertical={false} />
         <XAxis dataKey="i" tick={AX} tickLine={false} axisLine={{ stroke: GRID }}
-          label={{ value: "trade #", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
+          label={{ value: "trade #", fill: "#94a3b8", fontSize: 11, dy: 12 }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v?.toFixed(4)} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
-        <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
-        <Area type="monotone" dataKey="strategy" name="long/flat timing (ensemble)" stroke="#4ade80" strokeWidth={2} fill="url(#eq)" />
-        <Area type="monotone" dataKey="buyhold" name="buy & hold Nifty" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
+        <ReferenceLine y={1} stroke="#94a3b8" strokeDasharray="3 3" />
+        <Area type="monotone" dataKey="strategy" name="long/flat timing (ensemble)" stroke="#2dd4bf" strokeWidth={2} fill="url(#eq)" />
+        <Area type="monotone" dataKey="buyhold" name="buy & hold Nifty" stroke="#94a3b8" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -106,10 +106,10 @@ export function AttentionChart() {
       <LineChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
         <CartesianGrid stroke={GRID} vertical={false} />
         <XAxis dataKey="days_back" tick={AX} tickLine={false} axisLine={{ stroke: GRID }}
-          reversed label={{ value: "days back", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
+          reversed label={{ value: "days back", fill: "#94a3b8", fontSize: 11, dy: 12 }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(5)} />
-        <Line type="monotone" dataKey="weight" stroke="#38bdf8" strokeWidth={2} dot={false} />
+        <Line type="monotone" dataKey="weight" stroke="#a78bfa" strokeWidth={2} dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -123,8 +123,8 @@ export function ThresholdSweep() {
         <XAxis dataKey="threshold" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(3)} />
-        <ReferenceLine y={0} stroke="#8b98ad" />
-        <Line type="monotone" dataKey="sharpe" stroke="#4ade80" strokeWidth={2} dot={false} />
+        <ReferenceLine y={0} stroke="#94a3b8" />
+        <Line type="monotone" dataKey="sharpe" stroke="#2dd4bf" strokeWidth={2} dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -138,10 +138,10 @@ export function DecileChart() {
         <XAxis dataKey="decile" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(4)} />
-        <ReferenceLine y={0} stroke="#8b98ad" />
+        <ReferenceLine y={0} stroke="#94a3b8" />
         <Bar dataKey="mean_return" radius={[3, 3, 0, 0]}>
           {data.decile.map((row, i) => (
-            <Cell key={i} fill={row.mean_return >= 0 ? "#4ade80" : "#f87171"} />
+            <Cell key={i} fill={row.mean_return >= 0 ? "#2dd4bf" : "#fb7185"} />
           ))}
         </Bar>
       </BarChart>
@@ -157,10 +157,10 @@ export function YearlyChart() {
         <XAxis dataKey="year" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(3)} />
-        <ReferenceLine y={0} stroke="#8b98ad" />
+        <ReferenceLine y={0} stroke="#94a3b8" />
         <Bar dataKey="sharpe" radius={[3, 3, 0, 0]}>
           {data.yearly.map((row, i) => (
-            <Cell key={i} fill={row.sharpe >= 0 ? "#4ade80" : "#f87171"} />
+            <Cell key={i} fill={row.sharpe >= 0 ? "#2dd4bf" : "#fb7185"} />
           ))}
         </Bar>
       </BarChart>
@@ -178,8 +178,8 @@ export function TrainingHistory() {
         <XAxis dataKey="epoch" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(4)} />
-        <Line type="monotone" dataKey="loss" stroke="#38bdf8" strokeWidth={2} dot={false} name="train loss" />
-        <Line type="monotone" dataKey="val_loss" stroke="#4ade80" strokeWidth={2} dot={false} name="val loss" />
+        <Line type="monotone" dataKey="loss" stroke="#a78bfa" strokeWidth={2} dot={false} name="train loss" />
+        <Line type="monotone" dataKey="val_loss" stroke="#2dd4bf" strokeWidth={2} dot={false} name="val loss" />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -202,13 +202,13 @@ export function CalibrationChart() {
         <CartesianGrid stroke={GRID} vertical={false} />
         <XAxis dataKey="x" type="number" domain={[0, 1]} tick={AX} tickLine={false}
           axisLine={{ stroke: GRID }}
-          label={{ value: "predicted P(up)", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
+          label={{ value: "predicted P(up)", fill: "#94a3b8", fontSize: 11, dy: 12 }} />
         <YAxis domain={[0, 1]} tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v?.toFixed(3)} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
-        <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]} stroke="#8b98ad" strokeDasharray="4 4" />
-        <Line type="monotone" dataKey="raw" name="raw sigmoid" stroke="#f87171" strokeWidth={1.6} strokeDasharray="5 3" connectNulls />
-        <Line type="monotone" dataKey="calibrated" name="Platt-calibrated" stroke="#4ade80" strokeWidth={2} connectNulls />
+        <ReferenceLine segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]} stroke="#94a3b8" strokeDasharray="4 4" />
+        <Line type="monotone" dataKey="raw" name="raw sigmoid" stroke="#fb7185" strokeWidth={1.6} strokeDasharray="5 3" connectNulls />
+        <Line type="monotone" dataKey="calibrated" name="Platt-calibrated" stroke="#2dd4bf" strokeWidth={2} connectNulls />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -226,10 +226,10 @@ export function CSQuintiles() {
         <XAxis dataKey="q" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => `${(v * 100).toFixed(2)}%`} />
-        <ReferenceLine y={0} stroke="#8b98ad" />
+        <ReferenceLine y={0} stroke="#94a3b8" />
         <Bar dataKey="ret" radius={[3, 3, 0, 0]}>
           {d.map((row, i) => (
-            <Cell key={i} fill={row.ret >= 0 ? "#4ade80" : "#f87171"} />
+            <Cell key={i} fill={row.ret >= 0 ? "#2dd4bf" : "#fb7185"} />
           ))}
         </Bar>
       </BarChart>
@@ -255,14 +255,14 @@ export function CSEquity() {
       <LineChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
         <CartesianGrid stroke={GRID} vertical={false} />
         <XAxis dataKey="i" tick={AX} tickLine={false} axisLine={{ stroke: GRID }}
-          label={{ value: "rebalance #", fill: "#8b98ad", fontSize: 11, dy: 12 }} />
+          label={{ value: "rebalance #", fill: "#94a3b8", fontSize: 11, dy: 12 }} />
         <YAxis tick={AX} tickLine={false} axisLine={false} domain={["auto", "auto"]} />
         <Tooltip {...tip} formatter={(v: number) => v?.toFixed(4)} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
-        <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
-        <Line type="monotone" dataKey="spread" name="L/S spread (net, futures)" stroke="#4ade80" strokeWidth={2} dot={false} />
-        <Line type="monotone" dataKey="longonly" name="long-only top 20% (net, delivery)" stroke="#38bdf8" strokeWidth={1.8} dot={false} />
-        <Line type="monotone" dataKey="ew" name="equal-weight universe (gross)" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" dot={false} />
+        <ReferenceLine y={1} stroke="#94a3b8" strokeDasharray="3 3" />
+        <Line type="monotone" dataKey="spread" name="L/S spread (net, futures)" stroke="#2dd4bf" strokeWidth={2} dot={false} />
+        <Line type="monotone" dataKey="longonly" name="long-only top 20% (net, delivery)" stroke="#a78bfa" strokeWidth={1.8} dot={false} />
+        <Line type="monotone" dataKey="ew" name="equal-weight universe (gross)" stroke="#94a3b8" strokeWidth={1.6} strokeDasharray="4 3" dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -275,16 +275,16 @@ export function CSICSeries() {
       <AreaChart data={d} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
         <defs>
           <linearGradient id="ic" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.3} />
-            <stop offset="100%" stopColor="#38bdf8" stopOpacity={0} />
+            <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.3} />
+            <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke={GRID} vertical={false} />
         <XAxis dataKey="date" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} minTickGap={60} />
         <YAxis tick={AX} tickLine={false} axisLine={false} />
         <Tooltip {...tip} formatter={(v: number) => v?.toFixed(3)} />
-        <ReferenceLine y={0} stroke="#8b98ad" />
-        <Area type="monotone" dataKey="ic" stroke="#38bdf8" strokeWidth={1.4} fill="url(#ic)" />
+        <ReferenceLine y={0} stroke="#94a3b8" />
+        <Area type="monotone" dataKey="ic" stroke="#a78bfa" strokeWidth={1.4} fill="url(#ic)" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -292,11 +292,11 @@ export function CSICSeries() {
 
 // ---- Live stock signals: per-stock, all-horizons heatmap + risk profiles ---
 function probColor(p: number): string {
-  // Diverging around 0.5: red (underperform) -> neutral -> green (outperform).
+  // Diverging around 0.5: rose (underperform) -> neutral -> teal (outperform).
   const t = Math.max(-1, Math.min(1, (p - 0.5) * 6));
   return t >= 0
-    ? `rgba(74, 222, 128, ${(t * 0.85).toFixed(3)})`
-    : `rgba(248, 113, 113, ${(-t * 0.85).toFixed(3)})`;
+    ? `rgba(45, 212, 191, ${(t * 0.85).toFixed(3)})`
+    : `rgba(251, 113, 133, ${(-t * 0.85).toFixed(3)})`;
 }
 
 export function StockSignals() {
@@ -361,8 +361,8 @@ export function StockSignals() {
               <XAxis dataKey="h" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
               <YAxis domain={[0.3, 0.7]} tick={AX} tickLine={false} axisLine={false} />
               <Tooltip {...tip} formatter={(v: number) => `${(v * 100).toFixed(1)}%`} />
-              <ReferenceLine y={0.5} stroke="#8b98ad" strokeDasharray="4 4" />
-              <Line type="monotone" dataKey="p" stroke="#38bdf8" strokeWidth={2} dot={false} />
+              <ReferenceLine y={0.5} stroke="#94a3b8" strokeDasharray="4 4" />
+              <Line type="monotone" dataKey="p" stroke="#a78bfa" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -418,12 +418,12 @@ export function StockSignals() {
 // per-side transaction cost. Uses the raw gross returns and exposures exported
 // per strategy: net_i = gross_i - abs_pos_i * 2 * (bps / 1e4).
 const EXPLORER_STRATS: { key: string; label: string; color: string }[] = [
-  { key: "timing_rolling", label: "Timing · rolling thr", color: "#4ade80" },
+  { key: "timing_rolling", label: "Timing · rolling thr", color: "#2dd4bf" },
   { key: "timing_ensemble", label: "Timing · frozen thr", color: "#64748b" },
   { key: "risk_targeted", label: "Vol-targeted", color: "#a78bfa" },
-  { key: "timing_h20", label: "Timing · h20", color: "#38bdf8" },
+  { key: "timing_h20", label: "Timing · h20", color: "#a78bfa" },
   { key: "quantile", label: "Quantile L/S", color: "#f59e0b" },
-  { key: "sign", label: "Sign", color: "#f87171" },
+  { key: "sign", label: "Sign", color: "#fb7185" },
 ];
 
 function annSharpe(net: number[], ppy: number): number {
@@ -506,10 +506,10 @@ export function SharpeExplorer() {
               <XAxis type="number" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
               <YAxis type="category" dataKey="label" tick={{ ...AX, fontSize: 10 }} tickLine={false} axisLine={false} width={90} />
               <Tooltip {...tip} formatter={(v: number) => v.toFixed(3)} />
-              <ReferenceLine x={0} stroke="#8b98ad" />
+              <ReferenceLine x={0} stroke="#94a3b8" />
               <Bar dataKey="sharpe" radius={[0, 3, 3, 0]}>
                 {bars.map((b, i) => (
-                  <Cell key={i} fill={b.sharpe >= 0 ? b.color : "#f87171"} />
+                  <Cell key={i} fill={b.sharpe >= 0 ? b.color : "#fb7185"} />
                 ))}
               </Bar>
             </BarChart>
@@ -523,7 +523,7 @@ export function SharpeExplorer() {
               <XAxis dataKey="i" tick={AX} tickLine={false} axisLine={{ stroke: GRID }} />
               <YAxis tick={AX} tickLine={false} axisLine={false} />
               <Tooltip {...tip} formatter={(v: number) => v?.toFixed(3)} />
-              <ReferenceLine y={1} stroke="#8b98ad" strokeDasharray="3 3" />
+              <ReferenceLine y={1} stroke="#94a3b8" strokeDasharray="3 3" />
               {computed.map((c) => (
                 <Line key={c.key} type="monotone" dataKey={c.key} name={c.label} stroke={c.color} strokeWidth={1.8} dot={false} />
               ))}
@@ -567,8 +567,8 @@ export function PaperEquity() {
       <AreaChart data={d} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
         <defs>
           <linearGradient id="pe" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4ade80" stopOpacity={0.35} />
-            <stop offset="100%" stopColor="#4ade80" stopOpacity={0} />
+            <stop offset="0%" stopColor="#2dd4bf" stopOpacity={0.35} />
+            <stop offset="100%" stopColor="#2dd4bf" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke={GRID} vertical={false} />
@@ -576,9 +576,9 @@ export function PaperEquity() {
         <YAxis tick={AX} tickLine={false} axisLine={false} domain={["auto", "auto"]} width={44} />
         <Tooltip {...tip} formatter={(v: number) => v?.toFixed(2)} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
-        <ReferenceLine y={100} stroke="#8b98ad" strokeDasharray="3 3" />
-        <Area type="monotone" dataKey="strategy" name="paper strategy" stroke="#4ade80" strokeWidth={2} fill="url(#pe)" />
-        <Area type="monotone" dataKey="buyhold" name="buy & hold" stroke="#8b98ad" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
+        <ReferenceLine y={100} stroke="#94a3b8" strokeDasharray="3 3" />
+        <Area type="monotone" dataKey="strategy" name="paper strategy" stroke="#2dd4bf" strokeWidth={2} fill="url(#pe)" />
+        <Area type="monotone" dataKey="buyhold" name="buy & hold" stroke="#94a3b8" strokeWidth={1.6} strokeDasharray="4 3" fill="none" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -591,8 +591,8 @@ export function PriceChart() {
       <AreaChart data={d} margin={{ top: 8, right: 8, left: -4, bottom: 0 }}>
         <defs>
           <linearGradient id="px" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.35} />
-            <stop offset="100%" stopColor="#38bdf8" stopOpacity={0} />
+            <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.35} />
+            <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke={GRID} vertical={false} />
@@ -600,7 +600,7 @@ export function PriceChart() {
           minTickGap={60} />
         <YAxis tick={AX} tickLine={false} axisLine={false} domain={["auto", "auto"]} width={52} />
         <Tooltip {...tip} formatter={(v: number) => v.toFixed(0)} />
-        <Area type="monotone" dataKey="close" stroke="#38bdf8" strokeWidth={1.6} fill="url(#px)" />
+        <Area type="monotone" dataKey="close" stroke="#a78bfa" strokeWidth={1.6} fill="url(#px)" />
       </AreaChart>
     </ResponsiveContainer>
   );
