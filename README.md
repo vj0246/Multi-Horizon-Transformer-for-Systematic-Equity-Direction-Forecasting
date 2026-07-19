@@ -4,6 +4,26 @@
 
 ---
 
+## 📚 Full Documentation
+
+**→ [`Documentation/`](Documentation/README.md)** — complete guide written so that
+anyone can understand every file and reproduce every number without asking a
+question.
+
+| Doc | Answers |
+|-----|---------|
+| [Overview](Documentation/01-overview.md) | What this is, what it found, why the finding is negative |
+| [Getting Started](Documentation/02-getting-started.md) | Install, run, regenerate every artifact, GPU setup |
+| [Data](Documentation/03-data.md) | Every source, schema, and the 8 leakage rules |
+| [Architecture](Documentation/04-architecture.md) | Pipeline + model diagrams, layer by layer |
+| [File Reference](Documentation/05-file-reference.md) | Every file, what it does, how to run it |
+| [Evaluation](Documentation/06-evaluation.md) | Every metric and formula, and 3 bugs that faked skill |
+| [Results](Documentation/07-results.md) | The actual numbers with confidence intervals |
+| [Instrument Choice](Documentation/08-instrument-choice.md) | Why `^NSEI`, and whether a single stock is better |
+| [Research Gaps](Documentation/09-research-gaps.md) | Literature critique vs what is implemented |
+
+---
+
 ## Technical Summary
 
 This project builds a **multi-output binary classification Transformer** to answer one question with 20 simultaneous answers: *Will the Nifty 50 close higher than today — 1 day, 2 days, 3 days... all the way to 20 days from now?*
