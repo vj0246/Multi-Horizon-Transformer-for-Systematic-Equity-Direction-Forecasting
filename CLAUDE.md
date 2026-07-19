@@ -43,6 +43,7 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 
 ## Directory Map
 - `Source/Paper/` — paper trading. `engine.py` = long/flat book marked daily (costs, equity, trades); `run.py --refresh` = fetch fresh data, score OOS days with the FROZEN model (`Data/Processed_Data/paper_model/`, from `scripts/save_paper_model.py`), write `frontend/public/data/paper_trading.json`. Daily cron: `.github/workflows/paper_trading.yml` (commits update -> Vercel auto-deploys). Frozen model = trained through validation cutoff only, so all later days are true OOS.
+- `Source/Insights/build.py` — current forward predictions (`predictions.json`): scores the latest window with the frozen paper model, reports per-horizon calibrated P(up) beside its overlap-corrected AUC 95% CI and multiple-testing verdict. Never reuse `horizons.json`'s `p_value` for significance — that is a Spearman IC p-value over raw overlapping labels (i.i.d. assumption violated); this module tests AUC vs 0.5 with the effective-n SE instead.
 - `Source/Evaluation/` — metric suite (classification/error/financial/statistical, overlap-corrected AUC SE, deflated Sharpe, multiple-testing) + per-model registry (`Data/Evaluation/`). `scripts/evaluate_models.py`, `scripts/conviction_strategy.py`, `scripts/gbdt_baseline.py`.
 - `Source/Risk/sizing.py` — vol-targeted position sizing (lagged trailing vol, no look-ahead); run.py emits a `risk_targeted` strategy variant. Config `risk:`.
 - `Source/Api/main.py` — read-only FastAPI over the artifacts (`uvicorn Source.Api.main:app`). Never trains.
@@ -79,6 +80,7 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 
 ## Gotchas
 - Raw yfinance CSV has 3 header rows (Price/Ticker/Date). `data_loader.load_ohlcv` strips them + drops the duplicate adj-close column.
+- Attention pooling is `AttentionPooling1D`, a registered Keras Layer — NOT a Lambda. Keras cannot deserialize a Lambda wrapping a Python lambda, which breaks `model.save()` and makes optimizer state unsaveable. Its inner Dense is built in `build()`, otherwise weights silently fail to restore. Changing this invalidates existing `.weights.h5` files (re-run `scripts/save_paper_model.py`).
 - Model outputs **raw logits** (`from_logits=True`); apply `tf.sigmoid` at inference. Logits are used directly as the alpha signal.
 - Strategy metrics use **non-overlapping** 20-day returns (no overlap inflation) and charge transaction costs.
 - No look-ahead: StandardScaler fit on train only; temporal split, no shuffling.

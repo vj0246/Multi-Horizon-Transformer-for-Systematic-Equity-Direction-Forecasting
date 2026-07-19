@@ -56,6 +56,10 @@ def main():
         m.fit(X[:vcut], y[:vcut], validation_data=(X[vcut:], y[vcut:]),
               epochs=cfg["training"]["epochs"], batch_size=cfg["training"]["batch_size"],
               callbacks=[es], verbose=0)
+        # full model (architecture + weights + OPTIMIZER state) so training could
+        # be resumed; possible because attention pooling is a registered Layer,
+        # not a Lambda. Weights are also kept for lightweight loads.
+        m.save(str(OUT / f"seed_{i}.keras"))
         m.save_weights(str(OUT / f"seed_{i}.weights.h5"))
         lv = m.predict(X[vcut:], verbose=0)
         val_logits_accum = lv if val_logits_accum is None else val_logits_accum + lv
@@ -64,13 +68,23 @@ def main():
     import joblib
     joblib.dump(ds.scaler, OUT / "scaler.pkl")
     mu, sd = val_logits.mean(0), val_logits.std(0)
+
+    # Per-horizon Platt coefficients, fit ONLY on the held-out tail the seeds did
+    # not fit on, so forward probabilities are calibrated without touching any
+    # day the paper book will later trade.
+    from sklearn.linear_model import LogisticRegression
+    platt = []
+    for h in range(val_logits.shape[1]):
+        col, yh = val_logits[:, h:h + 1], y[vcut:][:, h]
+        if len(np.unique(yh)) < 2:                # degenerate horizon -> plain sigmoid
+            platt.append({"a": 1.0, "b": 0.0})
+            continue
+        lr = LogisticRegression(C=1e6, max_iter=1000).fit(col, yh)
+        platt.append({"a": float(lr.coef_[0][0]), "b": float(lr.intercept_[0])})
     # signal history over train+val for the rolling threshold seed
     all_logits = None
     for i in range(n_seeds):
-        tf.keras.utils.set_random_seed(cfg["training"]["seed"] + i)
-        m, _ = build_model(cfg, num_features=n_features)
-        compile_model(m, cfg)
-        m.load_weights(str(OUT / f"seed_{i}.weights.h5"))
+        m = tf.keras.models.load_model(str(OUT / f"seed_{i}.keras"))
         p = m.predict(X, verbose=0)
         all_logits = p if all_logits is None else all_logits + p
     sig_hist = ensemble_signal(all_logits / n_seeds, mu, sd)
@@ -83,6 +97,7 @@ def main():
         "n_seeds": n_seeds, "n_features": n_features,
         "feature_cols": ds.feature_cols,
         "mu": mu.tolist(), "sd": sd.tolist(),
+        "platt": platt,
         "signal_history": [round(float(x), 5) for x in sig_hist],
         "oos_cutoff": oos_cutoff,
         "trained_through": oos_cutoff,

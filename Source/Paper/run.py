@@ -75,7 +75,7 @@ def _frozen_signal_series(cfg):
     """Score every 60-day window with the frozen ensemble -> (dates, closes, signal)."""
     import joblib
 
-    from Source.Models.transformer import build_model, compile_model
+    from Source.Models.transformer import build_model
     meta = json.loads((MODEL / "meta.json").read_text(encoding="utf-8"))
     scaler = joblib.load(MODEL / "scaler.pkl")
     feat_cols = meta["feature_cols"]
@@ -90,10 +90,11 @@ def _frozen_signal_series(cfg):
     feats = df[feat_cols].to_numpy(dtype="float32")
     n_feat = len(feat_cols)
 
+    # inference only: never compiled, so the saved optimizer state is skipped
+    # deliberately (no shape-mismatch warning) instead of half-restored.
     models = []
     for i in range(meta["n_seeds"]):
         m, _ = build_model(cfg, num_features=n_feat)
-        compile_model(m, cfg)
         m.load_weights(str(MODEL / f"seed_{i}.weights.h5"))
         models.append(m)
 

@@ -15,6 +15,7 @@ import calibration from "@/public/data/calibration.json";
 import crossSection from "@/public/data/cross_section.json";
 import stockSignals from "@/public/data/stock_signals.json";
 import paperTrading from "@/public/data/paper_trading.json";
+import predictions from "@/public/data/predictions.json";
 
 export interface Summary {
   ticker: string;
@@ -159,6 +160,7 @@ export const data = {
   crossSection: crossSection as unknown as CrossSection,
   stockSignals: stockSignals as unknown as StockSignals,
   paperTrading: paperTrading as unknown as PaperTrading,
+  predictions: predictions as unknown as Predictions,
 };
 
 export interface PaperTrading {
@@ -203,6 +205,52 @@ export interface StockSignals {
   disclaimer: string;
   stocks: StockRow[];
   risk_profiles: RiskProfile[];
+}
+
+export interface HorizonPrediction {
+  horizon: number;
+  auc: number;
+  ic: number;
+  auc_se: number;
+  auc_ci95: number[];
+  eff_n: number;
+  p_value: number;
+  ic_pvalue_uncorrected: number;
+  significant_bonferroni: boolean;
+  significant_bh: boolean;
+  prob_up: number;
+  direction: string;
+  edge_pp: number;
+  actionable: boolean;
+  interpretation: string;
+}
+
+export interface Predictions {
+  as_of: string;
+  last_close: number;
+  model: {
+    frozen_through: string;
+    n_seeds: number;
+    n_features: number;
+    calibration: string;
+  };
+  position: {
+    signal_z: number;
+    threshold_z: number;
+    percentile_of_trailing: number;
+    window_days: number;
+    quantile_rule: number;
+    stance: string;
+    rationale: string;
+  };
+  horizons: HorizonPrediction[];
+  verdict: {
+    n_actionable: number;
+    n_horizons: number;
+    mean_auc: number;
+    headline: string;
+    note: string;
+  };
 }
 
 export const fmtPct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;

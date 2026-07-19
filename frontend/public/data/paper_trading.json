@@ -1,4113 +1,4149 @@
 {
-  "as_of": "2026-07-16",
+  "as_of": "2026-07-17",
   "meta": {
     "strategy": "timing_rolling (primary)",
     "horizon": 20,
     "cost_roundtrip_bps": 9.58,
-    "seeded_from": "frozen model trained through 2023-10-18 (all later days are OOS)",
+    "seeded_from": "frozen model trained through 2023-10-19 (all later days are OOS)",
     "instrument": "Nifty 50 futures (paper)",
-    "model_trained_through": "2023-10-18"
+    "model_trained_through": "2023-10-19"
   },
   "summary": {
     "n_days": 674,
-    "total_return": 0.22616999999999998,
-    "buy_hold_return": 0.22665568075089126,
-    "excess_return": -0.00048568075089128193,
-    "sharpe": 0.9249745806937226,
-    "max_drawdown": -0.1093282733848556,
-    "n_trades": 7,
+    "total_return": 0.19237899999999986,
+    "buy_hold_return": 0.24518913577668222,
+    "excess_return": -0.052810135776682365,
+    "sharpe": 0.719204025161698,
+    "max_drawdown": -0.11350638822028518,
+    "n_trades": 13,
     "current_position": "LONG",
-    "time_in_market": 0.4599406528189911
+    "time_in_market": 0.40059347181008903
   },
   "disclaimer": "PAPER TRADING - simulated, no real money. Runs the backtest's primary strategy forward on real NSE closes, charged real India futures costs. The model has NO validated edge (see the results above), so this is an honest live demonstration, not a profit engine. Not investment advice.",
   "equity_curve": [
     {
-      "date": "2023-10-19",
-      "strategy": 100.0,
-      "buy_hold": 99.7641,
-      "position": 0
-    },
-    {
       "date": "2023-10-20",
       "strategy": 100.0,
-      "buy_hold": 99.347,
+      "buy_hold": 99.5819,
       "position": 0
     },
     {
       "date": "2023-10-23",
       "strategy": 100.0,
-      "buy_hold": 98.0207,
+      "buy_hold": 98.2525,
       "position": 0
     },
     {
       "date": "2023-10-25",
       "strategy": 100.0,
-      "buy_hold": 97.2094,
+      "buy_hold": 97.4392,
       "position": 0
     },
     {
       "date": "2023-10-26",
       "strategy": 100.0,
-      "buy_hold": 95.8627,
+      "buy_hold": 96.0894,
       "position": 0
     },
     {
       "date": "2023-10-27",
       "strategy": 100.0,
-      "buy_hold": 96.8286,
+      "buy_hold": 97.0575,
       "position": 0
     },
     {
       "date": "2023-10-30",
       "strategy": 100.0,
-      "buy_hold": 97.3047,
+      "buy_hold": 97.5347,
       "position": 0
     },
     {
       "date": "2023-10-31",
       "strategy": 100.0,
-      "buy_hold": 96.9931,
+      "buy_hold": 97.2224,
       "position": 0
     },
     {
       "date": "2023-11-01",
       "strategy": 100.0,
-      "buy_hold": 96.5332,
+      "buy_hold": 96.7615,
       "position": 0
     },
     {
       "date": "2023-11-02",
       "strategy": 100.0,
-      "buy_hold": 97.2658,
+      "buy_hold": 97.4958,
       "position": 0
     },
     {
       "date": "2023-11-03",
       "strategy": 100.0,
-      "buy_hold": 97.7607,
+      "buy_hold": 97.9918,
       "position": 0
     },
     {
       "date": "2023-11-06",
       "strategy": 100.0,
-      "buy_hold": 98.6816,
+      "buy_hold": 98.9149,
       "position": 0
     },
     {
       "date": "2023-11-07",
       "strategy": 100.0,
-      "buy_hold": 98.6559,
+      "buy_hold": 98.8892,
       "position": 0
     },
     {
       "date": "2023-11-08",
       "strategy": 100.0,
-      "buy_hold": 98.843,
+      "buy_hold": 99.0767,
       "position": 0
     },
     {
       "date": "2023-11-09",
       "strategy": 100.0,
-      "buy_hold": 98.5979,
+      "buy_hold": 98.8311,
       "position": 0
     },
     {
       "date": "2023-11-10",
       "strategy": 100.0,
-      "buy_hold": 98.7507,
+      "buy_hold": 98.9842,
       "position": 0
     },
     {
       "date": "2023-11-13",
       "strategy": 100.0,
-      "buy_hold": 98.8432,
+      "buy_hold": 99.0769,
       "position": 0
     },
     {
       "date": "2023-11-15",
       "strategy": 100.0,
-      "buy_hold": 100.0221,
+      "buy_hold": 100.2586,
       "position": 0
     },
     {
       "date": "2023-11-16",
       "strategy": 100.0,
-      "buy_hold": 100.4784,
+      "buy_hold": 100.7159,
       "position": 0
     },
     {
       "date": "2023-11-17",
       "strategy": 100.0,
-      "buy_hold": 100.3086,
+      "buy_hold": 100.5457,
       "position": 0
     },
     {
       "date": "2023-11-20",
       "strategy": 100.0,
-      "buy_hold": 100.1164,
+      "buy_hold": 100.3531,
       "position": 0
     },
     {
       "date": "2023-11-21",
       "strategy": 100.0,
-      "buy_hold": 100.5709,
+      "buy_hold": 100.8087,
       "position": 0
     },
     {
       "date": "2023-11-22",
       "strategy": 100.0,
-      "buy_hold": 100.7155,
+      "buy_hold": 100.9536,
       "position": 0
     },
     {
       "date": "2023-11-23",
       "strategy": 100.0,
-      "buy_hold": 100.6654,
+      "buy_hold": 100.9035,
       "position": 0
     },
     {
       "date": "2023-11-24",
       "strategy": 100.0,
-      "buy_hold": 100.6283,
+      "buy_hold": 100.8663,
       "position": 0
     },
     {
       "date": "2023-11-28",
       "strategy": 100.0,
-      "buy_hold": 101.1113,
+      "buy_hold": 101.3503,
       "position": 0
     },
     {
       "date": "2023-11-29",
       "strategy": 100.0,
-      "buy_hold": 102.1631,
+      "buy_hold": 102.4046,
       "position": 0
     },
     {
       "date": "2023-11-30",
       "strategy": 100.0,
-      "buy_hold": 102.3489,
+      "buy_hold": 102.5909,
       "position": 0
     },
     {
       "date": "2023-12-01",
       "strategy": 100.0,
-      "buy_hold": 103.0339,
+      "buy_hold": 103.2775,
       "position": 0
     },
     {
       "date": "2023-12-04",
       "strategy": 100.0,
-      "buy_hold": 105.1634,
+      "buy_hold": 105.4121,
       "position": 0
     },
     {
       "date": "2023-12-05",
       "strategy": 100.0,
-      "buy_hold": 106.019,
+      "buy_hold": 106.2697,
       "position": 0
     },
     {
       "date": "2023-12-06",
       "strategy": 100.0,
-      "buy_hold": 106.4389,
+      "buy_hold": 106.6905,
       "position": 0
     },
     {
       "date": "2023-12-07",
       "strategy": 100.0,
-      "buy_hold": 106.2531,
+      "buy_hold": 106.5043,
       "position": 0
     },
     {
       "date": "2023-12-08",
       "strategy": 100.0,
-      "buy_hold": 106.6,
+      "buy_hold": 106.8521,
       "position": 0
     },
     {
       "date": "2023-12-11",
       "strategy": 100.0,
-      "buy_hold": 106.7409,
+      "buy_hold": 106.9932,
       "position": 0
     },
     {
       "date": "2023-12-12",
       "strategy": 100.0,
-      "buy_hold": 106.2798,
+      "buy_hold": 106.5311,
       "position": 0
     },
     {
       "date": "2023-12-13",
       "strategy": 100.0,
-      "buy_hold": 106.3812,
+      "buy_hold": 106.6327,
       "position": 0
     },
     {
       "date": "2023-12-14",
       "strategy": 100.0,
-      "buy_hold": 107.6844,
+      "buy_hold": 107.939,
       "position": 0
     },
     {
       "date": "2023-12-15",
       "strategy": 100.0,
-      "buy_hold": 109.077,
+      "buy_hold": 109.3349,
       "position": 0
     },
     {
       "date": "2023-12-18",
       "strategy": 100.0,
-      "buy_hold": 108.8838,
+      "buy_hold": 109.1413,
       "position": 0
     },
     {
       "date": "2023-12-19",
       "strategy": 100.0,
-      "buy_hold": 109.059,
+      "buy_hold": 109.3168,
       "position": 0
     },
     {
       "date": "2023-12-20",
       "strategy": 100.0,
-      "buy_hold": 107.5189,
+      "buy_hold": 107.7731,
       "position": 0
     },
     {
       "date": "2023-12-21",
       "strategy": 100.0,
-      "buy_hold": 108.0522,
+      "buy_hold": 108.3077,
       "position": 0
     },
     {
       "date": "2023-12-22",
       "strategy": 100.0,
-      "buy_hold": 108.5318,
+      "buy_hold": 108.7884,
       "position": 0
     },
     {
       "date": "2023-12-26",
       "strategy": 100.0,
-      "buy_hold": 108.9992,
+      "buy_hold": 109.257,
       "position": 0
     },
     {
       "date": "2023-12-27",
       "strategy": 100.0,
-      "buy_hold": 110.0841,
+      "buy_hold": 110.3444,
       "position": 0
     },
     {
       "date": "2023-12-28",
       "strategy": 100.0,
-      "buy_hold": 110.7142,
+      "buy_hold": 110.976,
       "position": 0
     },
     {
       "date": "2023-12-29",
       "strategy": 100.0,
-      "buy_hold": 110.4737,
+      "buy_hold": 110.7349,
       "position": 0
     },
     {
       "date": "2024-01-01",
       "strategy": 100.0,
-      "buy_hold": 110.5271,
+      "buy_hold": 110.7885,
       "position": 0
     },
     {
       "date": "2024-01-02",
       "strategy": 100.0,
-      "buy_hold": 110.1403,
+      "buy_hold": 110.4007,
       "position": 0
     },
     {
       "date": "2024-01-03",
       "strategy": 100.0,
-      "buy_hold": 109.3856,
+      "buy_hold": 109.6442,
       "position": 0
     },
     {
       "date": "2024-01-04",
       "strategy": 100.0,
-      "buy_hold": 110.1037,
+      "buy_hold": 110.364,
       "position": 0
     },
     {
       "date": "2024-01-05",
       "strategy": 100.0,
-      "buy_hold": 110.369,
+      "buy_hold": 110.63,
       "position": 0
     },
     {
       "date": "2024-01-08",
       "strategy": 100.0,
-      "buy_hold": 109.3635,
+      "buy_hold": 109.6221,
       "position": 0
     },
     {
       "date": "2024-01-09",
       "strategy": 100.0,
-      "buy_hold": 109.5254,
+      "buy_hold": 109.7844,
       "position": 0
     },
     {
       "date": "2024-01-10",
       "strategy": 100.0,
-      "buy_hold": 109.9008,
+      "buy_hold": 110.1607,
       "position": 0
     },
     {
       "date": "2024-01-11",
       "strategy": 100.0,
-      "buy_hold": 110.0457,
+      "buy_hold": 110.3059,
       "position": 0
     },
     {
       "date": "2024-01-12",
       "strategy": 100.0,
-      "buy_hold": 111.3031,
+      "buy_hold": 111.5663,
       "position": 0
     },
     {
       "date": "2024-01-15",
       "strategy": 100.0,
-      "buy_hold": 112.3346,
+      "buy_hold": 112.6002,
       "position": 0
     },
     {
       "date": "2024-01-16",
       "strategy": 100.0,
-      "buy_hold": 112.0034,
+      "buy_hold": 112.2682,
       "position": 0
     },
     {
       "date": "2024-01-17",
       "strategy": 100.0,
-      "buy_hold": 109.6632,
+      "buy_hold": 109.9224,
       "position": 0
     },
     {
       "date": "2024-01-18",
       "strategy": 100.0,
-      "buy_hold": 109.1055,
+      "buy_hold": 109.3635,
       "position": 0
     },
     {
       "date": "2024-01-19",
       "strategy": 100.0,
-      "buy_hold": 109.9196,
+      "buy_hold": 110.1795,
       "position": 0
     },
     {
       "date": "2024-01-23",
       "strategy": 100.0,
-      "buy_hold": 107.9696,
+      "buy_hold": 108.2248,
       "position": 0
     },
     {
       "date": "2024-01-24",
       "strategy": 100.0,
-      "buy_hold": 109.0633,
+      "buy_hold": 109.3212,
       "position": 0
     },
     {
       "date": "2024-01-25",
       "strategy": 100.0,
-      "buy_hold": 108.5481,
+      "buy_hold": 108.8047,
       "position": 0
     },
     {
       "date": "2024-01-29",
       "strategy": 100.0,
-      "buy_hold": 110.5053,
+      "buy_hold": 110.7665,
       "position": 0
     },
     {
       "date": "2024-01-30",
       "strategy": 100.0,
-      "buy_hold": 109.4097,
+      "buy_hold": 109.6684,
       "position": 0
     },
     {
       "date": "2024-01-31",
       "strategy": 100.0,
-      "buy_hold": 110.4448,
+      "buy_hold": 110.7059,
       "position": 0
     },
     {
       "date": "2024-02-01",
       "strategy": 100.0,
-      "buy_hold": 110.3012,
+      "buy_hold": 110.5619,
       "position": 0
     },
     {
       "date": "2024-02-02",
       "strategy": 100.0,
-      "buy_hold": 111.096,
+      "buy_hold": 111.3587,
       "position": 0
     },
     {
       "date": "2024-02-05",
       "strategy": 100.0,
-      "buy_hold": 110.6786,
+      "buy_hold": 110.9403,
       "position": 0
     },
     {
       "date": "2024-02-06",
       "strategy": 100.0,
-      "buy_hold": 111.4803,
+      "buy_hold": 111.7439,
       "position": 0
     },
     {
       "date": "2024-02-07",
       "strategy": 100.0,
-      "buy_hold": 111.4859,
+      "buy_hold": 111.7495,
       "position": 0
     },
     {
       "date": "2024-02-08",
       "strategy": 100.0,
-      "buy_hold": 110.4054,
+      "buy_hold": 110.6664,
       "position": 0
     },
     {
       "date": "2024-02-09",
       "strategy": 100.0,
-      "buy_hold": 110.7335,
+      "buy_hold": 110.9953,
       "position": 0
     },
     {
       "date": "2024-02-12",
       "strategy": 100.0,
-      "buy_hold": 109.8874,
+      "buy_hold": 110.1472,
       "position": 0
     },
     {
       "date": "2024-02-13",
       "strategy": 100.0,
-      "buy_hold": 110.534,
+      "buy_hold": 110.7953,
       "position": 0
     },
     {
       "date": "2024-02-14",
       "strategy": 100.0,
-      "buy_hold": 111.0261,
+      "buy_hold": 111.2886,
       "position": 0
     },
     {
       "date": "2024-02-15",
       "strategy": 100.0,
-      "buy_hold": 111.3855,
+      "buy_hold": 111.6488,
       "position": 0
     },
     {
       "date": "2024-02-16",
       "strategy": 100.0,
-      "buy_hold": 112.0461,
+      "buy_hold": 112.311,
       "position": 0
     },
     {
       "date": "2024-02-19",
       "strategy": 100.0,
-      "buy_hold": 112.4607,
+      "buy_hold": 112.7266,
       "position": 0
     },
     {
       "date": "2024-02-20",
       "strategy": 100.0,
-      "buy_hold": 112.8404,
+      "buy_hold": 113.1072,
       "position": 0
     },
     {
       "date": "2024-02-21",
       "strategy": 100.0,
-      "buy_hold": 112.1191,
+      "buy_hold": 112.3841,
       "position": 0
     },
     {
       "date": "2024-02-22",
       "strategy": 100.0,
-      "buy_hold": 112.9446,
+      "buy_hold": 113.2117,
       "position": 0
     },
     {
       "date": "2024-02-23",
       "strategy": 100.0,
-      "buy_hold": 112.9205,
+      "buy_hold": 113.1875,
       "position": 0
     },
     {
       "date": "2024-02-26",
       "strategy": 100.0,
-      "buy_hold": 112.4597,
+      "buy_hold": 112.7256,
       "position": 0
     },
     {
       "date": "2024-02-27",
       "strategy": 100.0,
-      "buy_hold": 112.8475,
+      "buy_hold": 113.1143,
       "position": 0
     },
     {
       "date": "2024-02-28",
       "strategy": 100.0,
-      "buy_hold": 111.5909,
+      "buy_hold": 111.8547,
       "position": 0
     },
     {
       "date": "2024-02-29",
       "strategy": 100.0,
-      "buy_hold": 111.7518,
+      "buy_hold": 112.016,
       "position": 0
     },
     {
       "date": "2024-03-01",
       "strategy": 100.0,
-      "buy_hold": 113.5613,
+      "buy_hold": 113.8298,
       "position": 0
     },
     {
       "date": "2024-03-04",
       "strategy": 100.0,
-      "buy_hold": 113.9011,
+      "buy_hold": 114.1704,
       "position": 0
     },
     {
       "date": "2024-03-05",
       "strategy": 100.0,
-      "buy_hold": 113.6505,
+      "buy_hold": 113.9192,
       "position": 0
     },
     {
       "date": "2024-03-06",
       "strategy": 100.0,
-      "buy_hold": 114.2491,
+      "buy_hold": 114.5192,
       "position": 0
     },
     {
       "date": "2024-03-07",
       "strategy": 100.0,
-      "buy_hold": 114.3482,
+      "buy_hold": 114.6186,
       "position": 0
     },
     {
       "date": "2024-03-11",
       "strategy": 100.0,
-      "buy_hold": 113.5303,
+      "buy_hold": 113.7987,
       "position": 0
     },
     {
       "date": "2024-03-12",
       "strategy": 100.0,
-      "buy_hold": 113.5458,
+      "buy_hold": 113.8142,
       "position": 0
     },
     {
       "date": "2024-03-13",
       "strategy": 100.0,
-      "buy_hold": 111.8275,
+      "buy_hold": 112.0919,
       "position": 0
     },
     {
       "date": "2024-03-14",
       "strategy": 100.0,
-      "buy_hold": 112.5847,
+      "buy_hold": 112.8509,
       "position": 0
     },
     {
       "date": "2024-03-15",
       "strategy": 100.0,
-      "buy_hold": 111.9579,
+      "buy_hold": 112.2226,
       "position": 0
     },
     {
       "date": "2024-03-18",
       "strategy": 100.0,
-      "buy_hold": 112.1224,
+      "buy_hold": 112.3875,
       "position": 0
     },
     {
       "date": "2024-03-19",
       "strategy": 100.0,
-      "buy_hold": 110.9112,
+      "buy_hold": 111.1734,
       "position": 0
     },
     {
       "date": "2024-03-20",
       "strategy": 100.0,
-      "buy_hold": 111.0212,
+      "buy_hold": 111.2837,
       "position": 0
     },
     {
       "date": "2024-03-21",
       "strategy": 100.0,
-      "buy_hold": 111.8999,
+      "buy_hold": 112.1645,
       "position": 0
     },
     {
       "date": "2024-03-22",
       "strategy": 100.0,
-      "buy_hold": 112.331,
+      "buy_hold": 112.5966,
       "position": 0
     },
     {
       "date": "2024-03-26",
       "strategy": 100.0,
-      "buy_hold": 111.8631,
+      "buy_hold": 112.1276,
       "position": 0
     },
     {
       "date": "2024-03-27",
       "strategy": 100.0,
-      "buy_hold": 112.4678,
+      "buy_hold": 112.7337,
       "position": 0
     },
     {
       "date": "2024-03-28",
       "strategy": 100.0,
-      "buy_hold": 113.501,
+      "buy_hold": 113.7694,
       "position": 0
     },
     {
       "date": "2024-04-01",
       "strategy": 100.0,
-      "buy_hold": 114.1878,
+      "buy_hold": 114.4578,
       "position": 0
     },
     {
       "date": "2024-04-02",
       "strategy": 100.0,
-      "buy_hold": 114.1436,
+      "buy_hold": 114.4135,
       "position": 0
     },
     {
       "date": "2024-04-03",
       "strategy": 100.0,
-      "buy_hold": 114.0488,
+      "buy_hold": 114.3184,
       "position": 0
     },
     {
       "date": "2024-04-04",
       "strategy": 100.0,
-      "buy_hold": 114.4555,
+      "buy_hold": 114.7261,
       "position": 0
     },
     {
       "date": "2024-04-05",
       "strategy": 100.0,
-      "buy_hold": 114.4506,
+      "buy_hold": 114.7212,
       "position": 0
     },
     {
       "date": "2024-04-08",
       "strategy": 100.0,
-      "buy_hold": 115.2264,
+      "buy_hold": 115.4988,
       "position": 0
     },
     {
       "date": "2024-04-09",
       "strategy": 100.0,
-      "buy_hold": 115.1067,
+      "buy_hold": 115.3788,
       "position": 0
     },
     {
       "date": "2024-04-10",
       "strategy": 100.0,
-      "buy_hold": 115.6712,
+      "buy_hold": 115.9447,
       "position": 0
     },
     {
       "date": "2024-04-12",
       "strategy": 100.0,
-      "buy_hold": 114.4796,
+      "buy_hold": 114.7503,
       "position": 0
     },
     {
       "date": "2024-04-15",
       "strategy": 100.0,
-      "buy_hold": 113.2245,
+      "buy_hold": 113.4922,
       "position": 0
     },
     {
       "date": "2024-04-16",
       "strategy": 100.0,
-      "buy_hold": 112.5911,
+      "buy_hold": 112.8573,
       "position": 0
     },
     {
       "date": "2024-04-18",
-      "strategy": 99.9521,
-      "buy_hold": 111.8181,
-      "position": 1
+      "strategy": 100.0,
+      "buy_hold": 112.0825,
+      "position": 0
     },
     {
       "date": "2024-04-19",
-      "strategy": 100.639,
-      "buy_hold": 112.5865,
-      "position": 1
+      "strategy": 100.0,
+      "buy_hold": 112.8527,
+      "position": 0
     },
     {
       "date": "2024-04-22",
-      "strategy": 101.4996,
-      "buy_hold": 113.5493,
-      "position": 1
+      "strategy": 100.0,
+      "buy_hold": 113.8178,
+      "position": 0
     },
     {
       "date": "2024-04-23",
-      "strategy": 101.6432,
-      "buy_hold": 113.71,
-      "position": 1
+      "strategy": 100.0,
+      "buy_hold": 113.9788,
+      "position": 0
     },
     {
       "date": "2024-04-24",
-      "strategy": 101.7995,
-      "buy_hold": 113.8848,
-      "position": 1
+      "strategy": 100.0,
+      "buy_hold": 114.1541,
+      "position": 0
     },
     {
       "date": "2024-04-25",
-      "strategy": 102.5627,
-      "buy_hold": 114.7386,
-      "position": 1
+      "strategy": 100.0,
+      "buy_hold": 115.0099,
+      "position": 0
     },
     {
       "date": "2024-04-26",
-      "strategy": 101.8793,
-      "buy_hold": 113.9741,
+      "strategy": 99.9521,
+      "buy_hold": 114.2435,
       "position": 1
     },
     {
       "date": "2024-04-29",
-      "strategy": 102.8947,
-      "buy_hold": 115.11,
+      "strategy": 100.9483,
+      "buy_hold": 115.3822,
       "position": 1
     },
     {
       "date": "2024-04-30",
-      "strategy": 102.7195,
-      "buy_hold": 114.914,
+      "strategy": 100.7764,
+      "buy_hold": 115.1857,
       "position": 1
     },
     {
       "date": "2024-05-02",
-      "strategy": 102.9165,
-      "buy_hold": 115.1344,
+      "strategy": 100.9697,
+      "buy_hold": 115.4066,
       "position": 1
     },
     {
       "date": "2024-05-03",
-      "strategy": 102.1333,
-      "buy_hold": 114.2582,
+      "strategy": 100.2013,
+      "buy_hold": 114.5284,
       "position": 1
     },
     {
       "date": "2024-05-06",
-      "strategy": 101.9827,
-      "buy_hold": 114.0897,
+      "strategy": 100.0535,
+      "buy_hold": 114.3595,
       "position": 1
     },
     {
       "date": "2024-05-07",
-      "strategy": 101.3456,
-      "buy_hold": 113.377,
+      "strategy": 99.4285,
+      "buy_hold": 113.6451,
       "position": 1
     },
     {
       "date": "2024-05-08",
-      "strategy": 101.3456,
-      "buy_hold": 113.377,
+      "strategy": 99.4285,
+      "buy_hold": 113.6451,
       "position": 1
     },
     {
       "date": "2024-05-09",
-      "strategy": 99.7779,
-      "buy_hold": 111.6231,
+      "strategy": 97.8904,
+      "buy_hold": 111.8871,
       "position": 1
     },
     {
       "date": "2024-05-10",
-      "strategy": 100.2218,
-      "buy_hold": 112.1198,
+      "strategy": 98.326,
+      "buy_hold": 112.3849,
       "position": 1
     },
     {
       "date": "2024-05-13",
-      "strategy": 100.4438,
-      "buy_hold": 112.3682,
+      "strategy": 98.5438,
+      "buy_hold": 112.6338,
       "position": 1
     },
     {
       "date": "2024-05-14",
-      "strategy": 100.9609,
-      "buy_hold": 112.9467,
+      "strategy": 99.0511,
+      "buy_hold": 113.2137,
       "position": 1
     },
     {
       "date": "2024-05-15",
-      "strategy": 100.8823,
-      "buy_hold": 112.8587,
+      "strategy": 98.974,
+      "buy_hold": 113.1256,
       "position": 1
     },
     {
       "date": "2024-05-16",
-      "strategy": 101.8061,
-      "buy_hold": 113.8922,
+      "strategy": 99.8803,
+      "buy_hold": 114.1615,
       "position": 1
     },
     {
       "date": "2024-05-17",
-      "strategy": 102.089,
-      "buy_hold": 114.2087,
+      "strategy": 100.1579,
+      "buy_hold": 114.4787,
       "position": 1
     },
     {
       "date": "2024-05-21",
-      "strategy": 102.3751,
-      "buy_hold": 114.5287,
+      "strategy": 100.4385,
+      "buy_hold": 114.7995,
       "position": 1
     },
     {
       "date": "2024-05-22",
-      "strategy": 102.6875,
-      "buy_hold": 114.8782,
+      "strategy": 100.745,
+      "buy_hold": 115.1498,
       "position": 1
     },
     {
       "date": "2024-05-23",
-      "strategy": 104.3681,
-      "buy_hold": 116.7583,
+      "strategy": 102.3939,
+      "buy_hold": 117.0344,
       "position": 1
     },
     {
       "date": "2024-05-24",
-      "strategy": 104.3202,
-      "buy_hold": 116.7047,
+      "strategy": 102.3468,
+      "buy_hold": 116.9806,
       "position": 1
     },
     {
       "date": "2024-05-27",
-      "strategy": 104.2082,
-      "buy_hold": 116.5794,
+      "strategy": 102.2369,
+      "buy_hold": 116.855,
       "position": 1
     },
     {
       "date": "2024-05-28",
-      "strategy": 104.0069,
-      "buy_hold": 116.3542,
+      "strategy": 102.0394,
+      "buy_hold": 116.6293,
       "position": 1
     },
     {
       "date": "2024-05-29",
-      "strategy": 103.1732,
-      "buy_hold": 115.4216,
+      "strategy": 101.2216,
+      "buy_hold": 115.6945,
       "position": 1
     },
     {
       "date": "2024-05-30",
-      "strategy": 102.1915,
-      "buy_hold": 114.3233,
+      "strategy": 100.2584,
+      "buy_hold": 114.5936,
       "position": 1
     },
     {
       "date": "2024-05-31",
-      "strategy": 102.3826,
-      "buy_hold": 114.5371,
+      "strategy": 100.4459,
+      "buy_hold": 114.8079,
       "position": 1
     },
     {
       "date": "2024-06-03",
-      "strategy": 105.7143,
-      "buy_hold": 118.2644,
+      "strategy": 103.7146,
+      "buy_hold": 118.544,
       "position": 1
     },
     {
       "date": "2024-06-04",
-      "strategy": 99.4461,
-      "buy_hold": 111.252,
+      "strategy": 97.565,
+      "buy_hold": 111.5151,
       "position": 1
     },
     {
       "date": "2024-06-05",
-      "strategy": 102.7899,
-      "buy_hold": 114.9928,
+      "strategy": 100.8455,
+      "buy_hold": 115.2647,
       "position": 1
     },
     {
       "date": "2024-06-06",
-      "strategy": 103.7035,
-      "buy_hold": 116.0149,
+      "strategy": 101.7419,
+      "buy_hold": 116.2892,
       "position": 1
     },
     {
       "date": "2024-06-07",
-      "strategy": 105.8336,
-      "buy_hold": 118.3978,
+      "strategy": 103.8316,
+      "buy_hold": 118.6777,
       "position": 1
     },
     {
       "date": "2024-06-10",
-      "strategy": 105.693,
-      "buy_hold": 118.2405,
+      "strategy": 103.6936,
+      "buy_hold": 118.52,
       "position": 1
     },
     {
       "date": "2024-06-11",
-      "strategy": 105.7186,
-      "buy_hold": 118.2692,
+      "strategy": 103.7188,
+      "buy_hold": 118.5488,
       "position": 1
     },
     {
       "date": "2024-06-12",
-      "strategy": 105.9826,
-      "buy_hold": 118.5645,
+      "strategy": 103.9779,
+      "buy_hold": 118.8449,
       "position": 1
     },
     {
       "date": "2024-06-13",
-      "strategy": 106.3278,
-      "buy_hold": 118.9506,
+      "strategy": 104.3165,
+      "buy_hold": 119.2319,
       "position": 1
     },
     {
       "date": "2024-06-14",
-      "strategy": 106.6309,
-      "buy_hold": 119.2897,
+      "strategy": 104.6138,
+      "buy_hold": 119.5718,
       "position": 1
     },
     {
       "date": "2024-06-18",
-      "strategy": 107.0503,
-      "buy_hold": 119.7589,
+      "strategy": 105.0253,
+      "buy_hold": 120.0421,
       "position": 1
     },
     {
       "date": "2024-06-19",
-      "strategy": 106.8599,
-      "buy_hold": 119.5459,
+      "strategy": 104.8385,
+      "buy_hold": 119.8286,
       "position": 1
     },
     {
       "date": "2024-06-20",
-      "strategy": 107.0916,
-      "buy_hold": 119.8052,
+      "strategy": 105.0659,
+      "buy_hold": 120.0885,
       "position": 1
     },
     {
       "date": "2024-06-21",
-      "strategy": 106.7922,
-      "buy_hold": 119.4702,
+      "strategy": 104.7721,
+      "buy_hold": 119.7527,
       "position": 1
     },
     {
       "date": "2024-06-24",
-      "strategy": 106.9592,
-      "buy_hold": 119.657,
+      "strategy": 104.9359,
+      "buy_hold": 119.9399,
       "position": 1
     },
     {
       "date": "2024-06-25",
-      "strategy": 107.7928,
-      "buy_hold": 120.5896,
+      "strategy": 105.7538,
+      "buy_hold": 120.8747,
       "position": 1
     },
     {
       "date": "2024-06-26",
-      "strategy": 108.4631,
-      "buy_hold": 121.3394,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 121.6263,
+      "position": 0
     },
     {
       "date": "2024-06-27",
-      "strategy": 109.2615,
-      "buy_hold": 122.2326,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 122.5216,
+      "position": 0
     },
     {
       "date": "2024-06-28",
-      "strategy": 109.1074,
-      "buy_hold": 122.0603,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 122.3489,
+      "position": 0
     },
     {
       "date": "2024-07-01",
-      "strategy": 109.7043,
-      "buy_hold": 122.728,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.0182,
+      "position": 0
     },
     {
       "date": "2024-07-02",
-      "strategy": 109.622,
-      "buy_hold": 122.636,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 122.926,
+      "position": 0
     },
     {
       "date": "2024-07-03",
-      "strategy": 110.3611,
-      "buy_hold": 123.4628,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.7548,
+      "position": 0
     },
     {
       "date": "2024-07-04",
-      "strategy": 110.4323,
-      "buy_hold": 123.5424,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.8345,
+      "position": 0
     },
     {
       "date": "2024-07-05",
-      "strategy": 110.5309,
-      "buy_hold": 123.6527,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.9451,
+      "position": 0
     },
     {
       "date": "2024-07-08",
-      "strategy": 110.5159,
-      "buy_hold": 123.6359,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.9283,
+      "position": 0
     },
     {
       "date": "2024-07-09",
-      "strategy": 111.0278,
-      "buy_hold": 124.2086,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 124.5023,
+      "position": 0
     },
     {
       "date": "2024-07-10",
-      "strategy": 110.5336,
-      "buy_hold": 123.6558,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.9481,
+      "position": 0
     },
     {
       "date": "2024-07-11",
-      "strategy": 110.495,
-      "buy_hold": 123.6126,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 123.9048,
+      "position": 0
     },
     {
       "date": "2024-07-12",
-      "strategy": 111.3411,
-      "buy_hold": 124.5591,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 124.8536,
+      "position": 0
     },
     {
       "date": "2024-07-15",
-      "strategy": 111.7253,
-      "buy_hold": 124.9889,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 125.2845,
+      "position": 0
     },
     {
       "date": "2024-07-16",
-      "strategy": 111.7913,
-      "buy_hold": 125.1226,
+      "strategy": 106.3604,
+      "buy_hold": 125.4185,
       "position": 0
     },
     {
       "date": "2024-07-18",
-      "strategy": 111.7913,
-      "buy_hold": 126.0776,
+      "strategy": 106.3604,
+      "buy_hold": 126.3757,
       "position": 0
     },
     {
       "date": "2024-07-19",
-      "strategy": 111.7913,
-      "buy_hold": 124.7053,
+      "strategy": 106.3604,
+      "buy_hold": 125.0001,
       "position": 0
     },
     {
       "date": "2024-07-22",
-      "strategy": 111.7913,
-      "buy_hold": 124.5952,
+      "strategy": 106.3604,
+      "buy_hold": 124.8898,
       "position": 0
     },
     {
       "date": "2024-07-23",
-      "strategy": 111.7913,
-      "buy_hold": 124.4417,
+      "strategy": 106.3604,
+      "buy_hold": 124.7359,
       "position": 0
     },
     {
       "date": "2024-07-24",
-      "strategy": 111.7913,
-      "buy_hold": 124.1085,
+      "strategy": 106.3604,
+      "buy_hold": 124.4019,
       "position": 0
     },
     {
       "date": "2024-07-25",
-      "strategy": 111.7913,
-      "buy_hold": 124.0708,
+      "strategy": 106.3604,
+      "buy_hold": 124.3642,
       "position": 0
     },
     {
       "date": "2024-07-26",
-      "strategy": 111.7913,
-      "buy_hold": 126.2504,
+      "strategy": 106.3604,
+      "buy_hold": 126.5489,
       "position": 0
     },
     {
       "date": "2024-07-29",
-      "strategy": 111.7913,
-      "buy_hold": 126.2568,
+      "strategy": 106.3604,
+      "buy_hold": 126.5553,
       "position": 0
     },
     {
       "date": "2024-07-30",
-      "strategy": 111.7913,
-      "buy_hold": 126.3646,
+      "strategy": 106.3604,
+      "buy_hold": 126.6633,
       "position": 0
     },
     {
       "date": "2024-07-31",
-      "strategy": 111.7913,
-      "buy_hold": 126.8417,
+      "strategy": 106.3604,
+      "buy_hold": 127.1416,
       "position": 0
     },
     {
       "date": "2024-08-01",
-      "strategy": 111.7913,
-      "buy_hold": 127.1454,
+      "strategy": 106.3604,
+      "buy_hold": 127.446,
       "position": 0
     },
     {
       "date": "2024-08-02",
-      "strategy": 111.7913,
-      "buy_hold": 125.6549,
+      "strategy": 106.3604,
+      "buy_hold": 125.952,
       "position": 0
     },
     {
       "date": "2024-08-05",
-      "strategy": 111.7913,
-      "buy_hold": 122.289,
+      "strategy": 106.3604,
+      "buy_hold": 122.5782,
       "position": 0
     },
     {
       "date": "2024-08-06",
-      "strategy": 111.7913,
-      "buy_hold": 121.9685,
+      "strategy": 106.3604,
+      "buy_hold": 122.2569,
       "position": 0
     },
     {
       "date": "2024-08-07",
-      "strategy": 111.7913,
-      "buy_hold": 123.5188,
+      "strategy": 106.3604,
+      "buy_hold": 123.8108,
       "position": 0
     },
     {
       "date": "2024-08-08",
-      "strategy": 111.7913,
-      "buy_hold": 122.6012,
+      "strategy": 106.3604,
+      "buy_hold": 122.8911,
       "position": 0
     },
     {
       "date": "2024-08-09",
-      "strategy": 111.7913,
-      "buy_hold": 123.8746,
+      "strategy": 106.3604,
+      "buy_hold": 124.1675,
       "position": 0
     },
     {
       "date": "2024-08-12",
-      "strategy": 111.7913,
-      "buy_hold": 123.7704,
+      "strategy": 106.3604,
+      "buy_hold": 124.063,
       "position": 0
     },
     {
       "date": "2024-08-13",
-      "strategy": 111.7913,
-      "buy_hold": 122.713,
+      "strategy": 106.3604,
+      "buy_hold": 123.0032,
       "position": 0
     },
     {
       "date": "2024-08-14",
-      "strategy": 111.7913,
-      "buy_hold": 122.7372,
+      "strategy": 106.3604,
+      "buy_hold": 123.0274,
       "position": 0
     },
     {
       "date": "2024-08-16",
-      "strategy": 111.7913,
-      "buy_hold": 124.7574,
+      "strategy": 106.3604,
+      "buy_hold": 125.0524,
       "position": 0
     },
     {
       "date": "2024-08-19",
-      "strategy": 111.7377,
-      "buy_hold": 124.9175,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 125.2129,
+      "position": 0
     },
     {
       "date": "2024-08-20",
-      "strategy": 112.3116,
-      "buy_hold": 125.5591,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 125.8559,
+      "position": 0
     },
     {
       "date": "2024-08-21",
-      "strategy": 112.636,
-      "buy_hold": 125.9218,
-      "position": 1
+      "strategy": 106.3604,
+      "buy_hold": 126.2195,
+      "position": 0
     },
     {
       "date": "2024-08-22",
-      "strategy": 112.8238,
-      "buy_hold": 126.1317,
+      "strategy": 106.3095,
+      "buy_hold": 126.43,
       "position": 1
     },
     {
       "date": "2024-08-23",
-      "strategy": 112.8768,
-      "buy_hold": 126.191,
+      "strategy": 106.3594,
+      "buy_hold": 126.4893,
       "position": 1
     },
     {
       "date": "2024-08-26",
-      "strategy": 113.7292,
-      "buy_hold": 127.1439,
+      "strategy": 107.1626,
+      "buy_hold": 127.4445,
       "position": 1
     },
     {
       "date": "2024-08-27",
-      "strategy": 113.7617,
-      "buy_hold": 127.1802,
+      "strategy": 107.1932,
+      "buy_hold": 127.4809,
       "position": 1
     },
     {
       "date": "2024-08-28",
-      "strategy": 113.919,
-      "buy_hold": 127.3561,
+      "strategy": 107.3415,
+      "buy_hold": 127.6572,
       "position": 1
     },
     {
       "date": "2024-08-29",
-      "strategy": 114.3719,
-      "buy_hold": 127.8624,
+      "strategy": 107.7682,
+      "buy_hold": 128.1648,
       "position": 1
     },
     {
       "date": "2024-08-30",
-      "strategy": 114.7537,
-      "buy_hold": 128.2892,
+      "strategy": 108.1279,
+      "buy_hold": 128.5925,
       "position": 1
     },
     {
       "date": "2024-09-02",
-      "strategy": 114.9483,
-      "buy_hold": 128.5068,
+      "strategy": 108.3113,
+      "buy_hold": 128.8106,
       "position": 1
     },
     {
       "date": "2024-09-03",
-      "strategy": 114.9535,
-      "buy_hold": 128.5126,
+      "strategy": 108.3162,
+      "buy_hold": 128.8165,
       "position": 1
     },
     {
       "date": "2024-09-04",
-      "strategy": 114.5845,
-      "buy_hold": 128.1001,
+      "strategy": 107.9685,
+      "buy_hold": 128.403,
       "position": 1
     },
     {
       "date": "2024-09-05",
-      "strategy": 114.3408,
-      "buy_hold": 127.8276,
+      "strategy": 107.7389,
+      "buy_hold": 128.1299,
       "position": 1
     },
     {
       "date": "2024-09-06",
-      "strategy": 113.0087,
-      "buy_hold": 126.3384,
+      "strategy": 106.4837,
+      "buy_hold": 126.6371,
       "position": 1
     },
     {
       "date": "2024-09-09",
-      "strategy": 113.3918,
-      "buy_hold": 126.7667,
+      "strategy": 106.8446,
+      "buy_hold": 127.0664,
       "position": 1
     },
     {
       "date": "2024-09-10",
-      "strategy": 113.8679,
-      "buy_hold": 127.2989,
+      "strategy": 107.2932,
+      "buy_hold": 127.5999,
       "position": 1
     },
     {
       "date": "2024-09-11",
-      "strategy": 113.3102,
-      "buy_hold": 126.6754,
+      "strategy": 106.7677,
+      "buy_hold": 126.9749,
       "position": 1
     },
     {
       "date": "2024-09-12",
-      "strategy": 115.4494,
-      "buy_hold": 129.067,
+      "strategy": 108.7835,
+      "buy_hold": 129.3722,
       "position": 1
     },
     {
       "date": "2024-09-13",
-      "strategy": 115.3021,
-      "buy_hold": 128.9023,
+      "strategy": 108.6446,
+      "buy_hold": 129.2071,
       "position": 1
     },
     {
       "date": "2024-09-16",
-      "strategy": 115.426,
-      "buy_hold": 129.0408,
+      "strategy": 108.7614,
+      "buy_hold": 129.3459,
       "position": 1
     },
     {
       "date": "2024-09-17",
-      "strategy": 115.5842,
-      "buy_hold": 129.2177,
+      "strategy": 108.9105,
+      "buy_hold": 129.5233,
       "position": 1
     },
     {
       "date": "2024-09-18",
-      "strategy": 115.3978,
-      "buy_hold": 129.0093,
+      "strategy": 108.7348,
+      "buy_hold": 129.3143,
       "position": 1
     },
     {
       "date": "2024-09-19",
-      "strategy": 115.5717,
-      "buy_hold": 129.2038,
+      "strategy": 108.8987,
+      "buy_hold": 129.5093,
       "position": 1
     },
     {
       "date": "2024-09-20",
-      "strategy": 117.2776,
-      "buy_hold": 131.1109,
+      "strategy": 110.5061,
+      "buy_hold": 131.4209,
       "position": 1
     },
     {
       "date": "2024-09-23",
-      "strategy": 117.9511,
-      "buy_hold": 131.8638,
+      "strategy": 111.1407,
+      "buy_hold": 132.1755,
       "position": 1
     },
     {
       "date": "2024-09-24",
-      "strategy": 117.9572,
-      "buy_hold": 131.8706,
+      "strategy": 111.1465,
+      "buy_hold": 132.1824,
       "position": 1
     },
     {
       "date": "2024-09-25",
-      "strategy": 118.2471,
-      "buy_hold": 132.1947,
+      "strategy": 111.4196,
+      "buy_hold": 132.5073,
       "position": 1
     },
     {
       "date": "2024-09-26",
-      "strategy": 119.2107,
-      "buy_hold": 133.2719,
+      "strategy": 112.3275,
+      "buy_hold": 133.587,
       "position": 1
     },
     {
       "date": "2024-09-27",
-      "strategy": 119.042,
-      "buy_hold": 133.0833,
+      "strategy": 112.1686,
+      "buy_hold": 133.398,
       "position": 1
     },
     {
       "date": "2024-09-30",
-      "strategy": 117.3681,
-      "buy_hold": 131.212,
+      "strategy": 110.5914,
+      "buy_hold": 131.5223,
       "position": 1
     },
     {
       "date": "2024-10-01",
-      "strategy": 117.3047,
-      "buy_hold": 131.1411,
+      "strategy": 110.5316,
+      "buy_hold": 131.4512,
       "position": 1
     },
     {
       "date": "2024-10-03",
-      "strategy": 114.8183,
-      "buy_hold": 128.3614,
+      "strategy": 108.1887,
+      "buy_hold": 128.6649,
       "position": 1
     },
     {
       "date": "2024-10-04",
-      "strategy": 113.7474,
-      "buy_hold": 127.1642,
+      "strategy": 107.1797,
+      "buy_hold": 127.4649,
       "position": 1
     },
     {
       "date": "2024-10-07",
-      "strategy": 112.7522,
-      "buy_hold": 126.0517,
+      "strategy": 106.242,
+      "buy_hold": 126.3497,
       "position": 1
     },
     {
       "date": "2024-10-08",
-      "strategy": 113.7408,
-      "buy_hold": 127.1568,
+      "strategy": 107.1735,
+      "buy_hold": 127.4575,
       "position": 1
     },
     {
       "date": "2024-10-09",
-      "strategy": 113.5989,
-      "buy_hold": 126.9982,
+      "strategy": 107.0398,
+      "buy_hold": 127.2985,
       "position": 1
     },
     {
       "date": "2024-10-10",
-      "strategy": 113.6739,
-      "buy_hold": 127.0821,
+      "strategy": 107.1105,
+      "buy_hold": 127.3826,
       "position": 1
     },
     {
       "date": "2024-10-11",
-      "strategy": 113.5184,
-      "buy_hold": 126.9083,
+      "strategy": 106.964,
+      "buy_hold": 127.2083,
       "position": 1
     },
     {
       "date": "2024-10-14",
-      "strategy": 114.2628,
-      "buy_hold": 127.7404,
+      "strategy": 107.6654,
+      "buy_hold": 128.0425,
       "position": 1
     },
     {
       "date": "2024-10-15",
-      "strategy": 113.9418,
-      "buy_hold": 127.3815,
+      "strategy": 107.3629,
+      "buy_hold": 127.6827,
       "position": 1
     },
     {
       "date": "2024-10-16",
-      "strategy": 113.5505,
-      "buy_hold": 126.9441,
+      "strategy": 106.9942,
+      "buy_hold": 127.2442,
       "position": 1
     },
     {
       "date": "2024-10-17",
-      "strategy": 112.5435,
-      "buy_hold": 125.8183,
+      "strategy": 106.0453,
+      "buy_hold": 126.1158,
       "position": 1
     },
     {
       "date": "2024-10-18",
-      "strategy": 113.0173,
-      "buy_hold": 126.3481,
+      "strategy": 106.4918,
+      "buy_hold": 126.6468,
       "position": 1
     },
     {
       "date": "2024-10-21",
-      "strategy": 112.6856,
-      "buy_hold": 125.9772,
+      "strategy": 106.1792,
+      "buy_hold": 126.2751,
       "position": 1
     },
     {
       "date": "2024-10-22",
-      "strategy": 111.2805,
-      "buy_hold": 124.4064,
+      "strategy": 104.8553,
+      "buy_hold": 124.7005,
       "position": 1
     },
     {
       "date": "2024-10-23",
-      "strategy": 111.1141,
-      "buy_hold": 124.2203,
+      "strategy": 104.6984,
+      "buy_hold": 124.514,
       "position": 1
     },
     {
       "date": "2024-10-24",
-      "strategy": 110.9499,
-      "buy_hold": 124.0368,
+      "strategy": 104.5438,
+      "buy_hold": 124.3301,
       "position": 1
     },
     {
       "date": "2024-10-25",
-      "strategy": 109.9559,
-      "buy_hold": 122.9255,
+      "strategy": 103.6071,
+      "buy_hold": 123.2162,
       "position": 1
     },
     {
       "date": "2024-10-28",
-      "strategy": 110.676,
-      "buy_hold": 123.7305,
+      "strategy": 104.2856,
+      "buy_hold": 124.023,
       "position": 1
     },
     {
       "date": "2024-10-29",
-      "strategy": 111.2566,
-      "buy_hold": 124.3797,
+      "strategy": 104.8328,
+      "buy_hold": 124.6738,
       "position": 1
     },
     {
       "date": "2024-10-30",
-      "strategy": 110.6837,
-      "buy_hold": 123.7391,
+      "strategy": 104.2929,
+      "buy_hold": 124.0317,
       "position": 1
     },
     {
       "date": "2024-10-31",
-      "strategy": 110.0675,
-      "buy_hold": 123.0503,
+      "strategy": 103.7123,
+      "buy_hold": 123.3413,
       "position": 1
     },
     {
       "date": "2024-11-01",
-      "strategy": 110.5177,
-      "buy_hold": 123.5536,
+      "strategy": 104.1365,
+      "buy_hold": 123.8457,
       "position": 1
     },
     {
       "date": "2024-11-04",
-      "strategy": 109.1126,
-      "buy_hold": 121.9828,
+      "strategy": 102.8125,
+      "buy_hold": 122.2712,
       "position": 1
     },
     {
       "date": "2024-11-05",
-      "strategy": 110.1037,
-      "buy_hold": 123.0907,
+      "strategy": 103.7464,
+      "buy_hold": 123.3818,
       "position": 1
     },
     {
       "date": "2024-11-06",
-      "strategy": 111.3348,
-      "buy_hold": 124.4671,
+      "strategy": 104.9065,
+      "buy_hold": 124.7614,
       "position": 1
     },
     {
       "date": "2024-11-07",
-      "strategy": 110.0402,
-      "buy_hold": 123.0198,
+      "strategy": 103.6866,
+      "buy_hold": 123.3107,
       "position": 1
     },
     {
       "date": "2024-11-08",
-      "strategy": 109.8077,
-      "buy_hold": 122.7598,
+      "strategy": 103.4675,
+      "buy_hold": 123.05,
       "position": 1
     },
     {
       "date": "2024-11-11",
-      "strategy": 109.7763,
-      "buy_hold": 122.7247,
+      "strategy": 103.4379,
+      "buy_hold": 123.0149,
       "position": 1
     },
     {
       "date": "2024-11-12",
-      "strategy": 108.6038,
-      "buy_hold": 121.4139,
+      "strategy": 102.3331,
+      "buy_hold": 121.701,
       "position": 1
     },
     {
       "date": "2024-11-13",
-      "strategy": 107.1287,
-      "buy_hold": 119.7648,
+      "strategy": 100.9431,
+      "buy_hold": 120.048,
       "position": 1
     },
     {
       "date": "2024-11-14",
-      "strategy": 107.0088,
-      "buy_hold": 119.6308,
+      "strategy": 100.8302,
+      "buy_hold": 119.9137,
       "position": 1
     },
     {
       "date": "2024-11-18",
-      "strategy": 106.6501,
-      "buy_hold": 119.2297,
+      "strategy": 100.4922,
+      "buy_hold": 119.5116,
       "position": 1
     },
     {
       "date": "2024-11-19",
-      "strategy": 106.9443,
-      "buy_hold": 119.5586,
+      "strategy": 100.7694,
+      "buy_hold": 119.8413,
       "position": 1
     },
     {
       "date": "2024-11-21",
-      "strategy": 106.1776,
-      "buy_hold": 118.7016,
+      "strategy": 100.047,
+      "buy_hold": 118.9822,
       "position": 1
     },
     {
       "date": "2024-11-22",
-      "strategy": 108.712,
-      "buy_hold": 121.5349,
+      "strategy": 102.4351,
+      "buy_hold": 121.8222,
       "position": 1
     },
     {
       "date": "2024-11-25",
-      "strategy": 110.1428,
-      "buy_hold": 123.1345,
+      "strategy": 103.7832,
+      "buy_hold": 123.4256,
       "position": 1
     },
     {
       "date": "2024-11-26",
-      "strategy": 110.0182,
-      "buy_hold": 122.9952,
+      "strategy": 103.6658,
+      "buy_hold": 123.286,
       "position": 1
     },
     {
       "date": "2024-11-27",
-      "strategy": 110.3838,
-      "buy_hold": 123.4039,
+      "strategy": 104.0103,
+      "buy_hold": 123.6957,
       "position": 1
     },
     {
       "date": "2024-11-28",
-      "strategy": 108.7434,
-      "buy_hold": 121.57,
+      "strategy": 102.4646,
+      "buy_hold": 121.8574,
       "position": 1
     },
     {
       "date": "2024-11-29",
-      "strategy": 109.7299,
-      "buy_hold": 122.6729,
+      "strategy": 103.3942,
+      "buy_hold": 122.9629,
       "position": 1
     },
     {
       "date": "2024-12-02",
-      "strategy": 110.389,
-      "buy_hold": 123.4097,
+      "strategy": 104.0153,
+      "buy_hold": 123.7015,
       "position": 1
     },
     {
       "date": "2024-12-03",
-      "strategy": 111.2125,
-      "buy_hold": 124.3304,
+      "strategy": 104.7912,
+      "buy_hold": 124.6243,
       "position": 1
     },
     {
       "date": "2024-12-04",
-      "strategy": 111.2594,
-      "buy_hold": 124.3827,
+      "strategy": 104.8353,
+      "buy_hold": 124.6768,
       "position": 1
     },
     {
       "date": "2024-12-05",
-      "strategy": 112.355,
-      "buy_hold": 125.6076,
+      "strategy": 105.8677,
+      "buy_hold": 125.9046,
       "position": 1
     },
     {
       "date": "2024-12-06",
-      "strategy": 112.2159,
-      "buy_hold": 125.4521,
+      "strategy": 105.7366,
+      "buy_hold": 125.7487,
       "position": 1
     },
     {
       "date": "2024-12-09",
-      "strategy": 111.9485,
-      "buy_hold": 125.1531,
+      "strategy": 105.4847,
+      "buy_hold": 125.4491,
       "position": 1
     },
     {
       "date": "2024-12-10",
-      "strategy": 111.9078,
-      "buy_hold": 125.1077,
+      "strategy": 105.4463,
+      "buy_hold": 125.4035,
       "position": 1
     },
     {
       "date": "2024-12-11",
-      "strategy": 112.0522,
-      "buy_hold": 125.2691,
+      "strategy": 105.5824,
+      "buy_hold": 125.5652,
       "position": 1
     },
     {
       "date": "2024-12-12",
-      "strategy": 111.5754,
-      "buy_hold": 124.7958,
-      "position": 0
+      "strategy": 105.1835,
+      "buy_hold": 125.0908,
+      "position": 1
     },
     {
       "date": "2024-12-13",
-      "strategy": 111.5754,
-      "buy_hold": 125.9121,
-      "position": 0
+      "strategy": 106.1244,
+      "buy_hold": 126.2098,
+      "position": 1
     },
     {
       "date": "2024-12-16",
-      "strategy": 111.5754,
-      "buy_hold": 125.4035,
-      "position": 0
+      "strategy": 105.6957,
+      "buy_hold": 125.7,
+      "position": 1
     },
     {
       "date": "2024-12-17",
-      "strategy": 111.5754,
-      "buy_hold": 123.7145,
+      "strategy": 104.2222,
+      "buy_hold": 124.007,
       "position": 0
     },
     {
       "date": "2024-12-18",
-      "strategy": 111.5754,
-      "buy_hold": 123.0173,
+      "strategy": 104.2222,
+      "buy_hold": 123.3081,
       "position": 0
     },
     {
       "date": "2024-12-19",
-      "strategy": 111.5754,
-      "buy_hold": 121.7609,
+      "strategy": 104.2222,
+      "buy_hold": 122.0487,
       "position": 0
     },
     {
       "date": "2024-12-20",
-      "strategy": 111.5754,
-      "buy_hold": 119.9094,
+      "strategy": 104.2222,
+      "buy_hold": 120.1929,
       "position": 0
     },
     {
       "date": "2024-12-23",
-      "strategy": 111.5754,
-      "buy_hold": 120.753,
+      "strategy": 104.2222,
+      "buy_hold": 121.0385,
       "position": 0
     },
     {
       "date": "2024-12-24",
-      "strategy": 111.5754,
-      "buy_hold": 120.6219,
+      "strategy": 104.2222,
+      "buy_hold": 120.9071,
       "position": 0
     },
     {
       "date": "2024-12-26",
-      "strategy": 111.5754,
-      "buy_hold": 120.7365,
+      "strategy": 104.2222,
+      "buy_hold": 121.022,
       "position": 0
     },
     {
       "date": "2024-12-27",
-      "strategy": 111.5754,
-      "buy_hold": 121.0578,
+      "strategy": 104.2222,
+      "buy_hold": 121.344,
       "position": 0
     },
     {
       "date": "2024-12-30",
-      "strategy": 111.5754,
-      "buy_hold": 120.2012,
+      "strategy": 104.2222,
+      "buy_hold": 120.4854,
       "position": 0
     },
     {
       "date": "2024-12-31",
-      "strategy": 111.5754,
-      "buy_hold": 120.2007,
+      "strategy": 104.2222,
+      "buy_hold": 120.4849,
       "position": 0
     },
     {
       "date": "2025-01-01",
-      "strategy": 111.5754,
-      "buy_hold": 120.6994,
+      "strategy": 104.2222,
+      "buy_hold": 120.9848,
       "position": 0
     },
     {
       "date": "2025-01-02",
-      "strategy": 111.5754,
-      "buy_hold": 122.9654,
+      "strategy": 104.2222,
+      "buy_hold": 123.2562,
       "position": 0
     },
     {
       "date": "2025-01-03",
-      "strategy": 111.5754,
-      "buy_hold": 122.0305,
+      "strategy": 104.2222,
+      "buy_hold": 122.3191,
       "position": 0
     },
     {
       "date": "2025-01-06",
-      "strategy": 111.5754,
-      "buy_hold": 120.0546,
+      "strategy": 104.2222,
+      "buy_hold": 120.3384,
       "position": 0
     },
     {
       "date": "2025-01-07",
-      "strategy": 111.5754,
-      "buy_hold": 120.5215,
+      "strategy": 104.2222,
+      "buy_hold": 120.8064,
       "position": 0
     },
     {
       "date": "2025-01-08",
-      "strategy": 111.5754,
-      "buy_hold": 120.4251,
+      "strategy": 104.2222,
+      "buy_hold": 120.7099,
       "position": 0
     },
     {
       "date": "2025-01-09",
-      "strategy": 111.5754,
-      "buy_hold": 119.5993,
+      "strategy": 104.2222,
+      "buy_hold": 119.8821,
       "position": 0
     },
     {
       "date": "2025-01-10",
-      "strategy": 111.5754,
-      "buy_hold": 119.1164,
+      "strategy": 104.2222,
+      "buy_hold": 119.398,
       "position": 0
     },
     {
       "date": "2025-01-13",
-      "strategy": 111.5754,
-      "buy_hold": 117.3597,
+      "strategy": 104.2222,
+      "buy_hold": 117.6372,
       "position": 0
     },
     {
       "date": "2025-01-14",
-      "strategy": 111.5754,
-      "buy_hold": 117.8178,
+      "strategy": 104.2222,
+      "buy_hold": 118.0963,
       "position": 0
     },
     {
       "date": "2025-01-15",
-      "strategy": 111.5754,
-      "buy_hold": 118.0066,
+      "strategy": 104.2222,
+      "buy_hold": 118.2856,
       "position": 0
     },
     {
       "date": "2025-01-16",
-      "strategy": 111.5754,
-      "buy_hold": 118.5079,
+      "strategy": 104.2222,
+      "buy_hold": 118.7881,
       "position": 0
     },
     {
       "date": "2025-01-17",
-      "strategy": 111.5754,
-      "buy_hold": 117.9558,
+      "strategy": 104.2222,
+      "buy_hold": 118.2347,
       "position": 0
     },
     {
       "date": "2025-01-20",
-      "strategy": 111.5754,
-      "buy_hold": 118.6754,
+      "strategy": 104.2222,
+      "buy_hold": 118.956,
       "position": 0
     },
     {
       "date": "2025-01-21",
-      "strategy": 111.5754,
-      "buy_hold": 117.0481,
+      "strategy": 104.2222,
+      "buy_hold": 117.3249,
       "position": 0
     },
     {
       "date": "2025-01-22",
-      "strategy": 111.5754,
-      "buy_hold": 117.7125,
+      "strategy": 104.2222,
+      "buy_hold": 117.9909,
       "position": 0
     },
     {
       "date": "2025-01-23",
-      "strategy": 111.5754,
-      "buy_hold": 117.9667,
+      "strategy": 104.2222,
+      "buy_hold": 118.2456,
       "position": 0
     },
     {
       "date": "2025-01-24",
-      "strategy": 111.5754,
-      "buy_hold": 117.3915,
+      "strategy": 104.2222,
+      "buy_hold": 117.6691,
       "position": 0
     },
     {
       "date": "2025-01-27",
-      "strategy": 111.5754,
-      "buy_hold": 116.0543,
+      "strategy": 104.2222,
+      "buy_hold": 116.3287,
       "position": 0
     },
     {
       "date": "2025-01-28",
-      "strategy": 111.5754,
-      "buy_hold": 116.7055,
+      "strategy": 104.2222,
+      "buy_hold": 116.9814,
       "position": 0
     },
     {
       "date": "2025-01-29",
-      "strategy": 111.5754,
-      "buy_hold": 117.7519,
+      "strategy": 104.2222,
+      "buy_hold": 118.0303,
       "position": 0
     },
     {
       "date": "2025-01-30",
-      "strategy": 111.5754,
-      "buy_hold": 118.1912,
+      "strategy": 104.2222,
+      "buy_hold": 118.4706,
       "position": 0
     },
     {
       "date": "2025-01-31",
-      "strategy": 111.5754,
-      "buy_hold": 119.5073,
+      "strategy": 104.2222,
+      "buy_hold": 119.7899,
       "position": 0
     },
     {
       "date": "2025-02-01",
-      "strategy": 111.5754,
-      "buy_hold": 119.3739,
+      "strategy": 104.2222,
+      "buy_hold": 119.6561,
       "position": 0
     },
     {
       "date": "2025-02-03",
-      "strategy": 111.5754,
-      "buy_hold": 118.7582,
+      "strategy": 104.2222,
+      "buy_hold": 119.039,
       "position": 0
     },
     {
       "date": "2025-02-04",
-      "strategy": 111.5754,
-      "buy_hold": 120.6808,
+      "strategy": 104.2222,
+      "buy_hold": 120.9662,
       "position": 0
     },
     {
       "date": "2025-02-05",
-      "strategy": 111.5754,
-      "buy_hold": 120.4625,
+      "strategy": 104.2222,
+      "buy_hold": 120.7473,
       "position": 0
     },
     {
       "date": "2025-02-06",
-      "strategy": 111.5754,
-      "buy_hold": 119.99,
+      "strategy": 104.2222,
+      "buy_hold": 120.2737,
       "position": 0
     },
     {
       "date": "2025-02-07",
-      "strategy": 111.5754,
-      "buy_hold": 119.7694,
+      "strategy": 104.2222,
+      "buy_hold": 120.0525,
       "position": 0
     },
     {
       "date": "2025-02-10",
-      "strategy": 111.5754,
-      "buy_hold": 118.8627,
+      "strategy": 104.2222,
+      "buy_hold": 119.1437,
       "position": 0
     },
     {
       "date": "2025-02-11",
-      "strategy": 111.5754,
-      "buy_hold": 117.2878,
+      "strategy": 104.2222,
+      "buy_hold": 117.5651,
       "position": 0
     },
     {
       "date": "2025-02-12",
-      "strategy": 111.5754,
-      "buy_hold": 117.1528,
+      "strategy": 104.2222,
+      "buy_hold": 117.4298,
       "position": 0
     },
     {
       "date": "2025-02-13",
-      "strategy": 111.5754,
-      "buy_hold": 117.0824,
+      "strategy": 104.2222,
+      "buy_hold": 117.3593,
       "position": 0
     },
     {
       "date": "2025-02-14",
-      "strategy": 111.5754,
-      "buy_hold": 116.5631,
+      "strategy": 104.2222,
+      "buy_hold": 116.8387,
       "position": 0
     },
     {
       "date": "2025-02-17",
-      "strategy": 111.5754,
-      "buy_hold": 116.7169,
+      "strategy": 104.2222,
+      "buy_hold": 116.9929,
       "position": 0
     },
     {
       "date": "2025-02-18",
-      "strategy": 111.5754,
-      "buy_hold": 116.6447,
+      "strategy": 104.2222,
+      "buy_hold": 116.9205,
       "position": 0
     },
     {
       "date": "2025-02-19",
-      "strategy": 111.5754,
-      "buy_hold": 116.5817,
+      "strategy": 104.2222,
+      "buy_hold": 116.8573,
       "position": 0
     },
     {
       "date": "2025-02-20",
-      "strategy": 111.5754,
-      "buy_hold": 116.4813,
+      "strategy": 104.2222,
+      "buy_hold": 116.7567,
       "position": 0
     },
     {
       "date": "2025-02-21",
-      "strategy": 111.5754,
-      "buy_hold": 115.8852,
+      "strategy": 104.2222,
+      "buy_hold": 116.1592,
       "position": 0
     },
     {
       "date": "2025-02-24",
-      "strategy": 111.5754,
-      "buy_hold": 114.6522,
+      "strategy": 104.2222,
+      "buy_hold": 114.9233,
       "position": 0
     },
     {
       "date": "2025-02-25",
-      "strategy": 111.5754,
-      "buy_hold": 114.6227,
+      "strategy": 104.2222,
+      "buy_hold": 114.8937,
       "position": 0
     },
     {
       "date": "2025-02-27",
-      "strategy": 111.5754,
-      "buy_hold": 114.61,
+      "strategy": 104.2222,
+      "buy_hold": 114.881,
       "position": 0
     },
     {
       "date": "2025-02-28",
-      "strategy": 111.5754,
-      "buy_hold": 112.4731,
+      "strategy": 104.2222,
+      "buy_hold": 112.739,
       "position": 0
     },
     {
       "date": "2025-03-03",
-      "strategy": 111.5754,
-      "buy_hold": 112.4457,
+      "strategy": 104.2222,
+      "buy_hold": 112.7115,
       "position": 0
     },
     {
       "date": "2025-03-04",
-      "strategy": 111.5754,
-      "buy_hold": 112.2594,
-      "position": 0
+      "strategy": 104.1723,
+      "buy_hold": 112.5248,
+      "position": 1
     },
     {
       "date": "2025-03-05",
-      "strategy": 111.5754,
-      "buy_hold": 113.5539,
-      "position": 0
+      "strategy": 105.3736,
+      "buy_hold": 113.8224,
+      "position": 1
     },
     {
       "date": "2025-03-06",
-      "strategy": 111.5754,
-      "buy_hold": 114.6082,
-      "position": 0
+      "strategy": 106.352,
+      "buy_hold": 114.8792,
+      "position": 1
     },
     {
       "date": "2025-03-07",
-      "strategy": 111.5754,
-      "buy_hold": 114.6479,
-      "position": 0
+      "strategy": 106.3888,
+      "buy_hold": 114.919,
+      "position": 1
     },
     {
       "date": "2025-03-10",
-      "strategy": 111.5754,
-      "buy_hold": 114.1792,
-      "position": 0
+      "strategy": 105.9538,
+      "buy_hold": 114.4491,
+      "position": 1
     },
     {
       "date": "2025-03-11",
-      "strategy": 111.5754,
-      "buy_hold": 114.3703,
-      "position": 0
+      "strategy": 106.1312,
+      "buy_hold": 114.6407,
+      "position": 1
     },
     {
       "date": "2025-03-12",
-      "strategy": 111.5754,
-      "buy_hold": 114.231,
-      "position": 0
+      "strategy": 106.0019,
+      "buy_hold": 114.5011,
+      "position": 1
     },
     {
       "date": "2025-03-13",
-      "strategy": 111.5754,
-      "buy_hold": 113.8584,
-      "position": 0
+      "strategy": 105.6561,
+      "buy_hold": 114.1276,
+      "position": 1
     },
     {
       "date": "2025-03-17",
-      "strategy": 111.5754,
-      "buy_hold": 114.4255,
-      "position": 0
+      "strategy": 106.1824,
+      "buy_hold": 114.696,
+      "position": 1
     },
     {
       "date": "2025-03-18",
-      "strategy": 111.5754,
-      "buy_hold": 116.0804,
-      "position": 0
+      "strategy": 107.7181,
+      "buy_hold": 116.3549,
+      "position": 1
     },
     {
       "date": "2025-03-19",
-      "strategy": 111.5754,
-      "buy_hold": 116.4531,
-      "position": 0
+      "strategy": 108.0639,
+      "buy_hold": 116.7284,
+      "position": 1
     },
     {
       "date": "2025-03-20",
-      "strategy": 111.5754,
-      "buy_hold": 117.892,
-      "position": 0
+      "strategy": 109.3992,
+      "buy_hold": 118.1707,
+      "position": 1
     },
     {
       "date": "2025-03-21",
-      "strategy": 111.5754,
-      "buy_hold": 118.7041,
-      "position": 0
+      "strategy": 110.1528,
+      "buy_hold": 118.9848,
+      "position": 1
     },
     {
       "date": "2025-03-24",
-      "strategy": 111.5754,
-      "buy_hold": 120.2696,
-      "position": 0
+      "strategy": 111.6055,
+      "buy_hold": 120.5539,
+      "position": 1
     },
     {
       "date": "2025-03-25",
-      "strategy": 111.5754,
-      "buy_hold": 120.3219,
-      "position": 0
+      "strategy": 111.6541,
+      "buy_hold": 120.6064,
+      "position": 1
     },
     {
       "date": "2025-03-26",
-      "strategy": 111.5754,
-      "buy_hold": 119.3977,
-      "position": 0
+      "strategy": 110.7964,
+      "buy_hold": 119.68,
+      "position": 1
     },
     {
       "date": "2025-03-27",
-      "strategy": 111.5754,
-      "buy_hold": 119.932,
-      "position": 0
+      "strategy": 111.2922,
+      "buy_hold": 120.2156,
+      "position": 1
     },
     {
       "date": "2025-03-28",
-      "strategy": 111.5754,
-      "buy_hold": 119.563,
-      "position": 0
+      "strategy": 110.9498,
+      "buy_hold": 119.8457,
+      "position": 1
     },
     {
       "date": "2025-04-01",
-      "strategy": 111.5754,
-      "buy_hold": 117.7651,
-      "position": 0
+      "strategy": 109.2814,
+      "buy_hold": 118.0436,
+      "position": 1
     },
     {
       "date": "2025-04-02",
-      "strategy": 111.5754,
-      "buy_hold": 118.6123,
-      "position": 0
+      "strategy": 110.0676,
+      "buy_hold": 118.8928,
+      "position": 1
     },
     {
       "date": "2025-04-03",
-      "strategy": 111.5754,
-      "buy_hold": 118.1942,
+      "strategy": 109.6271,
+      "buy_hold": 118.4737,
       "position": 0
     },
     {
       "date": "2025-04-04",
-      "strategy": 111.5754,
-      "buy_hold": 116.4371,
+      "strategy": 109.6271,
+      "buy_hold": 116.7124,
       "position": 0
     },
     {
       "date": "2025-04-07",
-      "strategy": 111.5754,
-      "buy_hold": 112.6607,
+      "strategy": 109.6271,
+      "buy_hold": 112.9271,
       "position": 0
     },
     {
       "date": "2025-04-08",
-      "strategy": 111.5754,
-      "buy_hold": 114.5632,
-      "position": 0
+      "strategy": 109.5746,
+      "buy_hold": 114.8341,
+      "position": 1
     },
     {
       "date": "2025-04-09",
-      "strategy": 111.5754,
-      "buy_hold": 113.8683,
-      "position": 0
+      "strategy": 108.9099,
+      "buy_hold": 114.1375,
+      "position": 1
     },
     {
       "date": "2025-04-11",
-      "strategy": 111.5754,
-      "buy_hold": 116.0512,
-      "position": 0
+      "strategy": 110.9978,
+      "buy_hold": 116.3256,
+      "position": 1
     },
     {
       "date": "2025-04-15",
-      "strategy": 111.5754,
-      "buy_hold": 118.593,
-      "position": 0
+      "strategy": 113.4289,
+      "buy_hold": 118.8734,
+      "position": 1
     },
     {
       "date": "2025-04-16",
-      "strategy": 111.5754,
-      "buy_hold": 119.1453,
-      "position": 0
+      "strategy": 113.9572,
+      "buy_hold": 119.427,
+      "position": 1
     },
     {
       "date": "2025-04-17",
-      "strategy": 111.5754,
-      "buy_hold": 121.2522,
-      "position": 0
+      "strategy": 115.9723,
+      "buy_hold": 121.5389,
+      "position": 1
     },
     {
       "date": "2025-04-21",
-      "strategy": 111.5754,
-      "buy_hold": 122.6446,
-      "position": 0
+      "strategy": 117.3041,
+      "buy_hold": 122.9346,
+      "position": 1
     },
     {
       "date": "2025-04-22",
-      "strategy": 111.5754,
-      "buy_hold": 122.8566,
-      "position": 0
+      "strategy": 117.5068,
+      "buy_hold": 123.1471,
+      "position": 1
     },
     {
       "date": "2025-04-23",
-      "strategy": 111.5754,
-      "buy_hold": 123.6786,
-      "position": 0
+      "strategy": 118.2931,
+      "buy_hold": 123.9711,
+      "position": 1
     },
     {
       "date": "2025-04-24",
-      "strategy": 111.5754,
-      "buy_hold": 123.2605,
-      "position": 0
+      "strategy": 117.8931,
+      "buy_hold": 123.552,
+      "position": 1
     },
     {
       "date": "2025-04-25",
-      "strategy": 111.5754,
-      "buy_hold": 122.2064,
-      "position": 0
+      "strategy": 116.885,
+      "buy_hold": 122.4954,
+      "position": 1
     },
     {
       "date": "2025-04-28",
-      "strategy": 111.5754,
-      "buy_hold": 123.6764,
-      "position": 0
+      "strategy": 118.2909,
+      "buy_hold": 123.9688,
+      "position": 1
     },
     {
       "date": "2025-04-29",
-      "strategy": 111.522,
-      "buy_hold": 123.7142,
+      "strategy": 118.3271,
+      "buy_hold": 124.0067,
       "position": 1
     },
     {
       "date": "2025-04-30",
-      "strategy": 111.5139,
-      "buy_hold": 123.7053,
+      "strategy": 118.3186,
+      "buy_hold": 123.9978,
       "position": 1
     },
     {
       "date": "2025-05-02",
-      "strategy": 111.5712,
-      "buy_hold": 123.7689,
+      "strategy": 118.3794,
+      "buy_hold": 124.0615,
       "position": 1
     },
     {
       "date": "2025-05-05",
-      "strategy": 112.0957,
-      "buy_hold": 124.3507,
+      "strategy": 118.9359,
+      "buy_hold": 124.6447,
       "position": 1
     },
     {
       "date": "2025-05-06",
-      "strategy": 111.722,
-      "buy_hold": 123.9361,
+      "strategy": 118.5393,
+      "buy_hold": 124.2292,
       "position": 1
     },
     {
       "date": "2025-05-07",
-      "strategy": 111.8815,
-      "buy_hold": 124.113,
+      "strategy": 118.7085,
+      "buy_hold": 124.4065,
       "position": 1
     },
     {
       "date": "2025-05-08",
-      "strategy": 111.2372,
-      "buy_hold": 123.3983,
+      "strategy": 118.0249,
+      "buy_hold": 123.6901,
       "position": 1
     },
     {
       "date": "2025-05-09",
-      "strategy": 110.0191,
-      "buy_hold": 122.0471,
+      "strategy": 116.7325,
+      "buy_hold": 122.3356,
       "position": 1
     },
     {
       "date": "2025-05-12",
-      "strategy": 114.22,
-      "buy_hold": 126.7072,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.0068,
+      "position": 0
     },
     {
       "date": "2025-05-13",
-      "strategy": 112.6328,
-      "buy_hold": 124.9465,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.2419,
+      "position": 0
     },
     {
       "date": "2025-05-14",
-      "strategy": 113.0386,
-      "buy_hold": 125.3967,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.6931,
+      "position": 0
     },
     {
       "date": "2025-05-15",
-      "strategy": 114.8496,
-      "buy_hold": 127.4057,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.7069,
+      "position": 0
     },
     {
       "date": "2025-05-16",
-      "strategy": 114.6558,
-      "buy_hold": 127.1907,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.4914,
+      "position": 0
     },
     {
       "date": "2025-05-19",
-      "strategy": 114.315,
-      "buy_hold": 126.8127,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.1125,
+      "position": 0
     },
     {
       "date": "2025-05-20",
-      "strategy": 113.1165,
-      "buy_hold": 125.4831,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.7798,
+      "position": 0
     },
     {
       "date": "2025-05-21",
-      "strategy": 113.7101,
-      "buy_hold": 126.1416,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.4399,
+      "position": 0
     },
     {
       "date": "2025-05-22",
-      "strategy": 112.7764,
-      "buy_hold": 125.1059,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.4017,
+      "position": 0
     },
     {
       "date": "2025-05-23",
-      "strategy": 113.8921,
-      "buy_hold": 126.3435,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.6422,
+      "position": 0
     },
     {
       "date": "2025-05-26",
-      "strategy": 114.5703,
-      "buy_hold": 127.0958,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.3963,
+      "position": 0
     },
     {
       "date": "2025-05-27",
-      "strategy": 113.7686,
-      "buy_hold": 126.2065,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.5049,
+      "position": 0
     },
     {
       "date": "2025-05-28",
-      "strategy": 113.4306,
-      "buy_hold": 125.8315,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.1291,
+      "position": 0
     },
     {
       "date": "2025-05-29",
-      "strategy": 113.8025,
-      "buy_hold": 126.2441,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.5426,
+      "position": 0
     },
     {
       "date": "2025-05-30",
-      "strategy": 113.4226,
-      "buy_hold": 125.8227,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.1201,
+      "position": 0
     },
     {
       "date": "2025-06-02",
-      "strategy": 113.2663,
-      "buy_hold": 125.6493,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.9464,
+      "position": 0
     },
     {
       "date": "2025-06-03",
-      "strategy": 112.4685,
-      "buy_hold": 124.7643,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.0592,
+      "position": 0
     },
     {
       "date": "2025-06-04",
-      "strategy": 112.8246,
-      "buy_hold": 125.1592,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.4552,
+      "position": 0
     },
     {
       "date": "2025-06-05",
-      "strategy": 113.4235,
-      "buy_hold": 125.8237,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.1212,
+      "position": 0
     },
     {
       "date": "2025-06-06",
-      "strategy": 114.579,
-      "buy_hold": 127.1055,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.406,
+      "position": 0
     },
     {
       "date": "2025-06-09",
-      "strategy": 115.038,
-      "buy_hold": 127.6146,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.9164,
+      "position": 0
     },
     {
       "date": "2025-06-10",
-      "strategy": 115.0428,
-      "buy_hold": 127.62,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.9217,
+      "position": 0
     },
     {
       "date": "2025-06-11",
-      "strategy": 115.213,
-      "buy_hold": 127.8088,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 128.111,
+      "position": 0
     },
     {
       "date": "2025-06-12",
-      "strategy": 114.0527,
-      "buy_hold": 126.5216,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.8208,
+      "position": 0
     },
     {
       "date": "2025-06-13",
-      "strategy": 113.2755,
-      "buy_hold": 125.6595,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.9566,
+      "position": 0
     },
     {
       "date": "2025-06-16",
-      "strategy": 114.3199,
-      "buy_hold": 126.818,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.1179,
+      "position": 0
     },
     {
       "date": "2025-06-17",
-      "strategy": 113.8932,
-      "buy_hold": 126.3447,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.6435,
+      "position": 0
     },
     {
       "date": "2025-06-18",
-      "strategy": 113.7037,
-      "buy_hold": 126.1345,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.4328,
+      "position": 0
     },
     {
       "date": "2025-06-19",
-      "strategy": 113.6176,
-      "buy_hold": 126.039,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.337,
+      "position": 0
     },
     {
       "date": "2025-06-20",
-      "strategy": 115.0801,
-      "buy_hold": 127.6614,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.9632,
+      "position": 0
     },
     {
       "date": "2025-06-23",
-      "strategy": 114.4363,
-      "buy_hold": 126.9472,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.2473,
+      "position": 0
     },
     {
       "date": "2025-06-24",
-      "strategy": 114.7683,
-      "buy_hold": 127.3155,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.6165,
+      "position": 0
     },
     {
       "date": "2025-06-25",
-      "strategy": 115.6866,
-      "buy_hold": 128.3342,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 128.6376,
+      "position": 0
     },
     {
       "date": "2025-06-26",
-      "strategy": 117.0809,
-      "buy_hold": 129.8809,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 130.188,
+      "position": 0
     },
     {
       "date": "2025-06-27",
-      "strategy": 117.4878,
-      "buy_hold": 130.3323,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 130.6405,
+      "position": 0
     },
     {
       "date": "2025-06-30",
-      "strategy": 116.9345,
-      "buy_hold": 129.7185,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 130.0252,
+      "position": 0
     },
     {
       "date": "2025-07-01",
-      "strategy": 117.0479,
-      "buy_hold": 129.8443,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 130.1513,
+      "position": 0
     },
     {
       "date": "2025-07-02",
-      "strategy": 116.6428,
-      "buy_hold": 129.3949,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 129.7008,
+      "position": 0
     },
     {
       "date": "2025-07-03",
-      "strategy": 116.4224,
-      "buy_hold": 129.1504,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 129.4557,
+      "position": 0
     },
     {
       "date": "2025-07-04",
-      "strategy": 116.6776,
-      "buy_hold": 129.4335,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 129.7396,
+      "position": 0
     },
     {
       "date": "2025-07-07",
-      "strategy": 116.679,
-      "buy_hold": 129.4351,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 129.7411,
+      "position": 0
     },
     {
       "date": "2025-07-08",
-      "strategy": 116.9594,
-      "buy_hold": 129.7462,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 130.0529,
+      "position": 0
     },
     {
       "date": "2025-07-09",
-      "strategy": 116.7468,
-      "buy_hold": 129.5103,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 129.8165,
+      "position": 0
     },
     {
       "date": "2025-07-10",
-      "strategy": 116.193,
-      "buy_hold": 128.8959,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 129.2007,
+      "position": 0
     },
     {
       "date": "2025-07-11",
-      "strategy": 115.2517,
-      "buy_hold": 127.8518,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 128.1541,
+      "position": 0
     },
     {
       "date": "2025-07-14",
-      "strategy": 114.9422,
-      "buy_hold": 127.5084,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.8099,
+      "position": 0
     },
     {
       "date": "2025-07-15",
-      "strategy": 115.4623,
-      "buy_hold": 128.0854,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 128.3882,
+      "position": 0
     },
     {
       "date": "2025-07-16",
-      "strategy": 115.5368,
-      "buy_hold": 128.168,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 128.471,
+      "position": 0
     },
     {
       "date": "2025-07-17",
-      "strategy": 115.0758,
-      "buy_hold": 127.6566,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.9584,
+      "position": 0
     },
     {
       "date": "2025-07-18",
-      "strategy": 114.4202,
-      "buy_hold": 126.9294,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.2295,
+      "position": 0
     },
     {
       "date": "2025-07-21",
-      "strategy": 114.9807,
-      "buy_hold": 127.5511,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.8527,
+      "position": 0
     },
     {
       "date": "2025-07-22",
-      "strategy": 114.8441,
-      "buy_hold": 127.3996,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.7008,
+      "position": 0
     },
     {
       "date": "2025-07-23",
-      "strategy": 115.5727,
-      "buy_hold": 128.2079,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 128.511,
+      "position": 0
     },
     {
       "date": "2025-07-24",
-      "strategy": 114.8496,
-      "buy_hold": 127.4057,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 127.7069,
+      "position": 0
     },
     {
       "date": "2025-07-25",
-      "strategy": 113.8181,
-      "buy_hold": 126.2614,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.5599,
+      "position": 0
     },
     {
       "date": "2025-07-28",
-      "strategy": 113.1027,
-      "buy_hold": 125.4678,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 125.7645,
+      "position": 0
     },
     {
       "date": "2025-07-29",
-      "strategy": 113.7452,
-      "buy_hold": 126.1805,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.4789,
+      "position": 0
     },
     {
       "date": "2025-07-30",
-      "strategy": 113.9008,
-      "buy_hold": 126.3531,
-      "position": 1
+      "strategy": 121.1317,
+      "buy_hold": 126.6519,
+      "position": 0
     },
     {
       "date": "2025-07-31",
-      "strategy": 113.5035,
-      "buy_hold": 125.9124,
+      "strategy": 121.0737,
+      "buy_hold": 126.2101,
       "position": 1
     },
     {
       "date": "2025-08-01",
-      "strategy": 112.5732,
-      "buy_hold": 124.8804,
+      "strategy": 120.0814,
+      "buy_hold": 125.1757,
       "position": 1
     },
     {
       "date": "2025-08-04",
-      "strategy": 113.2945,
-      "buy_hold": 125.6806,
+      "strategy": 120.8508,
+      "buy_hold": 125.9777,
       "position": 1
     },
     {
       "date": "2025-08-05",
-      "strategy": 112.9591,
-      "buy_hold": 125.3085,
+      "strategy": 120.493,
+      "buy_hold": 125.6047,
       "position": 1
     },
     {
       "date": "2025-08-06",
-      "strategy": 112.6138,
-      "buy_hold": 124.9254,
+      "strategy": 120.1247,
+      "buy_hold": 125.2208,
       "position": 1
     },
     {
       "date": "2025-08-07",
-      "strategy": 112.7144,
-      "buy_hold": 125.037,
+      "strategy": 120.232,
+      "buy_hold": 125.3326,
       "position": 1
     },
     {
       "date": "2025-08-08",
-      "strategy": 111.6473,
-      "buy_hold": 123.8533,
+      "strategy": 119.0937,
+      "buy_hold": 124.1461,
       "position": 1
     },
     {
       "date": "2025-08-11",
-      "strategy": 112.6635,
-      "buy_hold": 124.9806,
+      "strategy": 120.1777,
+      "buy_hold": 125.2761,
       "position": 1
     },
     {
       "date": "2025-08-12",
-      "strategy": 112.216,
-      "buy_hold": 124.4841,
+      "strategy": 119.7004,
+      "buy_hold": 124.7785,
       "position": 1
     },
     {
       "date": "2025-08-13",
-      "strategy": 112.8207,
-      "buy_hold": 125.1549,
+      "strategy": 120.3454,
+      "buy_hold": 125.4508,
       "position": 1
     },
     {
       "date": "2025-08-14",
-      "strategy": 112.8754,
-      "buy_hold": 125.2157,
+      "strategy": 120.4038,
+      "buy_hold": 125.5117,
       "position": 1
     },
     {
       "date": "2025-08-18",
-      "strategy": 114.0011,
-      "buy_hold": 126.4645,
+      "strategy": 121.6046,
+      "buy_hold": 126.7635,
       "position": 1
     },
     {
       "date": "2025-08-19",
-      "strategy": 114.4764,
-      "buy_hold": 126.9916,
+      "strategy": 122.1115,
+      "buy_hold": 127.2919,
       "position": 1
     },
     {
       "date": "2025-08-20",
-      "strategy": 114.7967,
-      "buy_hold": 127.347,
+      "strategy": 122.4532,
+      "buy_hold": 127.6481,
       "position": 1
     },
     {
       "date": "2025-08-21",
-      "strategy": 114.9488,
-      "buy_hold": 127.5157,
+      "strategy": 122.6155,
+      "buy_hold": 127.8172,
       "position": 1
     },
     {
       "date": "2025-08-22",
-      "strategy": 113.9698,
-      "buy_hold": 126.4296,
+      "strategy": 121.5711,
+      "buy_hold": 126.7286,
       "position": 1
     },
     {
       "date": "2025-08-25",
-      "strategy": 114.4172,
-      "buy_hold": 126.9261,
+      "strategy": 122.0484,
+      "buy_hold": 127.2262,
       "position": 1
     },
     {
       "date": "2025-08-26",
-      "strategy": 113.2455,
-      "buy_hold": 125.6262,
+      "strategy": 120.7985,
+      "buy_hold": 125.9232,
       "position": 1
     },
     {
       "date": "2025-08-28",
-      "strategy": 112.2779,
-      "buy_hold": 124.5528,
+      "strategy": 119.7664,
+      "buy_hold": 124.8473,
       "position": 1
     },
     {
       "date": "2025-08-29",
-      "strategy": 111.9385,
-      "buy_hold": 124.1763,
+      "strategy": 119.4044,
+      "buy_hold": 124.4699,
       "position": 1
     },
     {
       "date": "2025-09-01",
-      "strategy": 112.8468,
-      "buy_hold": 125.1839,
+      "strategy": 120.3732,
+      "buy_hold": 125.4799,
       "position": 1
     },
     {
       "date": "2025-09-02",
-      "strategy": 112.6385,
-      "buy_hold": 124.9529,
+      "strategy": 120.1511,
+      "buy_hold": 125.2483,
       "position": 1
     },
     {
       "date": "2025-09-03",
-      "strategy": 113.2592,
-      "buy_hold": 125.6414,
+      "strategy": 120.8132,
+      "buy_hold": 125.9385,
       "position": 1
     },
     {
       "date": "2025-09-04",
-      "strategy": 113.3474,
-      "buy_hold": 125.7393,
+      "strategy": 120.9073,
+      "buy_hold": 126.0366,
       "position": 1
     },
     {
       "date": "2025-09-05",
-      "strategy": 113.3781,
-      "buy_hold": 125.7733,
+      "strategy": 120.94,
+      "buy_hold": 126.0707,
       "position": 1
     },
     {
       "date": "2025-09-08",
-      "strategy": 113.5255,
-      "buy_hold": 125.9368,
+      "strategy": 121.0972,
+      "buy_hold": 126.2345,
       "position": 1
     },
     {
       "date": "2025-09-09",
-      "strategy": 113.9629,
-      "buy_hold": 126.422,
+      "strategy": 121.5638,
+      "buy_hold": 126.7209,
       "position": 1
     },
     {
       "date": "2025-09-10",
-      "strategy": 114.4418,
-      "buy_hold": 126.9532,
+      "strategy": 122.0746,
+      "buy_hold": 127.2534,
       "position": 1
     },
     {
       "date": "2025-09-11",
-      "strategy": 114.5902,
-      "buy_hold": 127.118,
+      "strategy": 122.233,
+      "buy_hold": 127.4185,
       "position": 1
     },
     {
       "date": "2025-09-12",
-      "strategy": 115.0874,
-      "buy_hold": 127.6695,
+      "strategy": 122.7633,
+      "buy_hold": 127.9714,
       "position": 1
     },
     {
       "date": "2025-09-15",
-      "strategy": 114.8821,
-      "buy_hold": 127.4418,
+      "strategy": 122.5443,
+      "buy_hold": 127.7431,
       "position": 1
     },
     {
       "date": "2025-09-16",
-      "strategy": 115.6607,
-      "buy_hold": 128.3055,
+      "strategy": 123.3749,
+      "buy_hold": 128.6088,
       "position": 1
     },
     {
       "date": "2025-09-17",
-      "strategy": 116.0784,
-      "buy_hold": 128.7689,
+      "strategy": 123.8204,
+      "buy_hold": 129.0733,
       "position": 1
     },
     {
       "date": "2025-09-18",
-      "strategy": 116.5062,
-      "buy_hold": 129.2434,
+      "strategy": 124.2767,
+      "buy_hold": 129.549,
       "position": 1
     },
     {
       "date": "2025-09-19",
-      "strategy": 116.0638,
-      "buy_hold": 128.7526,
+      "strategy": 123.8048,
+      "buy_hold": 129.057,
       "position": 1
     },
     {
       "date": "2025-09-22",
-      "strategy": 115.4923,
-      "buy_hold": 128.1187,
+      "strategy": 123.1952,
+      "buy_hold": 128.4216,
       "position": 1
     },
     {
       "date": "2025-09-23",
-      "strategy": 115.3418,
-      "buy_hold": 127.9517,
+      "strategy": 123.0346,
+      "buy_hold": 128.2542,
       "position": 1
     },
     {
       "date": "2025-09-24",
-      "strategy": 114.8258,
-      "buy_hold": 127.3793,
+      "strategy": 122.4842,
+      "buy_hold": 127.6804,
       "position": 1
     },
     {
       "date": "2025-09-25",
-      "strategy": 114.0648,
-      "buy_hold": 126.5351,
+      "strategy": 121.6725,
+      "buy_hold": 126.8343,
       "position": 1
     },
     {
       "date": "2025-09-26",
-      "strategy": 112.9827,
-      "buy_hold": 125.3346,
+      "strategy": 120.5182,
+      "buy_hold": 125.631,
       "position": 1
     },
     {
       "date": "2025-09-29",
-      "strategy": 112.8919,
-      "buy_hold": 125.234,
+      "strategy": 120.4214,
+      "buy_hold": 125.5301,
       "position": 1
     },
     {
       "date": "2025-09-30",
-      "strategy": 112.7829,
-      "buy_hold": 125.113,
+      "strategy": 120.305,
+      "buy_hold": 125.4088,
       "position": 1
     },
     {
       "date": "2025-10-01",
-      "strategy": 113.8149,
-      "buy_hold": 126.2578,
+      "strategy": 121.4059,
+      "buy_hold": 126.5563,
       "position": 1
     },
     {
       "date": "2025-10-03",
-      "strategy": 114.0804,
-      "buy_hold": 126.5524,
+      "strategy": 121.6892,
+      "buy_hold": 126.8516,
       "position": 1
     },
     {
       "date": "2025-10-06",
-      "strategy": 114.9209,
-      "buy_hold": 127.4847,
+      "strategy": 122.5857,
+      "buy_hold": 127.7862,
       "position": 1
     },
     {
       "date": "2025-10-07",
-      "strategy": 115.0613,
-      "buy_hold": 127.6406,
+      "strategy": 122.7355,
+      "buy_hold": 127.9423,
       "position": 1
     },
     {
       "date": "2025-10-08",
-      "strategy": 114.7765,
-      "buy_hold": 127.3246,
+      "strategy": 122.4317,
+      "buy_hold": 127.6257,
       "position": 1
     },
     {
       "date": "2025-10-09",
-      "strategy": 115.3982,
-      "buy_hold": 128.0142,
+      "strategy": 123.0948,
+      "buy_hold": 128.3169,
       "position": 1
     },
     {
       "date": "2025-10-10",
-      "strategy": 115.8727,
-      "buy_hold": 128.5406,
+      "strategy": 123.6009,
+      "buy_hold": 128.8445,
       "position": 1
     },
     {
       "date": "2025-10-13",
-      "strategy": 115.6069,
-      "buy_hold": 128.2458,
+      "strategy": 123.3174,
+      "buy_hold": 128.549,
       "position": 1
     },
     {
       "date": "2025-10-14",
-      "strategy": 115.2318,
-      "buy_hold": 127.8297,
+      "strategy": 122.9173,
+      "buy_hold": 128.1319,
       "position": 1
     },
     {
       "date": "2025-10-15",
-      "strategy": 116.0477,
-      "buy_hold": 128.7348,
+      "strategy": 123.7877,
+      "buy_hold": 129.0392,
       "position": 1
     },
     {
       "date": "2025-10-16",
-      "strategy": 117.2472,
-      "buy_hold": 130.0654,
+      "strategy": 125.0672,
+      "buy_hold": 130.373,
       "position": 1
     },
     {
       "date": "2025-10-17",
-      "strategy": 117.818,
-      "buy_hold": 130.6986,
+      "strategy": 125.676,
+      "buy_hold": 131.0076,
       "position": 1
     },
     {
       "date": "2025-10-20",
-      "strategy": 118.4289,
-      "buy_hold": 131.3762,
+      "strategy": 126.3276,
+      "buy_hold": 131.6869,
       "position": 1
     },
     {
       "date": "2025-10-21",
-      "strategy": 118.5455,
-      "buy_hold": 131.5056,
+      "strategy": 126.452,
+      "buy_hold": 131.8165,
       "position": 1
     },
     {
       "date": "2025-10-23",
-      "strategy": 118.65,
-      "buy_hold": 131.6215,
+      "strategy": 126.5635,
+      "buy_hold": 131.9327,
       "position": 1
     },
     {
       "date": "2025-10-24",
-      "strategy": 118.2089,
-      "buy_hold": 131.1322,
+      "strategy": 126.093,
+      "buy_hold": 131.4423,
       "position": 1
     },
     {
       "date": "2025-10-27",
-      "strategy": 118.9921,
-      "buy_hold": 132.001,
+      "strategy": 126.9284,
+      "buy_hold": 132.3131,
       "position": 1
     },
     {
       "date": "2025-10-28",
-      "strategy": 118.8553,
-      "buy_hold": 131.8493,
+      "strategy": 126.7825,
+      "buy_hold": 132.161,
       "position": 1
     },
     {
       "date": "2025-10-29",
-      "strategy": 119.3946,
-      "buy_hold": 132.4476,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 132.7608,
+      "position": 0
     },
     {
       "date": "2025-10-30",
-      "strategy": 118.5879,
-      "buy_hold": 131.5526,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 131.8637,
+      "position": 0
     },
     {
       "date": "2025-10-31",
-      "strategy": 117.8741,
-      "buy_hold": 130.7609,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 131.07,
+      "position": 0
     },
     {
       "date": "2025-11-03",
-      "strategy": 118.0632,
-      "buy_hold": 130.9706,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 131.2802,
+      "position": 0
     },
     {
       "date": "2025-11-04",
-      "strategy": 117.3038,
-      "buy_hold": 130.1282,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 130.4359,
+      "position": 0
     },
     {
       "date": "2025-11-06",
-      "strategy": 116.9008,
-      "buy_hold": 129.6811,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 129.9877,
+      "position": 0
     },
     {
       "date": "2025-11-07",
-      "strategy": 116.8211,
-      "buy_hold": 129.5927,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 129.8991,
+      "position": 0
     },
     {
       "date": "2025-11-10",
-      "strategy": 117.197,
-      "buy_hold": 130.0098,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 130.3172,
+      "position": 0
     },
     {
       "date": "2025-11-11",
-      "strategy": 117.7497,
-      "buy_hold": 130.6228,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 130.9317,
+      "position": 0
     },
     {
       "date": "2025-11-12",
-      "strategy": 118.5785,
-      "buy_hold": 131.5422,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 131.8532,
+      "position": 0
     },
     {
       "date": "2025-11-13",
-      "strategy": 118.5938,
-      "buy_hold": 131.5592,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 131.8703,
+      "position": 0
     },
     {
       "date": "2025-11-14",
-      "strategy": 118.7354,
-      "buy_hold": 131.7163,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 132.0278,
+      "position": 0
     },
     {
       "date": "2025-11-17",
-      "strategy": 119.2093,
-      "buy_hold": 132.242,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 132.5546,
+      "position": 0
     },
     {
       "date": "2025-11-18",
-      "strategy": 118.7354,
-      "buy_hold": 131.7163,
-      "position": 1
+      "strategy": 127.2968,
+      "buy_hold": 132.0278,
+      "position": 0
     },
     {
       "date": "2025-11-19",
-      "strategy": 119.3317,
-      "buy_hold": 132.4413,
+      "strategy": 127.2968,
+      "buy_hold": 132.7544,
       "position": 0
     },
     {
       "date": "2025-11-20",
-      "strategy": 119.3317,
-      "buy_hold": 133.1504,
+      "strategy": 127.2968,
+      "buy_hold": 133.4652,
       "position": 0
     },
     {
       "date": "2025-11-21",
-      "strategy": 119.3317,
-      "buy_hold": 132.52,
+      "strategy": 127.2968,
+      "buy_hold": 132.8334,
       "position": 0
     },
     {
       "date": "2025-11-24",
-      "strategy": 119.3317,
-      "buy_hold": 131.9677,
+      "strategy": 127.2968,
+      "buy_hold": 132.2797,
       "position": 0
     },
     {
       "date": "2025-11-25",
-      "strategy": 119.3317,
-      "buy_hold": 131.588,
+      "strategy": 127.2968,
+      "buy_hold": 131.8991,
       "position": 0
     },
     {
       "date": "2025-11-26",
-      "strategy": 119.3317,
-      "buy_hold": 133.2173,
+      "strategy": 127.2968,
+      "buy_hold": 133.5322,
       "position": 0
     },
     {
       "date": "2025-11-27",
-      "strategy": 119.3317,
-      "buy_hold": 133.2694,
+      "strategy": 127.2968,
+      "buy_hold": 133.5845,
       "position": 0
     },
     {
       "date": "2025-11-28",
-      "strategy": 119.3317,
-      "buy_hold": 133.2053,
+      "strategy": 127.2968,
+      "buy_hold": 133.5203,
       "position": 0
     },
     {
       "date": "2025-12-01",
-      "strategy": 119.3317,
-      "buy_hold": 133.067,
+      "strategy": 127.2968,
+      "buy_hold": 133.3817,
       "position": 0
     },
     {
       "date": "2025-12-02",
-      "strategy": 119.3317,
-      "buy_hold": 132.3373,
+      "strategy": 127.2968,
+      "buy_hold": 132.6502,
       "position": 0
     },
     {
       "date": "2025-12-03",
-      "strategy": 119.3317,
-      "buy_hold": 132.1024,
+      "strategy": 127.2968,
+      "buy_hold": 132.4148,
       "position": 0
     },
     {
       "date": "2025-12-04",
-      "strategy": 119.3317,
-      "buy_hold": 132.3452,
+      "strategy": 127.2968,
+      "buy_hold": 132.6581,
       "position": 0
     },
     {
       "date": "2025-12-05",
-      "strategy": 119.3317,
-      "buy_hold": 133.1214,
+      "strategy": 127.2968,
+      "buy_hold": 133.4362,
       "position": 0
     },
     {
       "date": "2025-12-08",
-      "strategy": 119.3317,
-      "buy_hold": 131.9731,
+      "strategy": 127.2968,
+      "buy_hold": 132.2851,
       "position": 0
     },
     {
       "date": "2025-12-09",
-      "strategy": 119.3317,
-      "buy_hold": 131.3584,
+      "strategy": 127.2968,
+      "buy_hold": 131.669,
       "position": 0
     },
     {
       "date": "2025-12-10",
-      "strategy": 119.3317,
-      "buy_hold": 130.9434,
+      "strategy": 127.2968,
+      "buy_hold": 131.253,
       "position": 0
     },
     {
       "date": "2025-12-11",
-      "strategy": 119.3317,
-      "buy_hold": 131.6579,
+      "strategy": 127.2968,
+      "buy_hold": 131.9692,
       "position": 0
     },
     {
       "date": "2025-12-12",
-      "strategy": 119.3317,
-      "buy_hold": 132.4123,
+      "strategy": 127.2968,
+      "buy_hold": 132.7253,
       "position": 0
     },
     {
       "date": "2025-12-15",
-      "strategy": 119.3317,
-      "buy_hold": 132.3124,
+      "strategy": 127.2968,
+      "buy_hold": 132.6252,
       "position": 0
     },
     {
       "date": "2025-12-16",
-      "strategy": 119.3317,
-      "buy_hold": 131.4624,
+      "strategy": 127.2968,
+      "buy_hold": 131.7732,
       "position": 0
     },
     {
       "date": "2025-12-17",
-      "strategy": 119.3317,
-      "buy_hold": 131.2512,
+      "strategy": 127.2968,
+      "buy_hold": 131.5615,
       "position": 0
     },
     {
       "date": "2025-12-18",
-      "strategy": 119.3317,
-      "buy_hold": 131.2359,
+      "strategy": 127.2968,
+      "buy_hold": 131.5462,
       "position": 0
     },
     {
       "date": "2025-12-19",
-      "strategy": 119.3317,
-      "buy_hold": 132.0028,
+      "strategy": 127.2968,
+      "buy_hold": 132.3149,
       "position": 0
     },
     {
       "date": "2025-12-22",
-      "strategy": 119.3317,
-      "buy_hold": 133.05,
+      "strategy": 127.2968,
+      "buy_hold": 133.3646,
       "position": 0
     },
     {
       "date": "2025-12-23",
-      "strategy": 119.3317,
-      "buy_hold": 133.0742,
+      "strategy": 127.2968,
+      "buy_hold": 133.3888,
       "position": 0
     },
     {
       "date": "2025-12-24",
-      "strategy": 119.3317,
-      "buy_hold": 132.896,
+      "strategy": 127.2968,
+      "buy_hold": 133.2102,
       "position": 0
     },
     {
       "date": "2025-12-26",
-      "strategy": 119.3317,
-      "buy_hold": 132.3886,
+      "strategy": 127.2968,
+      "buy_hold": 132.7017,
       "position": 0
     },
     {
       "date": "2025-12-29",
-      "strategy": 119.3317,
-      "buy_hold": 131.8793,
+      "strategy": 127.2968,
+      "buy_hold": 132.1911,
       "position": 0
     },
     {
       "date": "2025-12-30",
-      "strategy": 119.3317,
-      "buy_hold": 131.8627,
+      "strategy": 127.2968,
+      "buy_hold": 132.1745,
       "position": 0
     },
     {
       "date": "2025-12-31",
-      "strategy": 119.3317,
-      "buy_hold": 132.8324,
+      "strategy": 127.2968,
+      "buy_hold": 133.1465,
       "position": 0
     },
     {
       "date": "2026-01-01",
-      "strategy": 119.3317,
-      "buy_hold": 132.9186,
+      "strategy": 127.2968,
+      "buy_hold": 133.2329,
       "position": 0
     },
     {
       "date": "2026-01-02",
-      "strategy": 119.3317,
-      "buy_hold": 133.8438,
+      "strategy": 127.2968,
+      "buy_hold": 134.1603,
       "position": 0
     },
     {
       "date": "2026-01-05",
-      "strategy": 119.3317,
-      "buy_hold": 133.446,
+      "strategy": 127.2968,
+      "buy_hold": 133.7615,
       "position": 0
     },
     {
       "date": "2026-01-06",
-      "strategy": 119.3317,
-      "buy_hold": 133.082,
+      "strategy": 127.2968,
+      "buy_hold": 133.3967,
       "position": 0
     },
     {
       "date": "2026-01-07",
-      "strategy": 119.3317,
-      "buy_hold": 132.8891,
+      "strategy": 127.2968,
+      "buy_hold": 133.2033,
       "position": 0
     },
     {
       "date": "2026-01-08",
-      "strategy": 119.3317,
-      "buy_hold": 131.5476,
+      "strategy": 127.2968,
+      "buy_hold": 131.8586,
       "position": 0
     },
     {
       "date": "2026-01-09",
-      "strategy": 119.3317,
-      "buy_hold": 130.5636,
+      "strategy": 127.2968,
+      "buy_hold": 130.8723,
       "position": 0
     },
     {
       "date": "2026-01-12",
-      "strategy": 119.3317,
-      "buy_hold": 131.1073,
+      "strategy": 127.2968,
+      "buy_hold": 131.4173,
       "position": 0
     },
     {
       "date": "2026-01-13",
-      "strategy": 119.3317,
-      "buy_hold": 130.8127,
+      "strategy": 127.2968,
+      "buy_hold": 131.122,
       "position": 0
     },
     {
       "date": "2026-01-14",
-      "strategy": 119.3317,
-      "buy_hold": 130.4736,
+      "strategy": 127.2968,
+      "buy_hold": 130.7821,
       "position": 0
     },
     {
       "date": "2026-01-16",
-      "strategy": 119.3317,
-      "buy_hold": 130.6198,
+      "strategy": 127.2968,
+      "buy_hold": 130.9286,
       "position": 0
     },
     {
       "date": "2026-01-19",
-      "strategy": 119.3317,
-      "buy_hold": 130.0664,
+      "strategy": 127.2968,
+      "buy_hold": 130.374,
       "position": 0
     },
     {
       "date": "2026-01-20",
-      "strategy": 119.3317,
-      "buy_hold": 128.2719,
+      "strategy": 127.2968,
+      "buy_hold": 128.5752,
       "position": 0
     },
     {
       "date": "2026-01-21",
-      "strategy": 119.3317,
-      "buy_hold": 127.8907,
+      "strategy": 127.2968,
+      "buy_hold": 128.193,
       "position": 0
     },
     {
       "date": "2026-01-22",
-      "strategy": 119.3317,
-      "buy_hold": 128.5637,
+      "strategy": 127.2968,
+      "buy_hold": 128.8677,
       "position": 0
     },
     {
       "date": "2026-01-23",
-      "strategy": 119.3317,
-      "buy_hold": 127.3373,
+      "strategy": 127.2968,
+      "buy_hold": 127.6384,
       "position": 0
     },
     {
       "date": "2026-01-27",
-      "strategy": 119.3317,
-      "buy_hold": 127.9817,
+      "strategy": 127.2968,
+      "buy_hold": 128.2843,
       "position": 0
     },
     {
       "date": "2026-01-28",
-      "strategy": 119.3317,
-      "buy_hold": 128.8324,
+      "strategy": 127.2968,
+      "buy_hold": 129.137,
       "position": 0
     },
     {
       "date": "2026-01-29",
-      "strategy": 119.3317,
-      "buy_hold": 129.2195,
+      "strategy": 127.2968,
+      "buy_hold": 129.525,
       "position": 0
     },
     {
       "date": "2026-01-30",
-      "strategy": 119.3317,
-      "buy_hold": 128.7201,
+      "strategy": 127.2968,
+      "buy_hold": 129.0244,
       "position": 0
     },
     {
       "date": "2026-02-02",
-      "strategy": 119.3317,
-      "buy_hold": 127.5394,
+      "strategy": 127.2968,
+      "buy_hold": 127.8409,
       "position": 0
     },
     {
       "date": "2026-02-03",
-      "strategy": 119.3317,
-      "buy_hold": 130.7886,
+      "strategy": 127.2968,
+      "buy_hold": 131.0978,
       "position": 0
     },
     {
       "date": "2026-02-04",
-      "strategy": 119.3317,
-      "buy_hold": 131.0349,
+      "strategy": 127.2968,
+      "buy_hold": 131.3447,
       "position": 0
     },
     {
       "date": "2026-02-05",
-      "strategy": 119.3317,
-      "buy_hold": 130.3577,
+      "strategy": 127.2968,
+      "buy_hold": 130.666,
       "position": 0
     },
     {
       "date": "2026-02-06",
-      "strategy": 119.3317,
-      "buy_hold": 130.6165,
+      "strategy": 127.2968,
+      "buy_hold": 130.9253,
       "position": 0
     },
     {
       "date": "2026-02-09",
-      "strategy": 119.3317,
-      "buy_hold": 131.499,
+      "strategy": 127.2968,
+      "buy_hold": 131.8099,
       "position": 0
     },
     {
       "date": "2026-02-10",
-      "strategy": 119.3317,
-      "buy_hold": 131.8439,
+      "strategy": 127.2968,
+      "buy_hold": 132.1557,
       "position": 0
     },
     {
       "date": "2026-02-11",
-      "strategy": 119.3317,
-      "buy_hold": 131.939,
+      "strategy": 127.2968,
+      "buy_hold": 132.2509,
       "position": 0
     },
     {
       "date": "2026-02-12",
-      "strategy": 119.3317,
-      "buy_hold": 131.1935,
+      "strategy": 127.2968,
+      "buy_hold": 131.5037,
       "position": 0
     },
     {
       "date": "2026-02-13",
-      "strategy": 119.3317,
-      "buy_hold": 129.4849,
+      "strategy": 127.2968,
+      "buy_hold": 129.791,
       "position": 0
     },
     {
       "date": "2026-02-16",
-      "strategy": 119.3317,
-      "buy_hold": 130.5608,
+      "strategy": 127.2968,
+      "buy_hold": 130.8695,
       "position": 0
     },
     {
       "date": "2026-02-17",
-      "strategy": 119.3317,
-      "buy_hold": 130.7776,
+      "strategy": 127.2968,
+      "buy_hold": 131.0869,
       "position": 0
     },
     {
       "date": "2026-02-18",
-      "strategy": 119.3317,
-      "buy_hold": 131.2552,
+      "strategy": 127.2968,
+      "buy_hold": 131.5656,
       "position": 0
     },
     {
       "date": "2026-02-19",
-      "strategy": 119.3317,
-      "buy_hold": 129.3997,
+      "strategy": 127.2968,
+      "buy_hold": 129.7057,
       "position": 0
     },
     {
       "date": "2026-02-20",
-      "strategy": 119.3317,
-      "buy_hold": 129.994,
+      "strategy": 127.2968,
+      "buy_hold": 130.3014,
       "position": 0
     },
     {
       "date": "2026-02-23",
-      "strategy": 119.3317,
-      "buy_hold": 130.7146,
+      "strategy": 127.2968,
+      "buy_hold": 131.0237,
       "position": 0
     },
     {
       "date": "2026-02-24",
-      "strategy": 119.3317,
-      "buy_hold": 129.2488,
+      "strategy": 127.2968,
+      "buy_hold": 129.5543,
       "position": 0
     },
     {
       "date": "2026-02-25",
-      "strategy": 119.3317,
-      "buy_hold": 129.5428,
+      "strategy": 127.2968,
+      "buy_hold": 129.8491,
       "position": 0
     },
     {
       "date": "2026-02-26",
-      "strategy": 119.3317,
-      "buy_hold": 129.6143,
+      "strategy": 127.2968,
+      "buy_hold": 129.9207,
       "position": 0
     },
     {
       "date": "2026-02-27",
-      "strategy": 119.3317,
-      "buy_hold": 127.9982,
-      "position": 0
+      "strategy": 127.2359,
+      "buy_hold": 128.3008,
+      "position": 1
     },
     {
       "date": "2026-03-02",
-      "strategy": 119.3317,
-      "buy_hold": 126.4073,
-      "position": 0
+      "strategy": 125.6544,
+      "buy_hold": 126.7061,
+      "position": 1
     },
     {
       "date": "2026-03-04",
-      "strategy": 119.3317,
-      "buy_hold": 124.4491,
-      "position": 0
+      "strategy": 123.7079,
+      "buy_hold": 124.7433,
+      "position": 1
     },
     {
       "date": "2026-03-05",
-      "strategy": 119.3317,
-      "buy_hold": 125.8999,
-      "position": 0
+      "strategy": 125.1501,
+      "buy_hold": 126.1976,
+      "position": 1
     },
     {
       "date": "2026-03-06",
-      "strategy": 119.3317,
-      "buy_hold": 124.2963,
-      "position": 0
+      "strategy": 123.556,
+      "buy_hold": 124.5902,
+      "position": 1
     },
     {
       "date": "2026-03-09",
-      "strategy": 119.3317,
-      "buy_hold": 122.149,
-      "position": 0
+      "strategy": 121.4215,
+      "buy_hold": 122.4378,
+      "position": 1
     },
     {
       "date": "2026-03-10",
-      "strategy": 119.3317,
-      "buy_hold": 123.3363,
-      "position": 0
+      "strategy": 122.6017,
+      "buy_hold": 123.6279,
+      "position": 1
     },
     {
       "date": "2026-03-11",
-      "strategy": 119.3317,
-      "buy_hold": 121.3295,
-      "position": 0
+      "strategy": 120.6069,
+      "buy_hold": 121.6164,
+      "position": 1
     },
     {
       "date": "2026-03-12",
-      "strategy": 119.3317,
-      "buy_hold": 120.172,
-      "position": 0
+      "strategy": 119.4563,
+      "buy_hold": 120.4561,
+      "position": 1
     },
     {
       "date": "2026-03-13",
-      "strategy": 119.3317,
-      "buy_hold": 117.6909,
-      "position": 0
+      "strategy": 116.99,
+      "buy_hold": 117.9692,
+      "position": 1
     },
     {
       "date": "2026-03-16",
-      "strategy": 119.3317,
-      "buy_hold": 119.001,
-      "position": 0
+      "strategy": 118.2923,
+      "buy_hold": 119.2823,
+      "position": 1
     },
     {
       "date": "2026-03-17",
-      "strategy": 119.3317,
-      "buy_hold": 119.8771,
-      "position": 0
+      "strategy": 119.1632,
+      "buy_hold": 120.1606,
+      "position": 1
     },
     {
       "date": "2026-03-18",
-      "strategy": 119.3317,
-      "buy_hold": 120.8768,
-      "position": 0
+      "strategy": 120.1569,
+      "buy_hold": 121.1626,
+      "position": 1
     },
     {
       "date": "2026-03-19",
-      "strategy": 119.3317,
-      "buy_hold": 116.9337,
-      "position": 0
+      "strategy": 116.2373,
+      "buy_hold": 117.2102,
+      "position": 1
     },
     {
       "date": "2026-03-20",
-      "strategy": 119.3317,
-      "buy_hold": 117.5049,
-      "position": 0
+      "strategy": 116.8051,
+      "buy_hold": 117.7827,
+      "position": 1
     },
     {
       "date": "2026-03-23",
-      "strategy": 119.3317,
-      "buy_hold": 114.4453,
-      "position": 0
+      "strategy": 113.7637,
+      "buy_hold": 114.7159,
+      "position": 1
     },
     {
       "date": "2026-03-24",
-      "strategy": 119.3317,
-      "buy_hold": 116.4775,
-      "position": 0
+      "strategy": 115.7838,
+      "buy_hold": 116.7529,
+      "position": 1
     },
     {
       "date": "2026-03-25",
-      "strategy": 119.3317,
-      "buy_hold": 118.4807,
-      "position": 0
+      "strategy": 117.775,
+      "buy_hold": 118.7608,
+      "position": 1
     },
     {
       "date": "2026-03-27",
-      "strategy": 119.3317,
-      "buy_hold": 116.0057,
-      "position": 0
+      "strategy": 115.3148,
+      "buy_hold": 116.28,
+      "position": 1
     },
     {
       "date": "2026-03-30",
-      "strategy": 119.3317,
-      "buy_hold": 113.5239,
-      "position": 0
+      "strategy": 112.8478,
+      "buy_hold": 113.7923,
+      "position": 1
     },
     {
       "date": "2026-04-01",
-      "strategy": 119.3317,
-      "buy_hold": 115.293,
+      "strategy": 114.5515,
+      "buy_hold": 115.5656,
       "position": 0
     },
     {
       "date": "2026-04-02",
-      "strategy": 119.3317,
-      "buy_hold": 115.4643,
+      "strategy": 114.5515,
+      "buy_hold": 115.7373,
       "position": 0
     },
     {
       "date": "2026-04-06",
-      "strategy": 119.3317,
-      "buy_hold": 116.7614,
+      "strategy": 114.5515,
+      "buy_hold": 117.0375,
       "position": 0
     },
     {
       "date": "2026-04-07",
-      "strategy": 119.3317,
-      "buy_hold": 117.5514,
+      "strategy": 114.5515,
+      "buy_hold": 117.8293,
       "position": 0
     },
     {
       "date": "2026-04-08",
-      "strategy": 119.3317,
-      "buy_hold": 121.9929,
+      "strategy": 114.5515,
+      "buy_hold": 122.2814,
       "position": 0
     },
     {
       "date": "2026-04-09",
-      "strategy": 119.3317,
-      "buy_hold": 120.8631,
+      "strategy": 114.5515,
+      "buy_hold": 121.1489,
       "position": 0
     },
     {
       "date": "2026-04-10",
-      "strategy": 119.3317,
-      "buy_hold": 122.2636,
+      "strategy": 114.5515,
+      "buy_hold": 122.5527,
       "position": 0
     },
     {
       "date": "2026-04-13",
-      "strategy": 119.3317,
-      "buy_hold": 121.2065,
+      "strategy": 114.5515,
+      "buy_hold": 121.4931,
       "position": 0
     },
     {
       "date": "2026-04-15",
-      "strategy": 119.3317,
-      "buy_hold": 123.1822,
+      "strategy": 114.5515,
+      "buy_hold": 123.4735,
       "position": 0
     },
     {
       "date": "2026-04-16",
-      "strategy": 119.3317,
-      "buy_hold": 123.0066,
+      "strategy": 114.5515,
+      "buy_hold": 123.2974,
       "position": 0
     },
     {
       "date": "2026-04-17",
-      "strategy": 119.3317,
-      "buy_hold": 123.8037,
+      "strategy": 114.5515,
+      "buy_hold": 124.0964,
       "position": 0
     },
     {
       "date": "2026-04-20",
-      "strategy": 119.3317,
-      "buy_hold": 123.8611,
+      "strategy": 114.5515,
+      "buy_hold": 124.154,
       "position": 0
     },
     {
       "date": "2026-04-21",
-      "strategy": 119.3317,
-      "buy_hold": 124.9376,
+      "strategy": 114.5515,
+      "buy_hold": 125.233,
       "position": 0
     },
     {
       "date": "2026-04-22",
-      "strategy": 119.3317,
-      "buy_hold": 123.9285,
+      "strategy": 114.5515,
+      "buy_hold": 124.2215,
       "position": 0
     },
     {
       "date": "2026-04-23",
-      "strategy": 119.3317,
-      "buy_hold": 122.8861,
+      "strategy": 114.5515,
+      "buy_hold": 123.1767,
       "position": 0
     },
     {
       "date": "2026-04-24",
-      "strategy": 119.3317,
-      "buy_hold": 121.4876,
+      "strategy": 114.5515,
+      "buy_hold": 121.7749,
       "position": 0
     },
     {
       "date": "2026-04-27",
-      "strategy": 119.3317,
-      "buy_hold": 122.4776,
+      "strategy": 114.5515,
+      "buy_hold": 122.7672,
       "position": 0
     },
     {
       "date": "2026-04-28",
-      "strategy": 119.3317,
-      "buy_hold": 121.9845,
+      "strategy": 114.5515,
+      "buy_hold": 122.273,
       "position": 0
     },
     {
       "date": "2026-04-29",
-      "strategy": 119.3317,
-      "buy_hold": 122.9095,
+      "strategy": 114.5515,
+      "buy_hold": 123.2001,
       "position": 0
     },
     {
       "date": "2026-04-30",
-      "strategy": 119.3317,
-      "buy_hold": 121.9939,
+      "strategy": 114.5515,
+      "buy_hold": 122.2824,
       "position": 0
     },
     {
       "date": "2026-05-04",
-      "strategy": 119.3317,
-      "buy_hold": 122.6129,
+      "strategy": 114.5515,
+      "buy_hold": 122.9028,
       "position": 0
     },
     {
       "date": "2026-05-05",
-      "strategy": 119.3317,
-      "buy_hold": 122.1731,
+      "strategy": 114.5515,
+      "buy_hold": 122.462,
       "position": 0
     },
     {
       "date": "2026-05-06",
-      "strategy": 119.3317,
-      "buy_hold": 123.6888,
+      "strategy": 114.5515,
+      "buy_hold": 123.9813,
       "position": 0
     },
     {
       "date": "2026-05-07",
-      "strategy": 119.3317,
-      "buy_hold": 123.667,
+      "strategy": 114.5515,
+      "buy_hold": 123.9594,
       "position": 0
     },
     {
       "date": "2026-05-08",
-      "strategy": 119.3317,
-      "buy_hold": 122.9019,
+      "strategy": 114.5515,
+      "buy_hold": 123.1925,
       "position": 0
     },
     {
       "date": "2026-05-11",
-      "strategy": 119.3317,
-      "buy_hold": 121.0703,
+      "strategy": 114.5515,
+      "buy_hold": 121.3565,
       "position": 0
     },
     {
       "date": "2026-05-12",
-      "strategy": 119.3317,
-      "buy_hold": 118.8523,
+      "strategy": 114.5515,
+      "buy_hold": 119.1333,
       "position": 0
     },
     {
       "date": "2026-05-13",
-      "strategy": 119.3317,
-      "buy_hold": 119.0203,
+      "strategy": 114.5515,
+      "buy_hold": 119.3017,
       "position": 0
     },
     {
       "date": "2026-05-14",
-      "strategy": 119.3317,
-      "buy_hold": 120.4284,
+      "strategy": 114.5515,
+      "buy_hold": 120.7132,
       "position": 0
     },
     {
       "date": "2026-05-15",
-      "strategy": 119.3317,
-      "buy_hold": 120.1941,
+      "strategy": 114.5515,
+      "buy_hold": 120.4783,
       "position": 0
     },
     {
       "date": "2026-05-18",
-      "strategy": 119.3317,
-      "buy_hold": 120.2269,
+      "strategy": 114.5515,
+      "buy_hold": 120.5111,
       "position": 0
     },
     {
       "date": "2026-05-19",
-      "strategy": 119.3317,
-      "buy_hold": 120.0645,
+      "strategy": 114.5515,
+      "buy_hold": 120.3483,
       "position": 0
     },
     {
       "date": "2026-05-20",
-      "strategy": 119.3317,
-      "buy_hold": 120.2729,
+      "strategy": 114.5515,
+      "buy_hold": 120.5573,
       "position": 0
     },
     {
       "date": "2026-05-21",
-      "strategy": 119.3317,
-      "buy_hold": 120.251,
+      "strategy": 114.5515,
+      "buy_hold": 120.5353,
       "position": 0
     },
     {
       "date": "2026-05-22",
-      "strategy": 119.3317,
-      "buy_hold": 120.5794,
+      "strategy": 114.5515,
+      "buy_hold": 120.8645,
       "position": 0
     },
     {
       "date": "2026-05-25",
-      "strategy": 119.3317,
-      "buy_hold": 122.1675,
+      "strategy": 114.5515,
+      "buy_hold": 122.4564,
       "position": 0
     },
     {
       "date": "2026-05-26",
-      "strategy": 119.3317,
-      "buy_hold": 121.5677,
+      "strategy": 114.5515,
+      "buy_hold": 121.8551,
       "position": 0
     },
     {
       "date": "2026-05-27",
-      "strategy": 119.3317,
-      "buy_hold": 121.5344,
+      "strategy": 114.5515,
+      "buy_hold": 121.8217,
       "position": 0
     },
     {
       "date": "2026-05-29",
-      "strategy": 119.3317,
-      "buy_hold": 119.7073,
+      "strategy": 114.5515,
+      "buy_hold": 119.9904,
       "position": 0
     },
     {
       "date": "2026-06-01",
-      "strategy": 119.3317,
-      "buy_hold": 118.8678,
+      "strategy": 114.5515,
+      "buy_hold": 119.1488,
       "position": 0
     },
     {
       "date": "2026-06-02",
-      "strategy": 119.3317,
-      "buy_hold": 119.381,
+      "strategy": 114.5515,
+      "buy_hold": 119.6632,
       "position": 0
     },
     {
       "date": "2026-06-03",
-      "strategy": 119.3317,
-      "buy_hold": 118.9847,
+      "strategy": 114.5515,
+      "buy_hold": 119.266,
       "position": 0
     },
     {
       "date": "2026-06-04",
-      "strategy": 119.2746,
-      "buy_hold": 119.0404,
-      "position": 1
+      "strategy": 114.5515,
+      "buy_hold": 119.3218,
+      "position": 0
     },
     {
       "date": "2026-06-05",
-      "strategy": 119.0207,
-      "buy_hold": 118.7869,
+      "strategy": 114.4966,
+      "buy_hold": 119.0678,
       "position": 1
     },
     {
       "date": "2026-06-08",
-      "strategy": 117.7794,
-      "buy_hold": 117.5481,
+      "strategy": 113.3025,
+      "buy_hold": 117.826,
       "position": 1
     },
     {
       "date": "2026-06-09",
-      "strategy": 118.386,
-      "buy_hold": 118.1535,
+      "strategy": 113.8861,
+      "buy_hold": 118.4329,
       "position": 1
     },
     {
       "date": "2026-06-10",
-      "strategy": 118.2477,
-      "buy_hold": 118.0155,
+      "strategy": 113.7531,
+      "buy_hold": 118.2945,
       "position": 1
     },
     {
       "date": "2026-06-11",
-      "strategy": 117.976,
-      "buy_hold": 117.7443,
+      "strategy": 113.4917,
+      "buy_hold": 118.0227,
       "position": 1
     },
     {
       "date": "2026-06-12",
-      "strategy": 120.3257,
-      "buy_hold": 120.0894,
+      "strategy": 115.752,
+      "buy_hold": 120.3733,
       "position": 1
     },
     {
       "date": "2026-06-15",
-      "strategy": 121.5023,
-      "buy_hold": 121.2637,
+      "strategy": 116.8839,
+      "buy_hold": 121.5504,
       "position": 1
     },
     {
       "date": "2026-06-16",
-      "strategy": 122.1912,
-      "buy_hold": 121.9512,
+      "strategy": 117.5466,
+      "buy_hold": 122.2396,
       "position": 1
     },
     {
       "date": "2026-06-17",
-      "strategy": 122.683,
-      "buy_hold": 122.4421,
+      "strategy": 118.0197,
+      "buy_hold": 122.7316,
       "position": 1
     },
     {
       "date": "2026-06-18",
-      "strategy": 123.1022,
-      "buy_hold": 122.8604,
+      "strategy": 118.423,
+      "buy_hold": 123.1509,
       "position": 1
     },
     {
       "date": "2026-06-19",
-      "strategy": 122.3132,
-      "buy_hold": 122.073,
+      "strategy": 117.664,
+      "buy_hold": 122.3616,
       "position": 1
     },
     {
       "date": "2026-06-22",
-      "strategy": 122.7706,
-      "buy_hold": 122.5295,
+      "strategy": 118.104,
+      "buy_hold": 122.8192,
       "position": 1
     },
     {
       "date": "2026-06-23",
-      "strategy": 121.3505,
-      "buy_hold": 121.1122,
+      "strategy": 116.7379,
+      "buy_hold": 121.3985,
       "position": 1
     },
     {
       "date": "2026-06-24",
-      "strategy": 122.3567,
-      "buy_hold": 122.1165,
+      "strategy": 117.7059,
+      "buy_hold": 122.4052,
       "position": 1
     },
     {
       "date": "2026-06-25",
-      "strategy": 122.5317,
-      "buy_hold": 122.2911,
+      "strategy": 117.8742,
+      "buy_hold": 122.5802,
       "position": 1
     },
     {
       "date": "2026-06-29",
-      "strategy": 121.9727,
-      "buy_hold": 121.7332,
+      "strategy": 117.3364,
+      "buy_hold": 122.021,
       "position": 1
     },
     {
       "date": "2026-06-30",
-      "strategy": 121.5627,
-      "buy_hold": 121.3239,
+      "strategy": 116.942,
+      "buy_hold": 121.6108,
       "position": 1
     },
     {
       "date": "2026-07-01",
-      "strategy": 122.2763,
-      "buy_hold": 122.0361,
+      "strategy": 117.6285,
+      "buy_hold": 122.3247,
       "position": 1
     },
     {
       "date": "2026-07-02",
-      "strategy": 123.1414,
-      "buy_hold": 122.8996,
+      "strategy": 118.4607,
+      "buy_hold": 123.1902,
       "position": 1
     },
     {
       "date": "2026-07-03",
-      "strategy": 123.6261,
-      "buy_hold": 123.3833,
+      "strategy": 118.927,
+      "buy_hold": 123.675,
       "position": 1
     },
     {
       "date": "2026-07-06",
-      "strategy": 124.4385,
-      "buy_hold": 124.1941,
+      "strategy": 119.7085,
+      "buy_hold": 124.4878,
       "position": 1
     },
     {
       "date": "2026-07-07",
-      "strategy": 124.2773,
-      "buy_hold": 124.0332,
+      "strategy": 119.5534,
+      "buy_hold": 124.3265,
       "position": 1
     },
     {
       "date": "2026-07-08",
-      "strategy": 121.6457,
-      "buy_hold": 121.4068,
+      "strategy": 117.0219,
+      "buy_hold": 121.6938,
       "position": 1
     },
     {
       "date": "2026-07-09",
-      "strategy": 122.057,
-      "buy_hold": 121.8173,
+      "strategy": 117.4175,
+      "buy_hold": 122.1053,
       "position": 1
     },
     {
       "date": "2026-07-10",
-      "strategy": 123.3003,
-      "buy_hold": 123.0582,
+      "strategy": 118.6136,
+      "buy_hold": 123.3492,
       "position": 1
     },
     {
       "date": "2026-07-13",
-      "strategy": 123.3212,
-      "buy_hold": 123.079,
+      "strategy": 118.6337,
+      "buy_hold": 123.37,
       "position": 1
     },
     {
       "date": "2026-07-14",
-      "strategy": 122.5116,
-      "buy_hold": 122.271,
+      "strategy": 117.8549,
+      "buy_hold": 122.5601,
       "position": 1
     },
     {
       "date": "2026-07-15",
-      "strategy": 122.6463,
-      "buy_hold": 122.4055,
+      "strategy": 117.9845,
+      "buy_hold": 122.6949,
       "position": 1
     },
     {
       "date": "2026-07-16",
-      "strategy": 122.617,
-      "buy_hold": 122.3762,
+      "strategy": 117.9563,
+      "buy_hold": 122.6656,
+      "position": 1
+    },
+    {
+      "date": "2026-07-17",
+      "strategy": 119.2379,
+      "buy_hold": 123.9983,
       "position": 1
     }
   ],
   "trades": [
     {
-      "date": "2024-04-18",
+      "date": "2024-04-26",
       "action": "BUY",
-      "price": 21995.849609375,
+      "price": 22419.94921875,
       "equity": 99.9521
     },
     {
-      "date": "2024-07-16",
+      "date": "2024-06-26",
       "action": "SELL",
-      "price": 24613.0,
-      "equity": 111.7913
+      "price": 23868.80078125,
+      "equity": 106.3604
     },
     {
-      "date": "2024-08-19",
+      "date": "2024-08-22",
       "action": "BUY",
-      "price": 24572.650390625,
-      "equity": 111.7377
+      "price": 24811.5,
+      "equity": 106.3095
     },
     {
-      "date": "2024-12-12",
+      "date": "2024-12-17",
       "action": "SELL",
-      "price": 24548.69921875,
-      "equity": 111.5754
+      "price": 24336.0,
+      "equity": 104.2222
     },
     {
-      "date": "2025-04-29",
+      "date": "2025-03-04",
       "action": "BUY",
-      "price": 24335.94921875,
-      "equity": 111.522
+      "price": 22082.650390625,
+      "equity": 104.1723
     },
     {
-      "date": "2025-11-19",
+      "date": "2025-04-03",
       "action": "SELL",
-      "price": 26052.650390625,
-      "equity": 119.3317
+      "price": 23250.099609375,
+      "equity": 109.6271
     },
     {
-      "date": "2026-06-04",
+      "date": "2025-04-08",
       "action": "BUY",
-      "price": 23416.55078125,
-      "equity": 119.2746
+      "price": 22535.849609375,
+      "equity": 109.5746
+    },
+    {
+      "date": "2025-05-12",
+      "action": "SELL",
+      "price": 24924.69921875,
+      "equity": 121.1317
+    },
+    {
+      "date": "2025-07-31",
+      "action": "BUY",
+      "price": 24768.349609375,
+      "equity": 121.0737
+    },
+    {
+      "date": "2025-10-29",
+      "action": "SELL",
+      "price": 26053.900390625,
+      "equity": 127.2968
+    },
+    {
+      "date": "2026-02-27",
+      "action": "BUY",
+      "price": 25178.650390625,
+      "equity": 127.2359
+    },
+    {
+      "date": "2026-04-01",
+      "action": "SELL",
+      "price": 22679.400390625,
+      "equity": 114.5515
+    },
+    {
+      "date": "2026-06-05",
+      "action": "BUY",
+      "price": 23366.69921875,
+      "equity": 114.4966
     }
   ]
 }

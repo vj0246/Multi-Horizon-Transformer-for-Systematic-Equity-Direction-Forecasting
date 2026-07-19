@@ -11,6 +11,7 @@ import {
   HorizonAUC,
   HorizonIC,
   PaperEquity,
+  PredictionTable,
   PriceChart,
   SharpeExplorer,
   StockSignals,
@@ -24,6 +25,7 @@ const s = data.summary;
 const NAV = [
   ["overview", "Overview"],
   ["paper", "Paper Trading"],
+  ["predictions", "Predictions"],
   ["architecture", "Architecture"],
   ["results", "Results"],
   ["backtest", "Backtest"],
@@ -183,6 +185,57 @@ export default function Page() {
                 closes with the full India futures cost stack. It is not tuned to look good —
                 it under-performs simply holding the index, which is what the no-edge finding
                 predicts. That is the point: honest forward proof, updated as new data arrives.
+              </p>
+            </>
+          );
+        })()}
+      </Section>
+
+      {/* Current predictions */}
+      <Section
+        id="predictions"
+        eyebrow="Predictions"
+        title="What the model says today — and what that is worth"
+      >
+        {(() => {
+          const pr = data.predictions;
+          const pos = pr.position;
+          const v = pr.verdict;
+          const long = pos.stance === "LONG";
+          return (
+            <>
+              <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <Stat label="Stance" value={pos.stance} sub={`as of ${pr.as_of}`} tone={long ? "good" : "default"} />
+                <Stat label="Signal" value={fmtSigned(pos.signal_z, 2)} sub={`${pos.percentile_of_trailing.toFixed(0)}th pct of ${pos.window_days}d`} />
+                <Stat label="Entry threshold" value={fmtSigned(pos.threshold_z, 2)} sub={`${pos.quantile_rule}th-pct rule`} />
+                <Stat
+                  label="Actionable horizons"
+                  value={`${v.n_actionable} / ${v.n_horizons}`}
+                  sub="after multiple-testing correction"
+                  tone={v.n_actionable > 0 ? "good" : "bad"}
+                />
+              </div>
+
+              <div className="mb-5 rounded-lg border border-danger/40 bg-danger/5 px-4 py-3 text-xs leading-relaxed text-muted">
+                <span className="font-semibold text-danger">Read the intervals, not the probabilities.</span>{" "}
+                {v.headline} A calibrated 63% P(up) whose AUC interval spans 0.50 is
+                a confident-looking number with no evidence behind it — the table
+                below is laid out so that is visible at a glance rather than buried.
+              </div>
+
+              <Panel
+                title="Forward probabilities across all 20 horizons"
+                subtitle={`frozen ensemble (${pr.model.n_seeds} seeds, trained through ${pr.model.frozen_through}) · ${pr.model.calibration} · last close ${fmtNum(pr.last_close, 0)}`}
+              >
+                <PredictionTable />
+              </Panel>
+
+              <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted">
+                {pos.rationale}. The stance is a mechanical rule, not a conviction
+                call: it fires whenever the trailing-quantile condition is met,
+                independent of whether any horizon shows measurable skill. Publishing
+                both together is deliberate — it shows exactly how much (or how
+                little) statistical backing the live position has.
               </p>
             </>
           );

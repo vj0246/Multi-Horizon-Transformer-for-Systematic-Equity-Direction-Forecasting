@@ -14,6 +14,36 @@ import numpy as np
 import tensorflow as tf
 
 
+@tf.keras.utils.register_keras_serializable(package="mht")
+class AttentionPooling1D(tf.keras.layers.Layer):
+    """Learned attention pooling over the time axis.
+
+    A plain mean discards the ordering the positional encoding injects; this
+    learns a softmax weighting over timesteps and returns their weighted sum.
+
+    Implemented as a registered Layer rather than a Lambda so the model is fully
+    serializable - Keras refuses to deserialize a Lambda wrapping a Python
+    lambda, which blocks `model.save()` (and therefore saving optimizer state).
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.score = tf.keras.layers.Dense(1)
+
+    def build(self, input_shape):
+        # build the sublayer explicitly, otherwise it is unbuilt at save time and
+        # its weights fail to restore on load
+        self.score.build(input_shape)
+        super().build(input_shape)
+
+    def call(self, x):
+        w = tf.nn.softmax(self.score(x), axis=1)      # (B, T, 1) over time
+        return tf.reduce_sum(x * w, axis=1)           # (B, C)
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], input_shape[-1])
+
+
 def positional_encoding(length: int, d_model: int) -> tf.Tensor:
     """Standard Vaswani et al. sinusoidal positional encoding, shape (1, length, d_model)."""
     positions = np.arange(length)[:, np.newaxis]
@@ -68,12 +98,7 @@ def build_model(cfg: dict, num_features: int | None = None) -> tuple[tf.keras.Mo
     # Pooling: learned attention pooling keeps the temporal-order information the
     # positional encoding injected (a plain mean discards it); GAP kept as fallback.
     if m.get("pooling", "gap") == "attention":
-        scores = tf.keras.layers.Dense(1)(x)                    # (B, T, 1)
-        weights = tf.keras.layers.Softmax(axis=1)(scores)       # softmax over time
-        x = tf.keras.layers.Lambda(
-            lambda t: tf.reduce_sum(t[0] * t[1], axis=1),
-            output_shape=(m["d_model"],),
-        )([x, weights])
+        x = AttentionPooling1D(name="attention_pool")(x)
     else:
         x = tf.keras.layers.GlobalAveragePooling1D()(x)
     outputs = tf.keras.layers.Dense(horizons)(x)

@@ -456,6 +456,59 @@ def test_paper_artifact_valid_if_present():
         assert row["position"] in (0, 1) and row["strategy"] > 0 and row["buy_hold"] > 0
 
 
+def test_model_is_fully_serializable_with_optimizer_state():
+    """The attention pooling must stay a registered Layer, not a Lambda.
+
+    Keras refuses to deserialize a Lambda wrapping a Python lambda, which makes
+    model.save() fail and therefore makes optimizer state unsaveable. Regression
+    guard: a round trip must restore both predictions and optimizer slots.
+    """
+    import tempfile
+    import numpy as np
+    import tensorflow as tf
+    from Source.Models.transformer import build_model, compile_model
+
+    cfg = CFG
+    if cfg["model"].get("pooling") != "attention":
+        pytest.skip("attention pooling not enabled")
+    m, _ = build_model(cfg, num_features=8)
+    compile_model(m, cfg)
+    lb, h = cfg["sequence"]["lookback"], cfg["sequence"]["horizons"]
+    X = np.random.randn(16, lb, 8).astype("float32")
+    m.fit(X, np.random.randint(0, 2, (16, h)).astype("float32"), epochs=1, verbose=0)
+
+    with tempfile.TemporaryDirectory() as d:
+        path = f"{d}/m.keras"
+        m.save(path)                                   # must not raise
+        r = tf.keras.models.load_model(path)
+    assert len(r.optimizer.variables) == len(m.optimizer.variables)
+    assert np.allclose(m.predict(X[:2], verbose=0), r.predict(X[:2], verbose=0), atol=1e-5)
+
+
+def test_predictions_use_overlap_corrected_pvalues():
+    """predictions.json must not inherit horizons.json's i.i.d. Spearman p-value.
+
+    That p-value treats ~640 overlapping forward labels as independent and
+    reports skill that is not there; the shipped artifact must test AUC against
+    0.5 with the overlap-corrected SE instead.
+    """
+    import json
+    p = ROOT / "frontend" / "public" / "data" / "predictions.json"
+    if not p.exists():
+        pytest.skip("predictions.json not generated")
+    d = json.loads(p.read_text(encoding="utf-8"))
+    for r in d["horizons"]:
+        # effective sample size must shrink with horizon, never equal raw n
+        assert r["eff_n"] <= d["horizons"][0]["eff_n"] / 1.0
+        assert abs(r["eff_n"] * r["horizon"] - d["horizons"][0]["eff_n"]) < 1e-6
+        # a horizon is only actionable if its interval actually clears 0.5
+        if r["actionable"]:
+            assert r["auc_ci95"][0] > 0.5
+        # the uncorrected IC p-value is retained for contrast, not used
+        assert "ic_pvalue_uncorrected" in r
+    assert d["verdict"]["n_actionable"] == sum(r["actionable"] for r in d["horizons"])
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

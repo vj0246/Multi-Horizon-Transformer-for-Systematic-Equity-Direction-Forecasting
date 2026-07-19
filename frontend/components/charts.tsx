@@ -605,3 +605,89 @@ export function PriceChart() {
     </ResponsiveContainer>
   );
 }
+
+/** Per-horizon forward prediction with its overlap-corrected AUC interval.
+ *
+ * The bar is the 95% CI on that horizon's out-of-sample AUC; the tick at 0.50
+ * is the coin-flip line. An interval spanning the tick means the probability on
+ * the left is not statistically distinguishable from chance - which is the
+ * honest state of every horizon here, so the layout is built to show that
+ * rather than hide it behind a confident-looking number.
+ */
+export function PredictionTable() {
+  const p = data.predictions;
+  const lo = Math.min(...p.horizons.map((r) => r.auc_ci95[0]), 0.45);
+  const hi = Math.max(...p.horizons.map((r) => r.auc_ci95[1]), 0.55);
+  const x = (v: number) => ((v - lo) / (hi - lo)) * 100;
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[620px] border-collapse text-xs">
+        <thead>
+          <tr className="border-b border-edge text-[10px] uppercase tracking-wider text-muted">
+            <th className="py-2 pr-3 text-left font-medium">Horizon</th>
+            <th className="py-2 pr-3 text-right font-medium">P(up)</th>
+            <th className="py-2 pr-3 text-right font-medium">OOS AUC</th>
+            <th className="py-2 pr-4 text-center font-medium">
+              95% CI on AUC — overlap-corrected
+            </th>
+            <th className="py-2 pr-3 text-right font-medium">Eff. n</th>
+            <th className="py-2 text-right font-medium">Skill</th>
+          </tr>
+        </thead>
+        <tbody>
+          {p.horizons.map((r) => {
+            const [a, b] = r.auc_ci95;
+            return (
+              <tr key={r.horizon} className="border-b border-edge/40">
+                <td className="py-1.5 pr-3 text-muted">{r.horizon}d</td>
+                <td className="py-1.5 pr-3 text-right tag text-white">
+                  {(r.prob_up * 100).toFixed(1)}%
+                </td>
+                <td className="py-1.5 pr-3 text-right tag text-muted">
+                  {r.auc.toFixed(3)}
+                </td>
+                <td className="py-1.5 pr-4">
+                  <div className="relative h-4 w-full min-w-[160px]">
+                    {/* coin-flip reference */}
+                    <div
+                      className="absolute top-0 h-full w-px bg-muted/50"
+                      style={{ left: `${x(0.5)}%` }}
+                    />
+                    <div
+                      className={`absolute top-1/2 h-1 -translate-y-1/2 rounded-full ${
+                        r.actionable ? "bg-accent" : "bg-muted/40"
+                      }`}
+                      style={{ left: `${x(a)}%`, width: `${x(b) - x(a)}%` }}
+                    />
+                    <div
+                      className={`absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+                        r.actionable ? "bg-accent" : "bg-white/70"
+                      }`}
+                      style={{ left: `${x(r.auc)}%` }}
+                    />
+                  </div>
+                </td>
+                <td className="py-1.5 pr-3 text-right tag text-muted">
+                  {r.eff_n.toFixed(0)}
+                </td>
+                <td className="py-1.5 text-right">
+                  {r.actionable ? (
+                    <span className="text-accent">significant</span>
+                  ) : (
+                    <span className="text-muted">indistinct</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <div className="mt-3 text-[11px] leading-relaxed text-muted">
+        {p.verdict.note} Effective n is test days ÷ horizon: at 20 days, 640
+        overlapping windows carry only ~{p.horizons[19]?.eff_n.toFixed(0)}{" "}
+        independent observations, which is why the intervals widen with horizon.
+      </div>
+    </div>
+  );
+}
