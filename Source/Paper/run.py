@@ -27,9 +27,7 @@ import yaml
 
 from Source.Backtest.costs import india_cost_breakdown
 from Source.Backtest.run import ensemble_signal
-from Source.Paper import engine
-from Source.Pipeline.data_loader import load_ohlcv
-from Source.Pipeline.dataset import build_dataset, build_features, resolve_feature_cols
+from Source.Paper import engine, frozen
 
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = ROOT / "Data" / "Processed_Data" / "paper_model"
@@ -73,35 +71,10 @@ def _refresh_data(cfg):
 
 def _frozen_signal_series(cfg):
     """Score every 60-day window with the frozen ensemble -> (dates, closes, signal)."""
-    import joblib
-
-    from Source.Models.transformer import build_model
-    meta = json.loads((MODEL / "meta.json").read_text(encoding="utf-8"))
-    scaler = joblib.load(MODEL / "scaler.pkl")
-    feat_cols = meta["feature_cols"]
-    lookback = cfg["sequence"]["lookback"]
+    meta = frozen.load_meta()
     mu, sd = np.array(meta["mu"]), np.array(meta["sd"])
-
-    df = build_features(load_ohlcv(ROOT / cfg["data"]["raw_csv"]), cfg)
-    # guard: feature set must match the frozen model
-    if resolve_feature_cols(cfg) != feat_cols:
-        raise SystemExit("feature set changed since the model was frozen - re-run "
-                         "scripts/save_paper_model.py")
-    feats = df[feat_cols].to_numpy(dtype="float32")
-    n_feat = len(feat_cols)
-
-    # inference only: never compiled, so the saved optimizer state is skipped
-    # deliberately (no shape-mismatch warning) instead of half-restored.
-    models = []
-    for i in range(meta["n_seeds"]):
-        m, _ = build_model(cfg, num_features=n_feat)
-        m.load_weights(str(MODEL / f"seed_{i}.weights.h5"))
-        models.append(m)
-
-    idx = np.arange(lookback, len(df))
-    W = np.stack([feats[t - lookback:t] for t in idx]).astype("float32")
-    W = scaler.transform(W.reshape(-1, n_feat)).reshape(W.shape).astype("float32")
-    logit = np.mean([m.predict(W, verbose=0, batch_size=256) for m in models], axis=0)
+    df = frozen.feature_frame(cfg, meta)
+    idx, logit = frozen.score(cfg, meta, df)
     sig = ensemble_signal(logit, mu, sd)
 
     dates = df["date"].dt.strftime("%Y-%m-%d").to_numpy()[idx]

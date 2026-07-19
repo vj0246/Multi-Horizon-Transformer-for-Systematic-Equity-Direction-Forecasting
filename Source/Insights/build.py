@@ -2,9 +2,14 @@
 
 Scores the most recent 60-day window with the FROZEN paper model and reports,
 per horizon, the calibrated P(up) alongside the only thing that decides whether
-that number means anything: the horizon's out-of-sample AUC, its overlap-
+that number means anything: that same model's out-of-sample AUC, its overlap-
 corrected confidence interval, and whether it survives multiple-testing
 correction across all 20 horizons.
+
+Skill is measured on the frozen model's OWN out-of-sample period (everything
+strictly after its training cutoff), not borrowed from horizons.json - that
+artifact belongs to the backtest model, a different fit, so its error bars do
+not describe the predictor that produced these probabilities.
 
 The point is precision about uncertainty. A 54% probability from a horizon whose
 AUC confidence interval straddles 0.5 is not a 54% edge - it is noise with a
@@ -24,99 +29,95 @@ import yaml
 
 from Source.Backtest.run import ensemble_signal
 from Source.Evaluation.suite import _auc_se, auc_pvalue, multiple_testing
-from Source.Pipeline.data_loader import load_ohlcv
-from Source.Pipeline.dataset import build_features, resolve_feature_cols
+from Source.Paper import frozen
 
 ROOT = Path(__file__).resolve().parents[2]
-MODEL = ROOT / "Data" / "Processed_Data" / "paper_model"
 OUT = ROOT / "frontend" / "public" / "data" / "predictions.json"
 
 
-def _latest_logits(cfg, meta):
-    """Frozen-ensemble logits for the most recent window + the full signal series."""
-    import joblib
+def _skill_table(meta, df, idx, logits):
+    """Per-horizon skill OF THE FROZEN MODEL, on its own out-of-sample period.
 
-    from Source.Models.transformer import build_model
-    if resolve_feature_cols(cfg) != meta["feature_cols"]:
-        raise SystemExit("feature set changed since the model was frozen - re-run "
-                         "scripts/save_paper_model.py")
-    scaler = joblib.load(MODEL / "scaler.pkl")
-    lookback = cfg["sequence"]["lookback"]
+    Deliberately does NOT read horizons.json: that artifact is produced by the
+    backtest model (a different fit, trained on train only), so pairing its AUC
+    with this model's probabilities would attach error bars to a predictor that
+    was never measured. Here the probability and its interval come from the same
+    weights on the same days.
 
-    df = build_features(load_ohlcv(ROOT / cfg["data"]["raw_csv"]), cfg)
-    feats = df[meta["feature_cols"]].to_numpy(dtype="float32")
-    n_feat = len(meta["feature_cols"])
-
-    idx = np.arange(lookback, len(df))
-    W = np.stack([feats[t - lookback:t] for t in idx]).astype("float32")
-    W = scaler.transform(W.reshape(-1, n_feat)).reshape(W.shape).astype("float32")
-
-    logits = None
-    for i in range(meta["n_seeds"]):
-        m, _ = build_model(cfg, num_features=n_feat)      # inference only, never compiled
-        m.load_weights(str(MODEL / f"seed_{i}.weights.h5"))
-        p = m.predict(W, verbose=0, batch_size=256)
-        logits = p if logits is None else logits + p
-    logits /= meta["n_seeds"]
-
-    dates = df["date"].dt.strftime("%Y-%m-%d").to_numpy()[idx]
-    closes = df["close"].to_numpy()[idx]
-    return dates, closes, logits
-
-
-def _skill_table(cfg):
-    """Per-horizon OOS skill from the published backtest, with honest error bars.
-
-    AUC standard errors use the EFFECTIVE sample size (n / horizon): 20-day
-    labels built from daily windows overlap 20-fold, so treating them as
-    independent would shrink every interval by ~4.5x and manufacture skill.
+    AUC standard errors use the EFFECTIVE sample size (n / horizon): h-day
+    labels sampled daily overlap h-fold, so treating them as independent would
+    shrink every interval by ~sqrt(h) and manufacture skill.
     """
-    horizons = json.loads((ROOT / "frontend" / "public" / "data" / "horizons.json")
-                          .read_text(encoding="utf-8"))
-    summary = json.loads((ROOT / "frontend" / "public" / "data" / "summary.json")
-                         .read_text(encoding="utf-8"))
-    n_test = summary["split"]["test"]
+    from scipy.stats import spearmanr
+    from sklearn.metrics import roc_auc_score
+
+    cutoff = meta["oos_cutoff"]
+    dates = df["date"].dt.strftime("%Y-%m-%d").to_numpy()
+    close = df["close"].to_numpy()
+    n_rows = len(df)
+    oos = dates[idx] > cutoff                       # strictly after the training cutoff
 
     rows = []
-    for r in horizons:
-        h = int(r["horizon"])
-        auc = float(r["auc"])
-        eff_n = n_test / h
-        # class-balanced synthetic label vector purely to size the SE
-        y = np.zeros(n_test)
-        y[:int(round(float(r["class_balance_up"]) * n_test))] = 1
-        se = _auc_se(auc, y, overlap=h)
+    for h in range(1, logits.shape[1] + 1):
+        # a label exists only where the forward close has actually happened
+        valid = oos & (idx + h < n_rows)
+        t = idx[valid]
+        if valid.sum() < 20:                        # too few realized labels to score
+            rows.append({"horizon": h, "auc": float("nan"), "ic": float("nan"),
+                         "auc_se": float("nan"), "auc_ci95": [float("nan")] * 2,
+                         "n_labelled": int(valid.sum()), "eff_n": valid.sum() / h,
+                         "p_value": float("nan")})
+            continue
+        y = (close[t + h] > close[t]).astype(int)
+        score = logits[valid, h - 1]
+        fwd = close[t + h] / close[t] - 1.0
+        if len(np.unique(y)) < 2:                   # degenerate window, AUC undefined
+            auc, se = float("nan"), float("nan")
+        else:
+            auc = float(roc_auc_score(y, score))
+            se = _auc_se(auc, y, overlap=h)
+        ic = float(spearmanr(score, fwd).statistic)
         rows.append({
-            "horizon": h, "auc": auc, "ic": float(r["ic"]),
+            "horizon": h, "auc": auc, "ic": ic,
             "auc_se": se,
             "auc_ci95": [auc - 1.96 * se, auc + 1.96 * se],
-            "eff_n": eff_n,
-            # NOT horizons.json's p_value: that is the Spearman IC p-value over
-            # raw overlapping samples, which treats ~640 correlated labels as
-            # independent and reports significance that is not there. Test the
-            # AUC against 0.5 using the overlap-corrected SE instead.
-            "p_value": auc_pvalue(auc, y, overlap=h),
-            "ic_pvalue_uncorrected": float(r["p_value"]),
+            "n_labelled": int(valid.sum()),
+            "eff_n": valid.sum() / h,
+            "p_value": auc_pvalue(auc, y, overlap=h) if not np.isnan(auc) else float("nan"),
         })
-    pvals = np.array([r["p_value"] for r in rows], dtype=float)
-    mt = multiple_testing(list(pvals))
-    # per-horizon reject flags: Bonferroni is a flat threshold; BH rejects the
-    # k smallest p-values, where k is the count the suite computed.
-    bh_cut = np.sort(pvals)[mt["n_significant_bh"] - 1] if mt["n_significant_bh"] else -np.inf
-    for r in rows:
-        r["significant_bonferroni"] = bool(r["p_value"] <= mt["bonferroni_threshold"])
-        r["significant_bh"] = bool(r["p_value"] <= bh_cut)
+
+    mt = multiple_testing([r["p_value"] for r in rows])
+    bonf = mt.get("bonferroni_reject", [False] * len(rows))
+    bh = mt.get("bh_reject", [False] * len(rows))
+    for r, b, k in zip(rows, bonf, bh):
+        r["significant_bonferroni"] = bool(b)
+        r["significant_bh"] = bool(k)
     return rows, mt
 
 
 def build(cfg) -> dict:
-    meta = json.loads((MODEL / "meta.json").read_text(encoding="utf-8"))
-    dates, closes, logits = _latest_logits(cfg, meta)
-    skill, mt = _skill_table(cfg)
+    meta = frozen.load_meta()
+    df = frozen.feature_frame(cfg, meta)
+    roll_w = int(cfg["backtest"].get("rolling_threshold_window", 250))
+
+    # Score only what is actually used: the out-of-sample period (for skill) plus
+    # a rolling-window run-up (for today's entry threshold). Scoring the full
+    # history would discard ~80% of the forward passes every CI run.
+    cutoff = meta["oos_cutoff"]
+    dates_all = df["date"].dt.strftime("%Y-%m-%d").to_numpy()
+    first_oos = int(np.argmax(dates_all > cutoff))
+    idx, logits = frozen.score(cfg, meta, df, start=max(0, first_oos - roll_w))
+
+    skill, mt = _skill_table(meta, df, idx, logits)
+    dates = dates_all[idx]
+    closes = df["close"].to_numpy()[idx]
 
     latest = logits[-1]
     platt = meta.get("platt")
     if platt:
+        if len(platt) != len(latest):
+            raise SystemExit(f"frozen model has {len(latest)} heads but {len(platt)} Platt "
+                             "coefficients - re-run scripts/save_paper_model.py")
         prob = [float(1 / (1 + np.exp(-(p["a"] * z + p["b"]))))
                 for p, z in zip(platt, latest)]
     else:                                             # pre-Platt frozen model
@@ -125,17 +126,19 @@ def build(cfg) -> dict:
     mu, sd = np.array(meta["mu"]), np.array(meta["sd"])
     sig = ensemble_signal(logits, mu, sd)
 
-    # the deployed rule: long only when today's signal clears the trailing quantile
-    roll_w = int(cfg["backtest"].get("rolling_threshold_window", 250))
+    # the deployed rule: long only when today's signal clears the trailing quantile.
+    # `sig` already starts roll_w days before the OOS period, so the trailing
+    # window is fully covered without splicing in the stored signal history.
     q_up = cfg["backtest"]["quantile_upper"]
-    past = np.concatenate([np.array(meta["signal_history"]), sig])[-roll_w - 1:-1]
+    past = sig[-roll_w - 1:-1]
     thresh = float(np.percentile(past, q_up))
     today = float(sig[-1])
     pct = float((past < today).mean() * 100)
 
+    if len(skill) != len(prob):                       # never silently truncate horizons
+        raise SystemExit(f"skill table has {len(skill)} horizons but {len(prob)} probabilities")
     preds = []
     for row, p in zip(skill, prob):
-        h = row["horizon"]
         lo, hi = row["auc_ci95"]
         actionable = row["significant_bh"]
         preds.append({
@@ -180,7 +183,10 @@ def build(cfg) -> dict:
         "verdict": {
             "n_actionable": int(n_sig),
             "n_horizons": len(preds),
-            "mean_auc": float(np.mean([p["auc"] for p in preds])),
+            "mean_auc": float(np.nanmean([p["auc"] for p in preds])),
+            "oos_days_scored": int(max(p["n_labelled"] for p in preds)),
+            "multiple_testing": {k: v for k, v in mt.items()
+                                 if not k.endswith("_reject")},
             "headline": (
                 f"{n_sig} of {len(preds)} horizons carry statistically distinguishable skill"
                 if n_sig else
@@ -198,8 +204,6 @@ def build(cfg) -> dict:
 
 def main():
     cfg = yaml.safe_load(open(ROOT / "config.yaml", encoding="utf-8"))
-    if not (MODEL / "meta.json").exists():
-        raise SystemExit("frozen model missing - run scripts/save_paper_model.py first")
     out = build(cfg)
     OUT.write_text(json.dumps(out, indent=2), encoding="utf-8")
     v, pos = out["verdict"], out["position"]

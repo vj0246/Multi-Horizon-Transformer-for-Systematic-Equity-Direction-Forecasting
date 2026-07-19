@@ -498,15 +498,34 @@ def test_predictions_use_overlap_corrected_pvalues():
         pytest.skip("predictions.json not generated")
     d = json.loads(p.read_text(encoding="utf-8"))
     for r in d["horizons"]:
-        # effective sample size must shrink with horizon, never equal raw n
-        assert r["eff_n"] <= d["horizons"][0]["eff_n"] / 1.0
-        assert abs(r["eff_n"] * r["horizon"] - d["horizons"][0]["eff_n"]) < 1e-6
+        # effective sample size is labelled days / horizon, never the raw count
+        assert abs(r["eff_n"] * r["horizon"] - r["n_labelled"]) < 1e-6
+        assert r["horizon"] == 1 or r["eff_n"] < r["n_labelled"]
         # a horizon is only actionable if its interval actually clears 0.5
         if r["actionable"]:
             assert r["auc_ci95"][0] > 0.5
-        # the uncorrected IC p-value is retained for contrast, not used
-        assert "ic_pvalue_uncorrected" in r
     assert d["verdict"]["n_actionable"] == sum(r["actionable"] for r in d["horizons"])
+    # skill must be measured on the frozen model's own out-of-sample period
+    assert d["verdict"]["oos_days_scored"] > 0
+    assert max(r["n_labelled"] for r in d["horizons"]) == d["verdict"]["oos_days_scored"]
+
+
+def test_multiple_testing_reject_flags_match_counts():
+    """Per-hypothesis flags must agree with the counts, including at ties.
+
+    Callers previously rebuilt BH flags by taking the k-th smallest p-value as a
+    cutoff; with ties at the boundary that rejects more hypotheses than BH
+    counted. The suite now returns the flags directly.
+    """
+    from Source.Evaluation.suite import multiple_testing
+    mt = multiple_testing([0.001, 0.001, 0.4, 0.9, float("nan")])
+    assert len(mt["bh_reject"]) == 5 and len(mt["bonferroni_reject"]) == 5
+    assert sum(mt["bh_reject"]) == mt["n_significant_bh"]
+    assert sum(mt["bonferroni_reject"]) == mt["n_significant_bonferroni"]
+    assert mt["bh_reject"][4] is False and mt["bonferroni_reject"][4] is False  # NaN
+    # tie at the cutoff must not inflate the rejection set beyond the count
+    tied = multiple_testing([0.01] * 4 + [0.9] * 6)
+    assert sum(tied["bh_reject"]) == tied["n_significant_bh"]
 
 
 if __name__ == "__main__":

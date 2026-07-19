@@ -213,9 +213,9 @@ export interface HorizonPrediction {
   ic: number;
   auc_se: number;
   auc_ci95: number[];
+  n_labelled: number;
   eff_n: number;
   p_value: number;
-  ic_pvalue_uncorrected: number;
   significant_bonferroni: boolean;
   significant_bh: boolean;
   prob_up: number;
@@ -248,6 +248,8 @@ export interface Predictions {
     n_actionable: number;
     n_horizons: number;
     mean_auc: number;
+    oos_days_scored: number;
+    multiple_testing: Record<string, number>;
     headline: string;
     note: string;
   };

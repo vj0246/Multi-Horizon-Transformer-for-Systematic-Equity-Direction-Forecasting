@@ -616,6 +616,7 @@ export function PriceChart() {
  */
 export function PredictionTable() {
   const p = data.predictions;
+  const last = p.horizons[p.horizons.length - 1];
   const lo = Math.min(...p.horizons.map((r) => r.auc_ci95[0]), 0.45);
   const hi = Math.max(...p.horizons.map((r) => r.auc_ci95[1]), 0.55);
   const x = (v: number) => ((v - lo) / (hi - lo)) * 100;
@@ -684,9 +685,10 @@ export function PredictionTable() {
         </tbody>
       </table>
       <div className="mt-3 text-[11px] leading-relaxed text-muted">
-        {p.verdict.note} Effective n is test days ÷ horizon: at 20 days, 640
-        overlapping windows carry only ~{p.horizons[19]?.eff_n.toFixed(0)}{" "}
-        independent observations, which is why the intervals widen with horizon.
+        {p.verdict.note} Effective n is labelled days ÷ horizon: at {last.horizon}{" "}
+        days, {last.n_labelled} overlapping windows carry only ~
+        {last.eff_n.toFixed(0)} independent observations, which is why the
+        intervals widen with horizon.
       </div>
     </div>
   );

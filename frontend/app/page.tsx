@@ -202,6 +202,9 @@ export default function Page() {
           const pos = pr.position;
           const v = pr.verdict;
           const long = pos.stance === "LONG";
+          // pick the live worked example straight from the artifact — hardcoding a
+          // probability here would drift out of sync the next time the cron runs
+          const boldest = pr.horizons.reduce((a, b) => (b.prob_up > a.prob_up ? b : a));
           return (
             <>
               <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -218,14 +221,17 @@ export default function Page() {
 
               <div className="mb-5 rounded-lg border border-danger/40 bg-danger/5 px-4 py-3 text-xs leading-relaxed text-muted">
                 <span className="font-semibold text-danger">Read the intervals, not the probabilities.</span>{" "}
-                {v.headline} A calibrated 63% P(up) whose AUC interval spans 0.50 is
-                a confident-looking number with no evidence behind it — the table
-                below is laid out so that is visible at a glance rather than buried.
+                {v.headline} The boldest row below reads{" "}
+                {(boldest.prob_up * 100).toFixed(1)}% P(up) at {boldest.horizon}d, yet its
+                AUC interval [{fmtNum(boldest.auc_ci95[0], 3)}, {fmtNum(boldest.auc_ci95[1], 3)}]
+                {boldest.actionable ? " clears" : " spans"} 0.50 — a confident-looking number
+                with {boldest.actionable ? "measured skill behind it" : "no evidence behind it"}.
+                The table is laid out so that is visible at a glance rather than buried.
               </div>
 
               <Panel
-                title="Forward probabilities across all 20 horizons"
-                subtitle={`frozen ensemble (${pr.model.n_seeds} seeds, trained through ${pr.model.frozen_through}) · ${pr.model.calibration} · last close ${fmtNum(pr.last_close, 0)}`}
+                title={`Forward probabilities across all ${v.n_horizons} horizons`}
+                subtitle={`frozen ensemble (${pr.model.n_seeds} seeds, trained through ${pr.model.frozen_through}) · ${pr.model.calibration} · skill measured on this model's own ${v.oos_days_scored} out-of-sample days · last close ${fmtNum(pr.last_close, 0)}`}
               >
                 <PredictionTable />
               </Panel>

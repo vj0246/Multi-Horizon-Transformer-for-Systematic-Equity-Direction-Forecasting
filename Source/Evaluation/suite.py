@@ -198,8 +198,15 @@ def deflated_sharpe(sharpe: float, n_obs: int, n_trials: int,
 
 
 def multiple_testing(p_values: list[float], alpha: float = 0.05) -> dict:
-    """Bonferroni + Benjamini-Hochberg over a family of tests (e.g. 20 horizons)."""
-    p = np.asarray([x for x in p_values if not np.isnan(x)], dtype=float)
+    """Bonferroni + Benjamini-Hochberg over a family of tests (e.g. 20 horizons).
+
+    Returns per-hypothesis reject flags alongside the counts, aligned with the
+    input list (NaN p-values are never rejected). Callers need the flags to
+    label individual hypotheses; reconstructing them from the counts by
+    re-sorting is subtly wrong when p-values tie at the cutoff.
+    """
+    raw = np.asarray(p_values, dtype=float)
+    p = raw[~np.isnan(raw)]
     n = len(p)
     if n == 0:
         return {}
@@ -207,6 +214,12 @@ def multiple_testing(p_values: list[float], alpha: float = 0.05) -> dict:
     bh_thresh = alpha * (np.arange(1, n + 1)) / n
     passed = p[order] <= bh_thresh
     n_bh = int(np.max(np.where(passed)[0]) + 1) if passed.any() else 0
+    # BH rejects exactly the n_bh smallest p-values - take them by rank, not by
+    # value, so ties at the boundary cannot inflate the rejection set.
+    bh_reject = np.zeros(len(raw), dtype=bool)
+    if n_bh:
+        ranked = np.argsort(np.where(np.isnan(raw), np.inf, raw))
+        bh_reject[ranked[:n_bh]] = True
     return {
         "n_tests": n,
         "alpha": alpha,
@@ -215,4 +228,6 @@ def multiple_testing(p_values: list[float], alpha: float = 0.05) -> dict:
         "n_significant_bonferroni": int((p <= alpha / n).sum()),
         "n_significant_bh": n_bh,
         "n_significant_uncorrected": int((p <= alpha).sum()),
+        "bonferroni_reject": [bool(x) for x in (raw <= alpha / n) & ~np.isnan(raw)],
+        "bh_reject": [bool(x) for x in bh_reject],
     }
