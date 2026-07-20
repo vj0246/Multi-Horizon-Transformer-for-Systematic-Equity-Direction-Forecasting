@@ -12,7 +12,7 @@ Deep-learning system predicting Nifty 50 (`^NSEI`) directional movement across 2
 ## Run / Build / Test
 ```bash
 # 1. (optional) refresh data
-python Source/Ingestion/Fetch_Market_Data.py
+python -m Source.Ingestion.Fetch_Market_Data
 
 # 2. train + full backtest -> writes frontend/public/data/*.json
 python -m Source.Backtest.run
@@ -63,7 +63,7 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 - Pipeline is quiet (no per-epoch/headline prints; `verbose=0`); read results from the JSON artifacts, not stdout.
 - `Source/Ingestion/fetch_universe.py` — NSE universe downloader (Data/Raw_Data/Universe/, gitignored)
 - `Source/Ingestion/` — yfinance downloader
-- `Source/News/` — NewsAPI + FinBERT sentiment (parallel track, not fused)
+- `Source/News/build_sentiment.py` — NewsAPI + FinBERT sentiment, self-contained (parallel track, not fused; OFF by default)
 - `Notebooks/Notebooks/Eda.ipynb` — original research notebook (source of truth for logic)
 - `frontend/` — Next.js showcase site; `frontend/public/data/*.json` = generated artifacts
 - `config.yaml` — all hyperparameters

@@ -32,7 +32,7 @@ The system ingests raw OHLCV data for `^NSEI` (Nifty 50) going back to 2007, eng
 
 Training uses strict temporal split (70/15/15 — no look-ahead leakage), StandardScaler fitted exclusively on training data, binary cross-entropy loss with AUC as the primary metric, and early stopping with patience=7. Post-training evaluation goes beyond classification metrics: the model's raw logits are used directly as alpha signals, tested via Spearman IC, sign-strategy Sharpe, quantile long-short Sharpe, and decile return attribution — all on held-out test data.
 
-**The project is research-grade, not production-deployed.** Source modules for news ingestion (NewsAPI), FinBERT sentiment, and an XGBoost baseline exist in the codebase as parallel development tracks. The Transformer is the primary model.
+**The project is research-grade, not production-deployed.** A FinBERT news-sentiment track (`Source/News/`) and LightGBM baselines (`scripts/gbdt_*.py`) exist as parallel tracks. The Transformer is the primary model.
 
 ---
 
@@ -171,16 +171,12 @@ Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting/
 │
 ├── Source/
 │   ├── Ingestion/
-│   │   └── Fetch_Market_Data.py     # yfinance-based OHLCV downloader
+│   │   └── Fetch_Market_Data.py     # yfinance OHLCV downloader (config-driven)
 │   ├── Features/
 │   │   ├── Returns.py               # (Stub — return feature logic)
 │   │   └── Volatility.py            # (Stub — volatility feature logic)
 │   ├── Models/
-│   │   └── train_model              # XGBoost baseline with mean-centering trick
 │   ├── News/
-│   │   ├── fetch_news.py            # NewsAPI ingestion (100 articles/call)
-│   │   ├── process_news.py          # Daily article count aggregation
-│   │   └── sentiment.py            # FinBERT sentiment scoring per headline
 │   ├── Risk/
 │   │   └── Placeholder.txt          # Risk module (in progress)
 │   └── Api/
@@ -445,28 +441,21 @@ df["vol_regime_percentile"] = (
 ```
 This creates a continuous volatility regime percentile — groundwork for conditioning strategy behavior (e.g., reduce position sizing in high-vol regimes, increase in low-vol).
 
-### 12. Parallel Tracks — News and Sentiment Module
+### 12. Parallel Track — News and Sentiment Module
 
-Three source files implement a news-driven sentiment pipeline that runs independent of the Transformer:
+`Source/News/build_sentiment.py` implements the whole news-sentiment pipeline in one place: it calls the NewsAPI `/v2/everything` endpoint, scores each headline with **FinBERT** (`ProsusAI/finbert`), and aggregates to a daily mean in `Data/Processed_Data/daily_sentiment.csv`.
 
-**`fetch_news.py`** — Calls NewsAPI `/v2/everything` endpoint, pulls 100 articles per query, saves `date + title + description` to CSV.
-
-**`process_news.py`** — Groups articles by date, computes daily article count as a raw attention/volume signal.
-
-**`sentiment.py`** — Runs each headline through **FinBERT** (`ProsusAI/finbert`), a BERT model fine-tuned on financial text. Computes a scalar sentiment score per headline:
 ```python
 sentiment_score = probs[0] * -1 + probs[2] * 1  # negative weighted -1, positive weighted +1
 ```
-Aggregates to daily mean sentiment. This is designed to be merged with OHLCV features as additional input to the Transformer in future iterations.
 
-### 13. XGBoost Baseline
+`features.use_sentiment` wires it in as an extra model feature, and it is **off by default**: NewsAPI's free tier serves only ~30 days, so sentiment cannot be backfilled to 2007 and the historical backtest must never train on fabricated or all-zero values.
 
-`Source/Models/train_model` implements a mean-centered XGBoost regressor:
-```python
-y_train_centered = y_train - y_train.mean()  # remove drift bias
-model = XGBRegressor(n_estimators=600, max_depth=5, learning_rate=0.03)
-```
-Evaluated on MAE, RMSE, and Pearson correlation. Serves as the classical ML comparison point against the Transformer's AUC/Sharpe metrics.
+### 13. Gradient-Boosted Baselines
+
+`scripts/gbdt_baseline.py` (index) and `scripts/gbdt_cross_section.py` (panel) run **LightGBM** as the classical-ML comparison point, with purged/embargoed cross-validation and sample-uniqueness weights so overlapping labels cannot leak across folds.
+
+Both land at roughly the same place as the Transformer (AUC ~0.50, cross-sectional IC ~0). When a tree ensemble and a Transformer agree, the data is speaking, not the architecture.
 
 ---
 
@@ -482,7 +471,7 @@ pip install -r requirements.txt
 
 **Fetch fresh data:**
 ```bash
-python Source/Ingestion/Fetch_Market_Data.py
+python -m Source.Ingestion.Fetch_Market_Data
 # Downloads ^NSEI from 2006-01-01 to present
 # Saves to Data/Raw_Data/^NSEI_daily.csv
 ```
@@ -542,7 +531,7 @@ A plain mean over time steps discards the temporal-order information the positio
 |---|---|
 | Data | `yfinance`, `pandas`, `numpy`, `polars` |
 | Deep Learning | `tensorflow`, `keras` |
-| Classical ML | `xgboost`, `scikit-learn` |
+| Classical ML | `lightgbm`, `scikit-learn` |
 | NLP / Sentiment | `transformers` (FinBERT), `torch` |
 | Quant / Backtest | `quantstats`, `vectorbt`, `pyportfolioopt` |
 | Experiment Tracking | `mlflow`, `wandb` |

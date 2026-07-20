@@ -31,7 +31,6 @@ os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 from pathlib import Path  # noqa: E402
 
 import numpy as np  # noqa: E402
-import pandas as pd  # noqa: E402
 import tensorflow as tf  # noqa: E402
 import yaml  # noqa: E402
 

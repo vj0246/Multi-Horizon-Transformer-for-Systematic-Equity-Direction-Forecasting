@@ -18,7 +18,6 @@ Run:  python -m Source.Paper.run            (score with current data)
 from __future__ import annotations
 
 import argparse
-import glob
 import json
 from pathlib import Path
 

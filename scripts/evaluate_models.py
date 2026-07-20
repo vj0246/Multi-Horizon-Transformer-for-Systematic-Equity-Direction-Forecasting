@@ -27,7 +27,7 @@ from Source.Evaluation.registry import leaderboard, save_evaluation  # noqa: E40
 from Source.Evaluation.suite import (auc_pvalue, classification_metrics,  # noqa: E402
                                      deflated_sharpe, diebold_mariano,
                                      error_metrics, financial_metrics,
-                                     friedman_test, multiple_testing)
+                                     multiple_testing)
 from Source.Pipeline.data_loader import load_ohlcv  # noqa: E402
 from Source.Pipeline.dataset import build_dataset  # noqa: E402
 
@@ -71,7 +71,6 @@ def evaluate_transformer_index(cfg) -> dict:
     net = np.asarray(prim["net_returns"], dtype=float)
     fin = financial_metrics(net, prim.get("periods_per_year", ppy),
                             np.asarray(prim.get("abs_pos", [])))
-    bh = np.asarray(strat["buy_and_hold"]["net_returns"]) if "net_returns" in strat["buy_and_hold"] else None
 
     dsr = deflated_sharpe(fin["sharpe"], n_obs=len(net), n_trials=N_TRIALS,
                           skew=float(sstats.skew(net)), kurt=float(sstats.kurtosis(net, fisher=False)))

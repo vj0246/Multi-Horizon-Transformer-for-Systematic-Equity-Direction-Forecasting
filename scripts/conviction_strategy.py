@@ -36,8 +36,7 @@ from scipy import stats as sstats  # noqa: E402
 from Source.Backtest import metrics as M  # noqa: E402
 from Source.Backtest.costs import india_cost_breakdown  # noqa: E402
 from Source.Evaluation.registry import save_evaluation  # noqa: E402
-from Source.Evaluation.suite import (classification_metrics, deflated_sharpe,  # noqa: E402
-                                     financial_metrics)
+from Source.Evaluation.suite import deflated_sharpe, financial_metrics  # noqa: E402
 from Source.Pipeline.data_loader import load_ohlcv  # noqa: E402
 from Source.Pipeline.dataset import build_dataset  # noqa: E402
 
@@ -55,9 +54,6 @@ def fwd_log_return(close, idx, h):
 
 def main():
     cfg = yaml.safe_load(open(ROOT / "config.yaml", encoding="utf-8"))
-    ph = cfg["backtest"]["primary_horizon"]
-    holding = cfg["backtest"]["holding_period"]
-    ppy = cfg["backtest"]["periods_per_year"] / holding
     per_side = india_cost_breakdown(cfg, "futures")["per_side_bps"]
 
     ds = build_dataset(load_ohlcv(ROOT / cfg["data"]["raw_csv"]), cfg)
@@ -68,13 +64,6 @@ def main():
         print("no index cache - run the index track first"); return
     c = np.load(caches[-1], allow_pickle=True)
     lv, lt = c["logits_val"], c["logits_test"]
-
-    # calibrated P(up) at the primary horizon, Platt on validation only
-    _, pt_cal = M.calibrate_probs(lv, ds.y_val, lt)
-    pv_cal, _ = M.calibrate_probs(lv, ds.y_val, lv)
-    conf_val = np.abs(pv_cal[:, ph - 1] - 0.5)
-    conf_test = np.abs(pt_cal[:, ph - 1] - 0.5)
-    p_test = pt_cal[:, ph - 1]
 
     print(f"index conviction strategy | cost {2*per_side:.2f}bps round-trip")
     print("SKILL = accuracy_edge (acc_when_traded - majority baseline). A positive")

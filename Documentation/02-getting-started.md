@@ -12,9 +12,14 @@
 ## Install
 
 ```bash
-pip install tensorflow==2.21.0 numpy pandas scipy scikit-learn pyyaml yfinance joblib pytest
+pip install -r requirements.txt      # 15 packages, all actually imported
 cd frontend && npm install && cd ..
 ```
+
+`requirements.txt` is derived from the imports in `Source/`, `scripts/` and
+`tests/`. The core pipeline needs only numpy, pandas, scipy, scikit-learn,
+pyyaml, joblib, tensorflow and yfinance; lightgbm, fastapi and the FinBERT stack
+are optional and marked as such in the file.
 
 ## The five-minute path
 
@@ -38,7 +43,7 @@ Order matters — later steps consume earlier outputs.
 
 ```bash
 # Refresh market data (optional; the CSVs are committed)
-python Source/Ingestion/Fetch_Market_Data.py     # ^NSEI OHLCV
+python -m Source.Ingestion.Fetch_Market_Data     # ^NSEI OHLCV
 python -m Source.Ingestion.fetch_macro           # VIX, USDINR, crude, S&P
 python -m Source.Ingestion.fetch_universe        # 85 NSE names (gitignored)
 

@@ -33,13 +33,13 @@ Every file in the repository, what it does, and how to run it.
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `Fetch_Market_Data.py` | 12 | Downloads `^NSEI` daily OHLCV from yfinance. Script only, no `main()`. |
+| `Fetch_Market_Data.py` | 33 | Downloads `^NSEI` daily OHLCV from yfinance, to the ticker/path set in `config.yaml`. |
 | `fetch_macro.py` | 52 | Downloads India VIX, USDINR, crude, S&P 500 → `Data/Raw_Data/Macro/`. |
 | `fetch_universe.py` | 42 | Downloads 85 NSE large caps → `Data/Raw_Data/Universe/` (gitignored). Writes a **simple single-header CSV**, unlike the `^NSEI` export. |
 | `fetch_fundamentals.py` | 55 | **Current** fundamentals snapshot. Display only — never a model feature (would be look-ahead leakage). |
 
 ```bash
-python Source/Ingestion/Fetch_Market_Data.py
+python -m Source.Ingestion.Fetch_Market_Data
 python -m Source.Ingestion.fetch_macro
 python -m Source.Ingestion.fetch_universe
 ```
@@ -87,8 +87,8 @@ weights; the second exposes block-2 attention scores for interpretability.
 |------|-------|----------|
 | `costs.py` | 105 | India cost model. `INSTRUMENTS` dict, `india_cost_breakdown`, `total_cost_bps` |
 | `metrics.py` | 307 | Sharpe, drawdown, IC, decile attribution, `calibrate_probs`, `per_horizon_*` |
-| `run.py` | 454 | Index-track orchestrator. Trains, backtests, writes ~15 JSON artifacts |
-| `run_cross_section.py` | 297 | Cross-sectional orchestrator. Panel train + quantile spread |
+| `run.py` | 453 | Index-track orchestrator. Trains, backtests, writes ~15 JSON artifacts |
+| `run_cross_section.py` | 296 | Cross-sectional orchestrator. Panel train + quantile spread |
 
 ```bash
 python -m Source.Backtest.run                 # REUSE=1 to skip retraining
@@ -119,7 +119,7 @@ trading an index.
 
 | File | Lines | Contents |
 |------|-------|----------|
-| `suite.py` | 233 | `classification_metrics`, `_auc_se`, `auc_pvalue`, `error_metrics`, `financial_metrics`, `diebold_mariano`, `friedman_test`, `deflated_sharpe`, `multiple_testing` |
+| `suite.py` | 233 | `classification_metrics`, `_auc_se`, `auc_pvalue`, `error_metrics`, `financial_metrics`, `diebold_mariano`, `friedman_test`, `deflated_sharpe`, `multiple_testing` (returns per-hypothesis reject flags) |
 | `registry.py` | 63 | Per-model JSON registry in `Data/Evaluation/`, `leaderboard()` ranked by deflated Sharpe |
 
 See [Evaluation](06-evaluation.md) for every formula.
@@ -130,7 +130,7 @@ See [Evaluation](06-evaluation.md) for every formula.
 |------|-------|----------|
 | `engine.py` | 95 | Long/flat book marked daily. `new_state`, `step`, `summary`. Pure dict state, idempotent per date |
 | `frozen.py` | 65 | **Shared** loader/scorer for the frozen model. Used by both `run.py` and `Insights/build.py` so they can never drift apart |
-| `run.py` | 155 | Scores post-cutoff days with the frozen model, steps the book, writes `paper_trading.json` |
+| `run.py` | 154 | Scores post-cutoff days with the frozen model, steps the book, writes `paper_trading.json` |
 
 ```bash
 python -m Source.Paper.run              # score with current data
@@ -183,10 +183,7 @@ uvicorn Source.Api.main:app --reload
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `fetch_news.py` | 34 | NewsAPI headline fetch |
-| `process_news.py` | 17 | Cleaning |
-| `sentiment.py` | 37 | FinBERT scoring |
-| `build_sentiment.py` | 90 | Daily aggregate → `daily_sentiment.csv` |
+| `build_sentiment.py` | 90 | Self-contained: NewsAPI fetch → FinBERT scoring → daily aggregate in `daily_sentiment.csv` |
 
 Off by default — see [Data](03-data.md#sentiment-optional-off).
 
@@ -196,8 +193,8 @@ Off by default — see [Data](03-data.md#sentiment-optional-off).
 |--------|-------|---------|
 | `select_model.py` | 87 | Hyperparameter grid on **validation only** |
 | `save_paper_model.py` | 110 | Trains and FREEZES the 3-seed paper model, stores scaler, signal stats, Platt coefficients, and the OOS cutoff |
-| `evaluate_models.py` | 135 | Runs the full metric suite over every model, writes the registry |
-| `conviction_strategy.py` | 156 | Trades only when the model is confident — high-conviction gating |
+| `evaluate_models.py` | 134 | Runs the full metric suite over every model, writes the registry |
+| `conviction_strategy.py` | 145 | Trades only when the model is confident — high-conviction gating |
 | `gbdt_baseline.py` | 108 | LightGBM baseline, purged/embargoed CV |
 | `gbdt_cross_section.py` | 90 | LightGBM on the panel — the tool the literature favours |
 | `wsl_gpu_env.sh` | — | Fixes `LD_LIBRARY_PATH` for CUDA in WSL |
