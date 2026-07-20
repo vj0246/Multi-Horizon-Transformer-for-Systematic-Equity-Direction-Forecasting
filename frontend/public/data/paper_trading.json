@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-07-17",
+  "as_of": "2026-07-20",
   "meta": {
     "strategy": "timing_rolling (primary)",
     "horizon": 20,
@@ -9,15 +9,15 @@
     "model_trained_through": "2023-10-19"
   },
   "summary": {
-    "n_days": 674,
-    "total_return": 0.19237899999999986,
-    "buy_hold_return": 0.24518913577668222,
-    "excess_return": -0.052810135776682365,
-    "sharpe": 0.719204025161698,
+    "n_days": 675,
+    "total_return": 0.1876850000000001,
+    "buy_hold_return": 0.24028764263385205,
+    "excess_return": -0.05260264263385195,
+    "sharpe": 0.7034549808208974,
     "max_drawdown": -0.11350638822028518,
     "n_trades": 13,
     "current_position": "LONG",
-    "time_in_market": 0.40059347181008903
+    "time_in_market": 0.4014814814814815
   },
   "disclaimer": "PAPER TRADING - simulated, no real money. Runs the backtest's primary strategy forward on real NSE closes, charged real India futures costs. The model has NO validated edge (see the results above), so this is an honest live demonstration, not a profit engine. Not investment advice.",
   "equity_curve": [
@@ -4063,6 +4063,12 @@
       "date": "2026-07-17",
       "strategy": 119.2379,
       "buy_hold": 123.9983,
+      "position": 1
+    },
+    {
+      "date": "2026-07-20",
+      "strategy": 118.7685,
+      "buy_hold": 123.5102,
       "position": 1
     }
   ],
