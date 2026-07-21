@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T14:47:55+00:00",
-  "as_of": "2026-07-17",
+  "generated_at": "2026-07-21T16:27:43+00:00",
+  "as_of": "2026-07-21",
   "attribution": {
     "n_trades": 6,
     "hit_rate": 0.6666666666666666,
@@ -14,7 +14,7 @@
       "noise": 1,
       "signal_error": 1
     },
-    "noise_floor": 0.03836724462940837,
+    "noise_floor": 0.0383196584875678,
     "actionable": {
       "cost_drag_trades": 0,
       "cost_drag_cost": 0.0,
@@ -22,7 +22,7 @@
     },
     "not_actionable": {
       "noise_trades": 1,
-      "note": "1 of 6 trades moved less than the 3.84% noise floor. Their sign carries no information. Treating them as mistakes to learn from is how a system fits randomness."
+      "note": "1 of 6 trades moved less than the 3.83% noise floor. Their sign carries no information. Treating them as mistakes to learn from is how a system fits randomness."
     },
     "verdict": "Hit rate 4/6 = 66.7%, binomial p = 0.688. NOT distinguishable from a coin flip - with 6 trades, nothing here supports 'the model learned from a mistake'. The only reliable lessons in this journal are the deterministic ones (cost drag, exposure)."
   },
@@ -107,13 +107,13 @@
     },
     {
       "entry_date": "2026-06-05",
-      "exit_date": "2026-07-17",
+      "exit_date": "2026-07-21",
       "entry_price": 119.0678,
-      "exit_price": 123.9983,
-      "days_held": 29,
-      "gross_return": 0.0414091803157528,
+      "exit_price": 123.2513,
+      "days_held": 31,
+      "gross_return": 0.035135443839560354,
       "cost_return": -0.0009575799999999999,
-      "net_return": 0.0404516003157528,
+      "net_return": 0.034177863839560355,
       "direction_correct": true,
       "open": true
     }

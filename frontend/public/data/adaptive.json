@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T13:05:19+00:00",
-  "as_of": "2026-07-17",
+  "generated_at": "2026-07-21T16:27:58+00:00",
+  "as_of": "2026-07-21",
   "design": {
     "backbone_params": 69589,
     "decision_layer_params": 40,
@@ -13,7 +13,7 @@
     "rationale": "Layers are sized by parameter count against the independent observations their cadence delivers. A week carries ~0.25 independent observations at h=20, so weekly gradient updates to a 69,589-parameter backbone would fit noise; the fast layers therefore fit 0 or ~40 parameters and only the quarterly layer refits the network."
   },
   "drift": {
-    "n_observations": 924,
+    "n_observations": 926,
     "detectors": {
       "adwin": {
         "n_alarms": 11,
@@ -82,7 +82,7 @@
             "date": "2026-06-24",
             "index": 907,
             "mean_before": -0.7543825497837682,
-            "mean_after": 1.3110754164026441
+            "mean_after": 1.3119434043262412
           }
         ]
       },
@@ -1444,20 +1444,20 @@
     "enabled": true,
     "ran": false,
     "embargo_days": 20,
-    "n_train_after_purge": 778,
+    "n_train_after_purge": 780,
     "eval_block": {
-      "start": "2026-01-09",
-      "end": "2026-07-17",
+      "start": "2026-01-13",
+      "end": "2026-07-21",
       "n_labelled": 106
     },
     "champion": {
       "version": "v1-frozen",
       "cutoff": "2023-10-19",
-      "mean_auc": 0.4465509661218602,
-      "mean_auc_se": 0.17850969024708455,
-      "primary_auc": 0.6919515669515669,
-      "primary_auc_se": 0.2508294787557766,
-      "min_p_value": 0.22205623265982222,
+      "mean_auc": 0.45226190528624555,
+      "mean_auc_se": 0.17803447327903207,
+      "primary_auc": 0.7297008547008548,
+      "primary_auc_se": 0.24044145570234404,
+      "min_p_value": 0.1697055058146104,
       "n_scored": 106,
       "effective_n": 5.3
     }
