@@ -21,6 +21,10 @@ lightgbm
 fastapi
 uvicorn
 
+# ---- optional: authoritative NSE fundamentals (Source/Ingestion/nse.py) ----
+# NSE serves only browser-like clients; curl_cffi does the TLS impersonation.
+curl_cffi
+
 # ---- optional: LLM commentary, OFF by default (Source/Advisor/) ----
 # Needs GROQ_API_KEY (or ANTHROPIC_API_KEY) in the env or .env.local. Without a
 # key the journal writes deterministic template text, so this is never required.

@@ -45,6 +45,13 @@ jobs:
           TF_CPP_MIN_LOG_LEVEL: "2"
         run: python -m Source.Insights.build
 
+      # NSE blocks datacenter IPs, so this usually fails on GitHub runners and is
+      # expected to - continue-on-error keeps the rest of the job alive. Run it
+      # locally from an Indian connection to actually accumulate the archive.
+      - name: Archive NSE fundamentals snapshot
+        continue-on-error: true
+        run: python -m Source.Ingestion.nse || echo "NSE unreachable from CI (expected)"
+
       - name: Trade journal + attribution
         env:
           TF_CPP_MIN_LOG_LEVEL: "2"
@@ -64,7 +71,7 @@ jobs:
         run: |
           git config user.name "paper-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add frontend/public/data/paper_trading.json frontend/public/data/predictions.json frontend/public/data/adaptive.json frontend/public/data/journal.json Data/Adaptive/model_versions.json Data/Paper/state.json "Data/Raw_Data/^NSEI_daily.csv"
+          git add frontend/public/data/paper_trading.json frontend/public/data/predictions.json frontend/public/data/adaptive.json frontend/public/data/journal.json Data/Adaptive/model_versions.json Data/Raw_Data/NSE_Fundamentals/snapshots.csv Data/Paper/state.json "Data/Raw_Data/^NSEI_daily.csv"
           if git diff --cached --quiet; then
             echo "no change today"
           else

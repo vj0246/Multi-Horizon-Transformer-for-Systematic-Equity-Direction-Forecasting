@@ -835,6 +835,48 @@ def test_gdelt_partial_progress_is_saved_and_resumed(tmp_path, monkeypatch):
     assert len(saved) >= 1, "successful chunks were lost when a later chunk failed"
 
 
+def test_nse_archive_is_idempotent_and_never_rewrites_history(tmp_path, monkeypatch):
+    """The archive's value IS its history. Re-running today must not duplicate,
+    and must never touch rows from previous days - overwriting those silently
+    destroys the point-in-time property the archive exists to create."""
+    import pandas as pd
+    from Source.Ingestion import nse
+
+    arch = tmp_path / "snapshots.csv"
+    monkeypatch.setattr(nse, "ARCHIVE", arch)
+
+    nse.append_archive([{"as_of": "2026-01-01", "symbol": "AAA", "pe": 10.0}])
+    nse.append_archive([{"as_of": "2026-01-02", "symbol": "AAA", "pe": 11.0}])
+    # same day again with a changed value -> replaces that day only
+    nse.append_archive([{"as_of": "2026-01-02", "symbol": "AAA", "pe": 99.0}])
+
+    df = pd.read_csv(arch)
+    assert len(df) == 2, "re-running the same day duplicated rows"
+    assert df.duplicated(["as_of", "symbol"]).sum() == 0
+    hist = df[df["as_of"] == "2026-01-01"]["pe"].iloc[0]
+    assert hist == 10.0, "a previous day's archived value was rewritten"
+    assert df[df["as_of"] == "2026-01-02"]["pe"].iloc[0] == 99.0
+
+
+def test_nse_snapshot_is_gated_until_the_archive_has_depth():
+    """A one-day snapshot applied to historical rows is look-ahead leakage. The
+    module must refuse to call itself feature-ready until it spans a real split."""
+    from Source.Ingestion.nse import archive_span
+    span = archive_span()
+    if span["days"] < 250:
+        assert span["usable_as_features"] is False
+        assert "leakage" in span["note"].lower()
+
+
+def test_nse_market_hours_window():
+    from datetime import datetime
+    from Source.Ingestion.nse import IST, _market_open
+    assert _market_open(datetime(2026, 7, 21, 11, 0, tzinfo=IST))      # Tue midday
+    assert not _market_open(datetime(2026, 7, 21, 8, 0, tzinfo=IST))   # pre-open
+    assert not _market_open(datetime(2026, 7, 21, 16, 0, tzinfo=IST))  # post-close
+    assert not _market_open(datetime(2026, 7, 19, 11, 0, tzinfo=IST))  # Sunday
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))
