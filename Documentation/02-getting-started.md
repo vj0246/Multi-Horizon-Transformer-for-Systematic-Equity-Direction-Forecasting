@@ -24,7 +24,7 @@ are optional and marked as such in the file.
 ## The five-minute path
 
 ```bash
-# 1. Verify everything is correct (32 tests: leakage, costs, metrics, artifacts)
+# 1. Verify everything is correct (39 tests: leakage, costs, metrics, drift, gate)
 python -m pytest tests/test_rigorous.py -q
 
 # 2. Look at the results without retraining anything
@@ -59,6 +59,9 @@ python scripts/save_paper_model.py
 # Step the paper book and rebuild current predictions
 python -m Source.Paper.run --refresh
 python -m Source.Insights.build
+
+# Adaptive audit: drift detection + provenance (trains nothing)
+python -m Source.Adaptive.run
 
 # Rebuild the static site
 cd frontend && npm run build      # -> frontend/out

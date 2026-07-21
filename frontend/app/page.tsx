@@ -1,5 +1,5 @@
 import { data, fmtNum, fmtPct, fmtSigned } from "@/lib/data";
-import { Callout, Panel, Section, Spec, Stat } from "@/components/ui";
+import { Callout, Panel, Section, Stat } from "@/components/ui";
 import {
   AttentionChart,
   CalibrationChart,
@@ -7,6 +7,7 @@ import {
   CSICSeries,
   CSQuintiles,
   DecileChart,
+  DriftTimeline,
   EquityCurve,
   HorizonAUC,
   HorizonIC,
@@ -34,6 +35,7 @@ const NAV = [
   ["crosssection", "Cross-Section"],
   ["signals", "Stock Signals"],
   ["attention", "Attention"],
+  ["adaptive", "Adaptive"],
   ["docs", "Docs"],
   ["method", "Method"],
 ];
@@ -717,6 +719,76 @@ export default function Page() {
         </div>
       </Section>
 
+
+
+      {/* Adaptive retraining */}
+      <Section
+        id="adaptive"
+        eyebrow="Adaptation"
+        title="Retraining without manufacturing an edge"
+        lede="Layers are sized by parameter count against the independent observations their cadence actually delivers - not by clock speed. A week carries ~0.25 independent observations at a 20-day horizon, so weekly gradient updates to a 69,589-parameter backbone would fit noise, not signal."
+      >
+        {(() => {
+          const a = data.adaptive;
+          const reg = a.registry;
+          const rt = a.retrain;
+          const alarms = Object.values(a.drift.detectors)
+            .reduce((n, d) => n + d.n_alarms, 0);
+          return (
+            <>
+              <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <Stat label="Drift alarms" value={String(alarms)}
+                  sub={`over ${a.drift.n_observations} OOS days`} tone="warn" />
+                <Stat label="Recalibrations" value={String(a.recalibration.n_events)}
+                  sub={`${a.recalibration.window_days}d trailing window`} />
+                <Stat label="Champion" value={reg.champion ?? "none"}
+                  sub={`trained through ${reg.champion_cutoff ?? "-"}`} />
+                <Stat label="Trials counted" value={String(reg.n_trials)}
+                  sub="feeds the deflated Sharpe" tone="neutral" />
+              </div>
+
+              <div className="mb-5 grid gap-3 md:grid-cols-4">
+                {[
+                  ["Daily", "Drift detection", "0 params", "monitors only, never retrains"],
+                  ["Daily", "Entry threshold", "0 params", "past-only rolling percentile"],
+                  ["Monthly", "Platt calibration", `~${a.design.decision_layer_params} params`, "trailing window, label-embargoed"],
+                  ["Quarterly", "Backbone refit", `${a.design.backbone_params.toLocaleString()} params`, "purged, embargoed, gated"],
+                ].map(([when, what, params, how]) => (
+                  <Panel key={what} title={what} badge={when}>
+                    <div className="tag text-lg text-accent">{params}</div>
+                    <p className="mt-1 text-xs leading-relaxed text-muted">{how}</p>
+                  </Panel>
+                ))}
+              </div>
+
+              {rt.gate && (
+                <div className="mb-5">
+                  <Callout tone={rt.gate.promote ? "good" : "warn"}
+                    title={`Champion/challenger gate: ${rt.gate.promote ? "PROMOTED" : "REJECTED"}`}>
+                    {String(rt.gate.reason)}. The gate fails closed - a challenger that
+                    cannot be shown to be better is not promoted, and every rejected
+                    challenger still increments the trial count that deflates the Sharpe.
+                  </Callout>
+                </div>
+              )}
+
+              <Panel
+                title="Drift alarms on the live signal"
+                subtitle={`ADWIN + Page-Hinkley over ${a.drift.n_observations} out-of-sample days. Thresholds were calibrated empirically to zero false alarms on stationary input while still catching a 3-sigma shift.`}
+              >
+                <DriftTimeline />
+                <p className="mt-3 text-[11px] leading-relaxed text-muted">
+                  {a.drift.note}
+                </p>
+              </Panel>
+
+              <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted">
+                {reg.note}
+              </p>
+            </>
+          );
+        })()}
+      </Section>
 
       {/* Documentation */}
       <Section

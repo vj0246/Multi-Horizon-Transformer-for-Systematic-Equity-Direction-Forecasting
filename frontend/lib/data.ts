@@ -16,6 +16,7 @@ import crossSection from "@/public/data/cross_section.json";
 import stockSignals from "@/public/data/stock_signals.json";
 import paperTrading from "@/public/data/paper_trading.json";
 import predictions from "@/public/data/predictions.json";
+import adaptive from "@/public/data/adaptive.json";
 
 export interface Summary {
   ticker: string;
@@ -161,6 +162,7 @@ export const data = {
   stockSignals: stockSignals as unknown as StockSignals,
   paperTrading: paperTrading as unknown as PaperTrading,
   predictions: predictions as unknown as Predictions,
+  adaptive: adaptive as unknown as Adaptive,
 };
 
 export interface PaperTrading {
@@ -251,6 +253,37 @@ export interface Predictions {
     oos_days_scored: number;
     multiple_testing: Record<string, number>;
     headline: string;
+    note: string;
+  };
+}
+
+export interface Adaptive {
+  as_of: string;
+  design: {
+    backbone_params: number;
+    decision_layer_params: number;
+    independent_obs_per: Record<string, number>;
+    rationale: string;
+  };
+  drift: {
+    n_observations: number;
+    detectors: Record<string, {
+      n_alarms: number;
+      alarms: { date: string; index: number; mean_before: number | null; mean_after: number | null }[];
+    }>;
+    note: string;
+  };
+  recalibration: { enabled: boolean; window_days: number; n_events: number; note: string };
+  retrain: {
+    enabled: boolean; ran: boolean; embargo_days: number;
+    eval_block: { start: string | null; end: string | null; n_labelled: number };
+    champion: Record<string, unknown> & { version: string; cutoff: string };
+    gate?: Record<string, unknown> & { promote: boolean; reason: string };
+    outcome?: string;
+  };
+  registry: {
+    n_versions: number; n_trials: number;
+    champion: string | null; champion_cutoff: string | null;
     note: string;
   };
 }

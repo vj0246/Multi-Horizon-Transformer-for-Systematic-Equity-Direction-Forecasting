@@ -21,6 +21,7 @@ question.
 | [Results](Documentation/07-results.md) | The actual numbers with confidence intervals |
 | [Instrument Choice](Documentation/08-instrument-choice.md) | Why `^NSEI`, and whether a single stock is better |
 | [Research Gaps](Documentation/09-research-gaps.md) | Literature critique vs what is implemented |
+| [Adaptive Retraining](Documentation/10-adaptive-retraining.md) | Drift detection, model versioning, champion/challenger gate |
 
 ---
 

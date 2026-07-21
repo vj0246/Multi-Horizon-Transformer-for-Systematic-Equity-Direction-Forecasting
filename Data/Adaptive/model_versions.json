@@ -1,0 +1,19 @@
+{
+  "versions": [
+    {
+      "version": "v1-frozen",
+      "train_cutoff": "2023-10-19",
+      "registered_at": "2026-07-21T13:05:08+00:00",
+      "status": "champion",
+      "parent": null,
+      "trial_index": 1,
+      "metrics": {
+        "source": "scripts/save_paper_model.py"
+      },
+      "notes": "initial frozen paper model",
+      "promoted_at": "2026-07-21T13:05:08+00:00",
+      "promotion_reason": "bootstrap: first model in the lineage"
+    }
+  ],
+  "lineage": "index-timing"
+}

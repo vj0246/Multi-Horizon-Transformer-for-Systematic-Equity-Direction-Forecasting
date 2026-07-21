@@ -17,11 +17,12 @@ Every file in the repository, what it does, and how to run it.
 │   ├── Evaluation/             # Metric suite + per-model registry
 │   ├── Paper/                  # Live forward paper trading
 │   ├── Insights/               # Current predictions artifact
+│   ├── Adaptive/               # Drift detection, versioning, gated retraining
 │   ├── Risk/                   # Volatility-targeted sizing
 │   ├── News/                   # Optional sentiment track
 │   └── Api/                    # Read-only FastAPI over artifacts
 ├── scripts/                    # Runnable entry points
-├── tests/test_rigorous.py      # 32 tests
+├── tests/test_rigorous.py      # 39 tests
 ├── Data/                       # Raw + processed data
 ├── frontend/                   # Next.js static showcase site
 └── Documentation/              # You are here
@@ -164,6 +165,25 @@ python -m Source.Insights.build
 2. Never reuse `horizons.json`'s `p_value` for significance. That is a Spearman
    IC p-value over raw overlapping labels. Test AUC against 0.5 with the
    effective-n standard error instead.
+
+## `Source/Adaptive/` — layered retraining
+
+| File | Lines | Contents |
+|------|-------|----------|
+| `drift.py` | 178 | `ADWIN`, `PageHinkley`, `scan()`. Monitor-only, 0 fitted parameters |
+| `versioning.py` | 139 | Version registry, `assert_out_of_sample`, cumulative trial count |
+| `recalibrate.py` | 79 | Platt refit on a label-embargoed trailing window (~40 params) |
+| `retrain.py` | 179 | `purged_indices`, `evaluate_block`, `gate` (fails closed) |
+| `run.py` | 275 | Runs all four layers -> `adaptive.json` |
+
+```bash
+python -m Source.Adaptive.run              # audit; trains nothing
+python -m Source.Adaptive.run --retrain    # train a challenger, run the gate
+```
+
+Layers are sized by **parameter count against independent observations**, not by
+clock alone. See [Adaptive Retraining](10-adaptive-retraining.md) for the full
+rationale and the gate bug it caught in its own first run.
 
 ## `Source/Risk/sizing.py`
 

@@ -131,13 +131,3 @@ export function Callout({
     </div>
   );
 }
-
-/** Compact label/value row for dense specification lists. */
-export function Spec({ k, v }: { k: string; v: ReactNode }) {
-  return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-edge/40 py-1.5 last:border-0">
-      <span className="text-xs text-muted">{k}</span>
-      <span className="tag text-right text-xs text-white">{v}</span>
-    </div>
-  );
-}

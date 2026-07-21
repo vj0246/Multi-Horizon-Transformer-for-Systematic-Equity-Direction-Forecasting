@@ -528,6 +528,101 @@ def test_multiple_testing_reject_flags_match_counts():
     assert sum(tied["bh_reject"]) == tied["n_significant_bh"]
 
 
+# --------------------------------------------------------------- adaptive layer
+def test_drift_detectors_fire_on_shift_and_stay_quiet_when_stationary():
+    """A detector that never fires is useless; one that always fires is worse."""
+    import numpy as np
+    from Source.Adaptive.drift import ADWIN, PageHinkley
+
+    rng = np.random.default_rng(0)
+    stationary = list(rng.normal(0, 1, 600))
+    shifted = list(rng.normal(0, 1, 300)) + list(rng.normal(3, 1, 300))
+
+    for det_cls in (ADWIN, PageHinkley):
+        quiet = det_cls()
+        assert not any(quiet.update(x) for x in stationary),             f"{det_cls.__name__} alarmed on stationary data"
+        loud = det_cls()
+        assert any(loud.update(x) for x in shifted),             f"{det_cls.__name__} missed a 3-sigma level shift"
+
+
+def test_purged_indices_enforce_embargo():
+    from Source.Adaptive.retrain import purged_indices
+    n, eval_start, embargo = 1000, 800, 20
+    train, ev = purged_indices(n, train_end=eval_start, eval_start=eval_start,
+                               eval_end=n, embargo=embargo)
+    assert train[-1] <= eval_start - embargo - 1      # gap actually present
+    assert ev[0] == eval_start and ev[-1] == n - 1
+    with pytest.raises(ValueError):
+        purged_indices(n, eval_start, eval_start, n, embargo=-1)
+
+
+def test_gate_refuses_when_block_cannot_resolve_a_difference():
+    """The bug this encodes: a fixed 0.01 margin promotes noise when the
+    evaluation block holds ~5 independent observations and SE(AUC) ~ 0.25."""
+    from Source.Adaptive.retrain import gate
+    cfg = {"adaptive": {"retrain": {"min_improvement": 0.01, "promote_z": 1.96,
+                                    "min_effective_n": 30,
+                                    "promote_requires_dsr": False}}}
+    champ = {"mean_auc": 0.4466, "mean_auc_se": 0.25, "effective_n": 5.3}
+    chal = {"mean_auc": 0.5251, "mean_auc_se": 0.25, "effective_n": 5.3}
+    v = gate(champ, chal, cfg, n_trials=2)
+    assert v["promote"] is False
+    assert "independent observations" in v["reason"]
+
+
+def test_gate_requires_improvement_to_exceed_standard_error():
+    from Source.Adaptive.retrain import gate
+    cfg = {"adaptive": {"retrain": {"min_improvement": 0.01, "promote_z": 1.96,
+                                    "min_effective_n": 5,
+                                    "promote_requires_dsr": False}}}
+    champ = {"mean_auc": 0.50, "mean_auc_se": 0.05, "effective_n": 100}
+    small = gate(champ, {"mean_auc": 0.52, "mean_auc_se": 0.05, "effective_n": 100},
+                 cfg, n_trials=1)
+    assert small["promote"] is False                  # 0.02 < 1.96 * sqrt(2)*0.05
+    big = gate(champ, {"mean_auc": 0.70, "mean_auc_se": 0.05, "effective_n": 100},
+               cfg, n_trials=1)
+    assert big["promote"] is True
+
+
+def test_gate_fails_closed_when_dsr_cannot_be_evaluated():
+    """promote_requires_dsr must refuse, not silently skip, without returns."""
+    from Source.Adaptive.retrain import gate
+    cfg = {"adaptive": {"retrain": {"min_improvement": 0.01, "promote_z": 1.96,
+                                    "min_effective_n": 5,
+                                    "promote_requires_dsr": True}}}
+    champ = {"mean_auc": 0.50, "mean_auc_se": 0.05, "effective_n": 100}
+    chal = {"mean_auc": 0.90, "mean_auc_se": 0.05, "effective_n": 100}
+    v = gate(champ, chal, cfg, n_trials=1, net_returns=None)
+    assert v["promote"] is False and "could not be evaluated" in v["reason"]
+
+
+def test_versioning_rejects_in_sample_prediction():
+    from Source.Adaptive.versioning import assert_out_of_sample
+    entry = {"version": "vX", "train_cutoff": "2024-01-31"}
+    assert_out_of_sample(entry, "2024-02-01")                 # after cutoff: fine
+    for bad in ("2024-01-31", "2023-12-01"):
+        with pytest.raises(ValueError):
+            assert_out_of_sample(entry, bad)
+
+
+def test_recalibration_window_respects_label_embargo():
+    """Labels for horizon h resolve h days late, so the fit window must end
+    horizon_max before the prediction index - otherwise calibration is fit on
+    the very move being predicted."""
+    import numpy as np
+    from Source.Adaptive.recalibrate import recalibrate_at
+    rng = np.random.default_rng(1)
+    n, H = 600, 20
+    logits = rng.normal(size=(n, H))
+    labels = (rng.random((n, H)) > 0.5).astype(float)
+    cfg = {"adaptive": {"recalibration": {"window_days": 250, "min_window": 120}}}
+    ev = recalibrate_at(logits, labels, t=500, cfg=cfg, horizon_max=H)
+    assert ev["fit_end_index"] == 500 - H
+    assert ev["label_embargo_days"] == H
+    assert ev["effective_n"] == pytest.approx(ev["n_samples"] / H)
+    assert recalibrate_at(logits, labels, t=50, cfg=cfg, horizon_max=H) is None
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

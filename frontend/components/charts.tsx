@@ -693,3 +693,66 @@ export function PredictionTable() {
     </div>
   );
 }
+
+/** Drift alarms on the live signal, drawn against the signal's own level.
+ *
+ * The point of the chart is the SIZE of each shift, not the count of alarms: a
+ * detector firing is only interesting if the level actually moved, so each alarm
+ * is drawn as a before -> after pair rather than a bare marker.
+ */
+export function DriftTimeline() {
+  const a = data.adaptive;
+  const rows = Object.entries(a.drift.detectors).flatMap(([name, det]) =>
+    det.alarms
+      .filter((x) => x.mean_before !== null && x.mean_after !== null)
+      .map((x) => ({
+        name,
+        date: x.date,
+        before: x.mean_before as number,
+        after: x.mean_after as number,
+        shift: (x.mean_after as number) - (x.mean_before as number),
+      }))
+  );
+  rows.sort((p, q) => (p.date < q.date ? -1 : 1));
+  const maxAbs = Math.max(...rows.map((r) => Math.abs(r.shift)), 0.5);
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[560px] border-collapse text-xs">
+        <thead>
+          <tr className="border-b border-edge text-[10px] uppercase tracking-wider text-muted">
+            <th className="py-2 pr-3 text-left font-medium">Date</th>
+            <th className="py-2 pr-3 text-left font-medium">Detector</th>
+            <th className="py-2 pr-3 text-right font-medium">Level before</th>
+            <th className="py-2 pr-3 text-right font-medium">After</th>
+            <th className="py-2 text-center font-medium">Shift in signal level</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i} className="border-b border-edge/40">
+              <td className="py-1.5 pr-3 tag text-muted">{r.date}</td>
+              <td className="py-1.5 pr-3 text-muted">{r.name.replace("_", "-")}</td>
+              <td className="py-1.5 pr-3 text-right tag text-muted">{r.before.toFixed(2)}</td>
+              <td className="py-1.5 pr-3 text-right tag text-white">{r.after.toFixed(2)}</td>
+              <td className="py-1.5">
+                <div className="relative h-3 w-full min-w-[140px]">
+                  <div className="absolute left-1/2 top-0 h-full w-px bg-muted/40" />
+                  <div
+                    className={`absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full ${
+                      r.shift >= 0 ? "bg-accent" : "bg-danger"
+                    }`}
+                    style={{
+                      left: r.shift >= 0 ? "50%" : `${50 - (Math.abs(r.shift) / maxAbs) * 50}%`,
+                      width: `${(Math.abs(r.shift) / maxAbs) * 50}%`,
+                    }}
+                  />
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

@@ -271,3 +271,40 @@ risk:
 output:
   artifacts_dir: "frontend/public/data"
   model_dir: "Data/Processed_Data"
+
+# ---------------------------------------------------------------------------
+# Adaptive retraining (Source/Adaptive/). Layered by parameter count, not just
+# by clock: the number of parameters a layer updates must be supportable by the
+# number of INDEPENDENT observations that arrive in its cadence. At h=20 a week
+# of daily data carries ~0.25 independent observations, so gradient-updating the
+# ~70k-parameter backbone weekly would fit noise. Fast layers therefore touch
+# few or zero fitted parameters; only the slow layer refits the network.
+adaptive:
+  # --- fast layer: monitor only, changes no parameters ---
+  drift:
+    enabled: true
+    detectors: [adwin, page_hinkley]
+    adwin_delta: 0.002          # ADWIN confidence; smaller = fewer false alarms
+    ph_delta: 0.005             # Page-Hinkley slack (allowed drift before counting)
+    ph_lambda: 80.0             # PH alarm threshold, in standardised units;
+                                # smallest value with 0 false alarms on stationary
+                                # N(0,1) and 40/40 detection of a 3-sigma shift
+    min_samples: 60             # never alarm before this many observations
+
+  # --- mid layer: decision-layer only (~40 params), trailing window ---
+  recalibration:
+    enabled: true
+    every_days: 21              # ~monthly
+    window_days: 250            # trailing window the Platt fit uses (~12 indep obs)
+    min_window: 120             # refuse to recalibrate on less than this
+
+  # --- slow layer: full backbone refit ---
+  retrain:
+    enabled: true
+    every_days: 63              # ~quarterly
+    embargo_days: 20            # gap after train cutoff; must be >= max horizon
+    eval_days: 126              # held-out block the champion/challenger duel uses
+    min_improvement: 0.01       # floor on the AUC gain; the real bar is z x SE
+    promote_z: 1.96             # gain must also exceed this many standard errors
+    min_effective_n: 30         # refuse to judge on fewer independent observations
+    promote_requires_dsr: true  # ...and survive the deflated-Sharpe trial count
