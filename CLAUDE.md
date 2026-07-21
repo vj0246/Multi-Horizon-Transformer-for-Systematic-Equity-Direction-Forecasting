@@ -124,7 +124,10 @@ An h-day forward label sampled daily overlaps its neighbour h-fold, so independe
 - Round-trip by instrument: **futures 9.58bps** (what the index track uses), intraday 10.47, options 25.53, delivery 28.22. Charged round-trip on every trade.
 
 ## Env Vars (names only)
+- `GROQ_API_KEY` — optional LLM commentary (`Source/Advisor/`, provider `groq` by default). Read from the env or `.env.local`. Without it the journal writes deterministic template text, so nothing breaks.
+- `ANTHROPIC_API_KEY` — same layer, only if `advisor.provider: anthropic`.
 - `NEWSAPI_KEY` — only for the optional Source/News sentiment pipeline. Not needed for the model or site.
+- Never read, print or echo the values. `.env*` is gitignored by three separate rules; keep it that way.
 
 ## Gotchas
 - Raw yfinance CSV has 3 header rows (Price/Ticker/Date). `data_loader.load_ohlcv` strips them + drops the duplicate adj-close column.

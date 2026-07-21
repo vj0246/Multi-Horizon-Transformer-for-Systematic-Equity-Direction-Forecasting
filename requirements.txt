@@ -21,6 +21,12 @@ lightgbm
 fastapi
 uvicorn
 
+# ---- optional: LLM commentary, OFF by default (Source/Advisor/) ----
+# Needs GROQ_API_KEY (or ANTHROPIC_API_KEY) in the env or .env.local. Without a
+# key the journal writes deterministic template text, so this is never required.
+groq
+# anthropic               # uncomment to use provider: anthropic
+
 # ---- optional: news sentiment track, OFF by default (Source/News/) ----
 # NewsAPI only serves ~30 days, so this cannot be backfilled - see Documentation/03
 requests

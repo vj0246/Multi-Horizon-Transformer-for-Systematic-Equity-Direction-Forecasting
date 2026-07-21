@@ -21,7 +21,10 @@ import json
 import os
 import re
 import time
+from pathlib import Path
 from typing import Callable
+
+ROOT = Path(__file__).resolve().parents[2]
 
 MAX_INPUT_CHARS = 12000
 MAX_TOKENS = 900
@@ -40,6 +43,29 @@ _INJECTION = re.compile(
 
 class AdvisorError(RuntimeError):
     pass
+
+
+def _load_env_file() -> None:
+    """Read API keys from .env.local into the environment if not already set.
+
+    Only the two key NAMES below are looked for and nothing is ever logged or
+    echoed - the value goes straight into os.environ. Real environment variables
+    always win, so this never overrides a deliberately exported key.
+    """
+    path = ROOT / ".env.local"
+    if not path.exists():
+        return
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, _, v = line.partition("=")
+            k = k.strip()
+            if k in ("GROQ_API_KEY", "ANTHROPIC_API_KEY") and not os.environ.get(k):
+                os.environ[k] = v.strip().strip("'\"")
+    except OSError:
+        pass                                          # unreadable -> stay unset
 
 
 def screen_input(text: str) -> str:
@@ -74,10 +100,12 @@ def complete(system: str, user: str, provider: str = "groq",
     """One completion. Returns {text, provider, model, usage}."""
     screen_input(user)
 
+    _load_env_file()
+
     if provider == "groq":
         key = os.environ.get("GROQ_API_KEY")
         if not key:
-            raise AdvisorError("GROQ_API_KEY not set")
+            raise AdvisorError("GROQ_API_KEY not set (env or .env.local)")
         from groq import Groq
         c = Groq(api_key=key, timeout=TIMEOUT_S)
         mdl = model or "llama-3.3-70b-versatile"
@@ -92,7 +120,7 @@ def complete(system: str, user: str, provider: str = "groq",
     if provider == "anthropic":
         key = os.environ.get("ANTHROPIC_API_KEY")
         if not key:
-            raise AdvisorError("ANTHROPIC_API_KEY not set")
+            raise AdvisorError("ANTHROPIC_API_KEY not set (env or .env.local)")
         import anthropic
         c = anthropic.Anthropic(api_key=key, timeout=TIMEOUT_S)
         mdl = model or "claude-sonnet-5"
