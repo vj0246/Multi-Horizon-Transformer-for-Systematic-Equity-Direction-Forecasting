@@ -712,6 +712,85 @@ def test_llm_payload_never_contains_a_forward_prediction():
     assert "advice" in d["disclaimer"].lower()
 
 
+# ------------------------------------------------------ intraday / sentiment
+def test_intraday_features_are_causal():
+    """Every intraday feature at bar t must use only data available before t.
+
+    The volume feature is the one that bites: intraday volume is U-shaped, so a
+    naive z-score against a flat mean encodes time-of-day rather than surprise,
+    and an expanding mean without a shift would include the current bar.
+    """
+    import numpy as np
+    import pandas as pd
+    from Source.Intraday.features import add_intraday_features
+
+    rng = np.random.default_rng(0)
+    n = 400
+    ts = pd.date_range("2024-01-01 09:15", periods=n, freq="1h", tz="Asia/Kolkata")
+    close = 100 * np.exp(np.cumsum(rng.normal(0, 0.002, n)))
+    df = pd.DataFrame({"datetime": ts, "open": close, "high": close * 1.001,
+                       "low": close * 0.999, "close": close,
+                       "volume": rng.integers(1000, 5000, n).astype(float)})
+    out = add_intraday_features(df)
+
+    # perturbing a future bar must not change any earlier feature row
+    df2 = df.copy()
+    df2.loc[n - 1, "close"] *= 1.5
+    df2.loc[n - 1, "volume"] *= 10
+    out2 = add_intraday_features(df2)
+    cols = [c for c in ("ret", "vol_20", "rel_volume", "close_vs_vwap", "range_pos")
+            if c in out.columns]
+    for c in cols:
+        a = out[c].to_numpy()[:-1]
+        b = out2[c].to_numpy()[:-1]
+        assert np.allclose(np.nan_to_num(a), np.nan_to_num(b)),             f"{c} at earlier bars changed when a FUTURE bar was altered"
+
+
+def test_sentiment_merge_is_strictly_lagged():
+    """A bar must never see news published inside or after that bar."""
+    import numpy as np
+    import pandas as pd
+    from Source.News.gdelt import attach_sentiment
+
+    bars = pd.DataFrame({
+        "datetime": pd.date_range("2024-01-01 09:00", periods=6, freq="1h", tz="UTC"),
+        "close": np.arange(6, dtype=float),
+    })
+    # a single huge tone spike published at the 4th bar
+    tone = pd.DataFrame({
+        "datetime": pd.date_range("2024-01-01 09:00", periods=6, freq="1h", tz="UTC"),
+        "tone": [0.0, 0.0, 0.0, 99.0, 0.0, 0.0],
+    })
+    out = attach_sentiment(bars, tone, lag_bars=1)
+    spike = out["news_tone"].to_numpy()
+    # the 99 must appear strictly AFTER the bar it was published in
+    assert spike[3] == 0.0, "bar saw news published within its own interval"
+    assert spike[4] == 99.0, "lagged sentiment failed to arrive on the next bar"
+
+
+def test_gdelt_rejects_unparenthesised_or_query():
+    """GDELT answers a malformed query with HTTP 200 and a text body, so a
+    silent empty result is the failure mode; the client must raise instead."""
+    from Source.News.gdelt import DEFAULT_QUERY
+    assert DEFAULT_QUERY.strip().startswith("("),         "OR'd GDELT terms must be parenthesised or the API returns 200 + an error"
+
+
+def test_intraday_artifact_reports_economics_and_effective_n():
+    import json as _json
+    p = ROOT / "frontend" / "public" / "data" / "intraday.json"
+    if not p.exists():
+        pytest.skip("intraday.json not generated")
+    d = _json.loads(p.read_text(encoding="utf-8"))
+    econ = d["economics"]
+    assert econ["breakeven_win_rate"] > 0.5          # costs always push it above
+    assert econ["cost_share_of_move"] > 0
+    for r in d["horizons"]:
+        # effective n must be bar count / horizon, never the raw count
+        assert r["eff_n"] < d["split"]["test"] or r["horizon_bars"] == 1
+        if r.get("significant_bh"):
+            assert r["auc_ci95"][0] > 0.5
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

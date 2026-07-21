@@ -19,6 +19,7 @@ Read in order if you are new:
 | 9 | [Research Gaps](09-research-gaps.md) | Literature critique mapped to what is and is not implemented |
 | 10 | [Adaptive Retraining](10-adaptive-retraining.md) | Drift detection, versioning, and the champion/challenger gate |
 | 11 | [Journal & Advisor](11-journal-and-advisor.md) | P&L attribution, why not RL, the bandit, and the LLM guardrails |
+| 12 | [Intraday & Sentiment](12-intraday-and-sentiment.md) | Why hourly not 5-min, the cost/power tradeoff, GDELT news tone |
 
 ## The one-paragraph summary
 

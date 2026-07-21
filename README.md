@@ -23,6 +23,7 @@ question.
 | [Research Gaps](Documentation/09-research-gaps.md) | Literature critique vs what is implemented |
 | [Adaptive Retraining](Documentation/10-adaptive-retraining.md) | Drift detection, model versioning, champion/challenger gate |
 | [Journal & Advisor](Documentation/11-journal-and-advisor.md) | P&L attribution, why not RL, the bandit, LLM guardrails |
+| [Intraday & Sentiment](Documentation/12-intraday-and-sentiment.md) | Why hourly not 5-min, cost vs power, GDELT news tone |
 
 ---
 

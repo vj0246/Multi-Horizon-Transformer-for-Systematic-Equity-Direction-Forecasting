@@ -1,0 +1,281 @@
+{
+  "generated_at": "2026-07-21T17:01:58+00:00",
+  "interval": "1h",
+  "horizon_bars": 20,
+  "horizon_days_approx": 4.26,
+  "bars_per_day": 4.69,
+  "n_bars": 4997,
+  "n_windows": 4917,
+  "split": {
+    "train": 3441,
+    "val": 738,
+    "test": 738
+  },
+  "features": [
+    "ret",
+    "ret_5",
+    "ret_20",
+    "vol_20",
+    "vol_60",
+    "range_pos",
+    "gap",
+    "gap_z",
+    "bar_of_day",
+    "minutes_from_open",
+    "rel_volume",
+    "close_vs_vwap"
+  ],
+  "use_sentiment": false,
+  "mean_auc": 0.5031254090750121,
+  "n_significant_bh": 0,
+  "horizons": [
+    {
+      "horizon_bars": 1,
+      "auc": 0.5173692714453584,
+      "auc_se": 0.021250687900673894,
+      "auc_ci95": [
+        0.4757179231600375,
+        0.5590206197306792
+      ],
+      "eff_n": 738.0,
+      "p_value": 0.20686392877173887,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 2,
+      "auc": 0.4766956623956742,
+      "auc_se": 0.030053010371073937,
+      "auc_ci95": [
+        0.41779176206836927,
+        0.535599562722979
+      ],
+      "eff_n": 369.0,
+      "p_value": 0.7809604536790511,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 3,
+      "auc": 0.49532140548798403,
+      "auc_se": 0.0368854322051646,
+      "auc_ci95": [
+        0.42302595836586143,
+        0.5676168526101066
+      ],
+      "eff_n": 246.0,
+      "p_value": 0.5504669786704002,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 4,
+      "auc": 0.5070910786812283,
+      "auc_se": 0.042616637209951944,
+      "auc_ci95": [
+        0.42356246974972245,
+        0.5906196876127341
+      ],
+      "eff_n": 184.5,
+      "p_value": 0.433924131393457,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 5,
+      "auc": 0.48361932185461604,
+      "auc_se": 0.04766308936702944,
+      "auc_ci95": [
+        0.3901996666952383,
+        0.5770389770139938
+      ],
+      "eff_n": 147.6,
+      "p_value": 0.6344551628521311,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 6,
+      "auc": 0.49795756435876337,
+      "auc_se": 0.05227932605576408,
+      "auc_ci95": [
+        0.3954900852894658,
+        0.6004250434280609
+      ],
+      "eff_n": 123.0,
+      "p_value": 0.5155818134545537,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 7,
+      "auc": 0.5001138391709571,
+      "auc_se": 0.05649587114691321,
+      "auc_ci95": [
+        0.38938193172300717,
+        0.610845746618907
+      ],
+      "eff_n": 105.42857142857143,
+      "p_value": 0.4991961319153774,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 8,
+      "auc": 0.5063528202115158,
+      "auc_se": 0.060429845530113616,
+      "auc_ci95": [
+        0.38791032297249317,
+        0.6247953174505385
+      ],
+      "eff_n": 92.25,
+      "p_value": 0.45813743981589305,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 9,
+      "auc": 0.5009703028521023,
+      "auc_se": 0.06417485582376696,
+      "auc_ci95": [
+        0.37518758543751907,
+        0.6267530202666856
+      ],
+      "eff_n": 82.0,
+      "p_value": 0.4939683528785527,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 10,
+      "auc": 0.4900508853461968,
+      "auc_se": 0.06767043954855445,
+      "auc_ci95": [
+        0.3574168238310301,
+        0.6226849468613636
+      ],
+      "eff_n": 73.8,
+      "p_value": 0.558443088004132,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 11,
+      "auc": 0.5090982671719215,
+      "auc_se": 0.07108111797480947,
+      "auc_ci95": [
+        0.369779275941295,
+        0.648417258402548
+      ],
+      "eff_n": 67.0909090909091,
+      "p_value": 0.449075131862292,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 12,
+      "auc": 0.5465145362523541,
+      "auc_se": 0.07398047909260665,
+      "auc_ci95": [
+        0.4015127972308451,
+        0.6915162752738632
+      ],
+      "eff_n": 61.5,
+      "p_value": 0.2647594226912868,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 13,
+      "auc": 0.515131888836552,
+      "auc_se": 0.07737371814241162,
+      "auc_ci95": [
+        0.3634794012774253,
+        0.6667843763956788
+      ],
+      "eff_n": 56.76923076923077,
+      "p_value": 0.4224738229807472,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 14,
+      "auc": 0.5121737980486658,
+      "auc_se": 0.08026827928562746,
+      "auc_ci95": [
+        0.354847970648836,
+        0.6694996254484956
+      ],
+      "eff_n": 52.714285714285715,
+      "p_value": 0.4397260266542935,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 15,
+      "auc": 0.4843016378024497,
+      "auc_se": 0.08309457982528912,
+      "auc_ci95": [
+        0.32143626134488307,
+        0.6471670142600163
+      ],
+      "eff_n": 49.2,
+      "p_value": 0.5749228737479734,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 16,
+      "auc": 0.4893944300518135,
+      "auc_se": 0.08596733825818792,
+      "auc_ci95": [
+        0.3208984470657652,
+        0.6578904130378618
+      ],
+      "eff_n": 46.125,
+      "p_value": 0.5490919281147121,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 17,
+      "auc": 0.5007724223163842,
+      "auc_se": 0.0887050470978585,
+      "auc_ci95": [
+        0.32691053000458153,
+        0.6746343146281868
+      ],
+      "eff_n": 43.411764705882355,
+      "p_value": 0.49652615001984235,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 18,
+      "auc": 0.507568373796444,
+      "auc_se": 0.0915255462918104,
+      "auc_ci95": [
+        0.3281783030644957,
+        0.6869584445283924
+      ],
+      "eff_n": 41.0,
+      "p_value": 0.46704846928424837,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 19,
+      "auc": 0.5124394994687758,
+      "auc_se": 0.09405513631511912,
+      "auc_ci95": [
+        0.3280914322911423,
+        0.6967875666464092
+      ],
+      "eff_n": 38.8421052631579,
+      "p_value": 0.4473903014686229,
+      "significant_bh": false
+    },
+    {
+      "horizon_bars": 20,
+      "auc": 0.5095711759504863,
+      "auc_se": 0.09649275230695681,
+      "auc_ci95": [
+        0.32044538142885093,
+        0.6986969704721216
+      ],
+      "eff_n": 36.9,
+      "p_value": 0.4604934610459078,
+      "significant_bh": false
+    }
+  ],
+  "economics": {
+    "roundtrip_cost_bps": 9.5759,
+    "typical_move_bps": 177.69476067039722,
+    "cost_share_of_move": 0.05388960239386103,
+    "breakeven_win_rate": 0.5269448011969305,
+    "note": "An edge must clear the break-even win rate to be tradable, not merely clear 0.50. Statistical significance and profitability are separate bars and both must be passed."
+  },
+  "why_this_configuration": "1h bars held 20 bars (~4.3 days) gives ~37 independent observations at the primary horizon, against ~32 on the daily track. Sampling finer while keeping a 20-DAY horizon would instead REDUCE independent observations to ~5 - frequency and horizon must move together."
+}
