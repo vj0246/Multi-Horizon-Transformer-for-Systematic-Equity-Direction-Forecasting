@@ -791,6 +791,50 @@ def test_intraday_artifact_reports_economics_and_effective_n():
             assert r["auc_ci95"][0] > 0.5
 
 
+def test_gdelt_network_errors_surface_as_runtimeerror():
+    """A raw requests exception escaping _get once discarded a partially
+    completed backfill: fetch_range only catches RuntimeError, so a ReadTimeout
+    killed the whole run and threw away every chunk already fetched."""
+    import requests
+    from unittest import mock
+    from Source.News import gdelt
+
+    with mock.patch.object(gdelt.requests, "get",
+                           side_effect=requests.exceptions.ReadTimeout("boom")),          mock.patch.object(gdelt.time, "sleep"):          # no real backoff in tests
+        with pytest.raises(RuntimeError):
+            gdelt._get({"query": "x"})
+
+
+def test_gdelt_partial_progress_is_saved_and_resumed(tmp_path, monkeypatch):
+    """Every successful chunk must hit disk before the next request, so a later
+    failure cannot discard earlier work."""
+    import pandas as pd
+    from datetime import datetime, timezone
+    from Source.News import gdelt
+
+    out = tmp_path / "tone.csv"
+    monkeypatch.setattr(gdelt, "OUT", out)
+    monkeypatch.setattr(gdelt.time, "sleep", lambda *_: None)
+
+    calls = {"n": 0}
+
+    def fake_fetch(start, end, query=None):
+        calls["n"] += 1
+        if calls["n"] == 2:                              # second chunk explodes
+            raise RuntimeError("simulated 429 storm")
+        return pd.DataFrame({"datetime": [pd.Timestamp(start)],
+                             "tone": [1.5]})
+
+    monkeypatch.setattr(gdelt, "fetch_tone", fake_fetch)
+    start = datetime(2024, 1, 1, tzinfo=timezone.utc)
+    end = datetime(2024, 4, 1, tzinfo=timezone.utc)
+    gdelt.fetch_range(start, end, chunk_days=30, pause_s=0, resume=False)
+
+    assert out.exists(), "no data was persisted despite a successful first chunk"
+    saved = pd.read_csv(out)
+    assert len(saved) >= 1, "successful chunks were lost when a later chunk failed"
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

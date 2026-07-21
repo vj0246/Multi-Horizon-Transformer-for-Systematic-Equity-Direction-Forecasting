@@ -9,14 +9,20 @@ adding one.
 GDELT DOC 2.0 solves exactly that gap:
   - free, no API key
   - global news coverage including Indian outlets
-  - history back to 2017 at 15-minute resolution
+  - history back to 2017
   - `timelinetone` returns an average tone series, which is what we want -
     per-article scoring is unnecessary when the target is a per-bar aggregate
 
-Two operational quirks, handled here rather than left to callers:
-  1. It rate-limits aggressively (HTTP 429) with no documented budget, so every
-     call goes through bounded exponential backoff.
-  2. OR'd query terms MUST be parenthesised or the API returns a plain-text
+Three operational realities, handled here rather than left to callers:
+  1. RESOLUTION SCALES WITH THE WINDOW. A 60-day request returns ~60 points, i.e.
+     DAILY tone, not 15-minute. Finer resolution needs smaller `chunk_days`,
+     which means proportionally more requests - and see (2). Daily tone is
+     sufficient for the daily track; the hourly track forward-fills it.
+  2. It rate-limits aggressively (HTTP 429) with no documented budget, so a
+     730-day backfill will usually NOT complete in one pass. Every chunk is
+     therefore saved as it arrives and `resume` skips what is already on disk:
+     run the command repeatedly to fill gaps rather than expecting one clean run.
+  3. OR'd query terms MUST be parenthesised or the API returns a plain-text
      error with HTTP 200 - a malformed query looks like a successful empty
      result unless you check.
 
@@ -47,12 +53,24 @@ TIMEOUT_S = 45
 
 
 def _get(params: dict) -> dict:
-    """One GDELT call with backoff. Raises on a persistent failure."""
+    """One GDELT call with backoff. Raises RuntimeError on persistent failure.
+
+    Network faults (read timeout, connection reset) are retried like a 429 and
+    then re-raised AS RuntimeError, so callers have exactly one exception type to
+    handle. Letting a raw requests exception escape here once cost a partially
+    completed backfill.
+    """
     delay = 5.0
     last = None
     for attempt in range(MAX_RETRIES):
-        r = requests.get(API, params=params, timeout=TIMEOUT_S,
-                         headers={"User-Agent": "mht-research/1.0"})
+        try:
+            r = requests.get(API, params=params, timeout=TIMEOUT_S,
+                             headers={"User-Agent": "mht-research/1.0"})
+        except requests.RequestException as e:
+            last = type(e).__name__
+            time.sleep(delay)
+            delay *= 1.8
+            continue
         if r.status_code == 200:
             body = r.text.lstrip()
             if not body.startswith("{"):
@@ -90,26 +108,67 @@ def fetch_tone(start: datetime, end: datetime, query: str = DEFAULT_QUERY) -> pd
     return df.sort_values("datetime").reset_index(drop=True)
 
 
+def _merge_save(new: pd.DataFrame) -> pd.DataFrame:
+    """Merge new points into the CSV on disk and persist. Never loses prior work."""
+    frames = [new]
+    if OUT.exists():
+        frames.append(pd.read_csv(OUT, parse_dates=["datetime"]))
+    df = (pd.concat(frames, ignore_index=True)
+          .dropna(subset=["datetime"])
+          .drop_duplicates("datetime")
+          .sort_values("datetime")
+          .reset_index(drop=True))
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUT, index=False)
+    return df
+
+
 def fetch_range(start: datetime, end: datetime, query: str = DEFAULT_QUERY,
-                chunk_days: int = 60, pause_s: float = 2.0) -> pd.DataFrame:
-    """Walk a long span in chunks, because GDELT truncates wide windows."""
-    out = []
+                chunk_days: int = 60, pause_s: float = 5.0,
+                resume: bool = True) -> pd.DataFrame:
+    """Walk a long span in chunks, saving after every chunk.
+
+    GDELT rate-limits hard and unpredictably, so a 730-day backfill will usually
+    NOT complete in one pass. Two properties make that a non-problem:
+
+      - every successful chunk is written to disk immediately, so a failure
+        later never discards earlier work
+      - `resume` skips chunks already covered on disk, so re-running the command
+        fills the gaps instead of starting over
+
+    Run it a few times rather than expecting one clean pass.
+    """
+    have = set()
+    if resume and OUT.exists():
+        prior = pd.read_csv(OUT, parse_dates=["datetime"])
+        have = set(pd.to_datetime(prior["datetime"], utc=True).dt.date)
+        print(f"  resuming: {len(have)} days already on disk")
+
     cur = start
+    total_new = 0
     while cur < end:
         stop = min(cur + timedelta(days=chunk_days), end)
+        span_days = {(cur + timedelta(days=i)).date()
+                     for i in range((stop - cur).days + 1)}
+        if resume and span_days and span_days <= have:
+            print(f"  {cur:%Y-%m-%d} -> {stop:%Y-%m-%d}: already covered")
+            cur = stop
+            continue
         try:
             part = fetch_tone(cur, stop, query)
             if not part.empty:
-                out.append(part)
-            print(f"  {cur:%Y-%m-%d} -> {stop:%Y-%m-%d}: {len(part)} points")
+                _merge_save(part)
+                total_new += len(part)
+            print(f"  {cur:%Y-%m-%d} -> {stop:%Y-%m-%d}: {len(part)} points (saved)")
         except RuntimeError as e:
             print(f"  {cur:%Y-%m-%d} -> {stop:%Y-%m-%d}: skipped ({e})")
         cur = stop
         time.sleep(pause_s)                      # be a good citizen; it rate-limits
-    if not out:
-        return pd.DataFrame(columns=["datetime", "tone"])
-    return (pd.concat(out).drop_duplicates("datetime")
-            .sort_values("datetime").reset_index(drop=True))
+
+    print(f"  {total_new} new points this pass")
+    if OUT.exists():
+        return pd.read_csv(OUT, parse_dates=["datetime"])
+    return pd.DataFrame(columns=["datetime", "tone"])
 
 
 def attach_sentiment(bars: pd.DataFrame, tone: pd.DataFrame, *,
@@ -152,18 +211,28 @@ def main():
     ap = argparse.ArgumentParser(description="Backfill GDELT news tone.")
     ap.add_argument("--days", type=int, default=730, help="how far back to fetch")
     ap.add_argument("--query", default=DEFAULT_QUERY)
+    ap.add_argument("--chunk-days", type=int, default=60,
+                    help="smaller chunks = finer tone resolution, more requests")
+    ap.add_argument("--no-resume", action="store_true",
+                    help="refetch everything instead of filling gaps")
     args = ap.parse_args()
 
     end = datetime.now(timezone.utc)
     start = end - timedelta(days=args.days)
     print(f"GDELT tone {start:%Y-%m-%d} -> {end:%Y-%m-%d}")
-    df = fetch_range(start, end, args.query)
+    df = fetch_range(start, end, args.query, chunk_days=args.chunk_days,
+                     resume=not args.no_resume)
     if df.empty:
         raise SystemExit("no data returned - check the query parenthesisation")
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(OUT, index=False)
-    print(f"{len(df)} points -> {OUT}")
-    print(f"tone mean {df['tone'].mean():+.3f}  sd {df['tone'].std():.3f}")
+    span = (df["datetime"].max() - df["datetime"].min()).days or 1
+    print(f"{len(df)} points on disk -> {OUT}")
+    print(f"  {df['datetime'].min():%Y-%m-%d} -> {df['datetime'].max():%Y-%m-%d} "
+          f"({len(df)/span:.2f} points/day)")
+    print(f"  tone mean {df['tone'].mean():+.3f}  sd {df['tone'].std():.3f}")
+    covered = df["datetime"].dt.date.nunique()
+    if covered < args.days * 0.9:
+        print(f"  NOTE: {covered}/{args.days} days covered. GDELT rate-limits hard; "
+              "re-run this command to fill the gaps (it resumes).")
 
 
 if __name__ == "__main__":
