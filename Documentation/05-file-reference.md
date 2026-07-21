@@ -18,6 +18,8 @@ Every file in the repository, what it does, and how to run it.
 │   ├── Paper/                  # Live forward paper trading
 │   ├── Insights/               # Current predictions artifact
 │   ├── Adaptive/               # Drift detection, versioning, gated retraining
+│   ├── Journal/                # P&L attribution + Thompson bandit
+│   ├── Advisor/                # Optional LLM commentary (off by default)
 │   ├── Risk/                   # Volatility-targeted sizing
 │   ├── News/                   # Optional sentiment track
 │   └── Api/                    # Read-only FastAPI over artifacts

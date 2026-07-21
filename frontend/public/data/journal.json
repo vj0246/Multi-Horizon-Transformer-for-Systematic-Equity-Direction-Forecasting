@@ -1,0 +1,260 @@
+{
+  "generated_at": "2026-07-21T14:47:55+00:00",
+  "as_of": "2026-07-17",
+  "attribution": {
+    "n_trades": 6,
+    "hit_rate": 0.6666666666666666,
+    "hit_rate_pvalue": 0.6875,
+    "hit_rate_is_significant": false,
+    "gross_return_sum": 0.15697120542164367,
+    "cost_return_sum": -0.005745479999999999,
+    "cost_share_of_gross": 0.03660212702429687,
+    "categories": {
+      "win": 4,
+      "noise": 1,
+      "signal_error": 1
+    },
+    "noise_floor": 0.03836724462940837,
+    "actionable": {
+      "cost_drag_trades": 0,
+      "cost_drag_cost": 0.0,
+      "note": "Cost drag is deterministic - these trades had the direction right and lost to fees. Fewer, longer holds fix it without any model change. This is the only component that can be acted on without a significance test."
+    },
+    "not_actionable": {
+      "noise_trades": 1,
+      "note": "1 of 6 trades moved less than the 3.84% noise floor. Their sign carries no information. Treating them as mistakes to learn from is how a system fits randomness."
+    },
+    "verdict": "Hit rate 4/6 = 66.7%, binomial p = 0.688. NOT distinguishable from a coin flip - with 6 trades, nothing here supports 'the model learned from a mistake'. The only reliable lessons in this journal are the deterministic ones (cost drag, exposure)."
+  },
+  "trades": [
+    {
+      "entry_date": "2024-04-26",
+      "exit_date": "2024-06-26",
+      "entry_price": 114.2435,
+      "exit_price": 121.6263,
+      "days_held": 40,
+      "gross_return": 0.06462337025738885,
+      "cost_return": -0.0009575799999999999,
+      "net_return": 0.06366579025738885,
+      "direction_correct": true,
+      "open": false,
+      "category": "win"
+    },
+    {
+      "entry_date": "2024-08-22",
+      "exit_date": "2024-12-17",
+      "entry_price": 126.43,
+      "exit_price": 124.007,
+      "days_held": 80,
+      "gross_return": -0.0191647552005062,
+      "cost_return": -0.0009575799999999999,
+      "net_return": -0.0201223352005062,
+      "direction_correct": false,
+      "open": false,
+      "category": "noise"
+    },
+    {
+      "entry_date": "2025-03-04",
+      "exit_date": "2025-04-03",
+      "entry_price": 112.5248,
+      "exit_price": 118.4737,
+      "days_held": 20,
+      "gross_return": 0.05286745677397331,
+      "cost_return": -0.0009575799999999999,
+      "net_return": 0.05190987677397331,
+      "direction_correct": true,
+      "open": false,
+      "category": "win"
+    },
+    {
+      "entry_date": "2025-04-08",
+      "exit_date": "2025-05-12",
+      "entry_price": 114.8341,
+      "exit_price": 127.0068,
+      "days_held": 20,
+      "gross_return": 0.10600248532448098,
+      "cost_return": -0.0009575799999999999,
+      "net_return": 0.10504490532448098,
+      "direction_correct": true,
+      "open": false,
+      "category": "win"
+    },
+    {
+      "entry_date": "2025-07-31",
+      "exit_date": "2025-10-29",
+      "entry_price": 126.2101,
+      "exit_price": 132.7608,
+      "days_held": 60,
+      "gross_return": 0.05190313611985098,
+      "cost_return": -0.0009575799999999999,
+      "net_return": 0.05094555611985098,
+      "direction_correct": true,
+      "open": false,
+      "category": "win"
+    },
+    {
+      "entry_date": "2026-02-27",
+      "exit_date": "2026-04-01",
+      "entry_price": 128.3008,
+      "exit_price": 115.5656,
+      "days_held": 20,
+      "gross_return": -0.09926048785354424,
+      "cost_return": -0.0009575799999999999,
+      "net_return": -0.10021806785354424,
+      "direction_correct": false,
+      "open": false,
+      "category": "signal_error"
+    },
+    {
+      "entry_date": "2026-06-05",
+      "exit_date": "2026-07-17",
+      "entry_price": 119.0678,
+      "exit_price": 123.9983,
+      "days_held": 29,
+      "gross_return": 0.0414091803157528,
+      "cost_return": -0.0009575799999999999,
+      "net_return": 0.0404516003157528,
+      "direction_correct": true,
+      "open": true
+    }
+  ],
+  "bandit": {
+    "arms": [
+      {
+        "arm": "timing_expanding",
+        "pulls": 3,
+        "alpha": 1.0,
+        "beta": 4.0,
+        "mean": 0.2,
+        "sd": 0.16329931618554522,
+        "ci95": [
+          0.006309463209709866,
+          0.6023646356164746
+        ]
+      },
+      {
+        "arm": "timing_ensemble",
+        "pulls": 2,
+        "alpha": 1.0,
+        "beta": 3.0,
+        "mean": 0.25,
+        "sd": 0.19364916731037085,
+        "ci95": [
+          0.008403758659612636,
+          0.7075982261787133
+        ]
+      },
+      {
+        "arm": "timing_h20",
+        "pulls": 3,
+        "alpha": 1.0,
+        "beta": 4.0,
+        "mean": 0.2,
+        "sd": 0.16329931618554522,
+        "ci95": [
+          0.006309463209709866,
+          0.6023646356164746
+        ]
+      },
+      {
+        "arm": "quantile",
+        "pulls": 1,
+        "alpha": 1.0,
+        "beta": 2.0,
+        "mean": 0.3333333333333333,
+        "sd": 0.23570226039551584,
+        "ci95": [
+          0.01257911709342505,
+          0.841886116991581
+        ]
+      },
+      {
+        "arm": "sign",
+        "pulls": 13,
+        "alpha": 8.0,
+        "beta": 7.0,
+        "mean": 0.5333333333333333,
+        "sd": 0.12472191289246472,
+        "ci95": [
+          0.28860940003830743,
+          0.7696394585519376
+        ]
+      },
+      {
+        "arm": "timing_best",
+        "pulls": 2,
+        "alpha": 1.0,
+        "beta": 3.0,
+        "mean": 0.25,
+        "sd": 0.19364916731037085,
+        "ci95": [
+          0.008403758659612636,
+          0.7075982261787133
+        ]
+      },
+      {
+        "arm": "timing_rolling",
+        "pulls": 5,
+        "alpha": 3.0,
+        "beta": 4.0,
+        "mean": 0.42857142857142855,
+        "sd": 0.1749635530559413,
+        "ci95": [
+          0.11811724875702521,
+          0.7772219044964879
+        ]
+      },
+      {
+        "arm": "risk_targeted",
+        "pulls": 3,
+        "alpha": 1.0,
+        "beta": 4.0,
+        "mean": 0.2,
+        "sd": 0.16329931618554522,
+        "ci95": [
+          0.006309463209709866,
+          0.6023646356164746
+        ]
+      }
+    ],
+    "total_pulls": 32,
+    "separation": {
+      "p_best": {
+        "timing_expanding": 0.0288,
+        "timing_ensemble": 0.07035,
+        "timing_h20": 0.0286,
+        "quantile": 0.1645,
+        "sign": 0.4128,
+        "timing_best": 0.06615,
+        "timing_rolling": 0.1996,
+        "risk_targeted": 0.0292
+      },
+      "top_arm": "sign",
+      "p_top_is_best": 0.4128,
+      "uniform_baseline": 0.125,
+      "separated": false,
+      "verdict": "No arm is distinguishable: the leader (sign) is best with only probability 0.41 against a 0.12 coin-flip baseline. The argmax here is noise, not a decision."
+    },
+    "note": "A bandit allocates between fixed, already-validated rules; it does not learn a policy. That is deliberate - policy learning needs ~1e6 decisions and this book has made ~13. Read the separation verdict before the arm means: argmax always names a winner whether or not one exists.",
+    "replay": {
+      "n_periods": 32,
+      "bandit_total_return": 0.081209,
+      "best_single_arm": "sign",
+      "best_single_arm_return": 0.253301,
+      "regret_vs_best_fixed": 0.172092,
+      "caveat": "Offline replay with full knowledge of every arm's outcome. Not an out-of-sample result and not evidence the bandit would help live."
+    }
+  },
+  "commentary": {
+    "source": "template",
+    "headline": "6 closed trades: hit rate 67%, not distinguishable from chance",
+    "what_happened": "The book closed 6 round trips. Gross return summed to +15.70% and costs removed 0.57%.",
+    "what_it_means": "Hit rate 4/6 = 66.7%, binomial p = 0.688. NOT distinguishable from a coin flip - with 6 trades, nothing here supports 'the model learned from a mistake'. The only reliable lessons in this journal are the deterministic ones (cost drag, exposure).",
+    "caveats": [
+      "6 trades is far too few to establish skill either way.",
+      "1 trades fell inside the noise floor and carry no directional information.",
+      "Bandit separability: No arm is distinguishable: the leader (sign) is best with only probability 0.41 against a 0.12 coin-flip baseline. The argmax here is noise, not a decision."
+    ]
+  },
+  "disclaimer": "Commentary explains HISTORICAL results only. It is never shown a forward prediction, so it cannot and does not give trading advice. The underlying model has no validated edge."
+}

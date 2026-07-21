@@ -35,6 +35,7 @@ const NAV = [
   ["crosssection", "Cross-Section"],
   ["signals", "Stock Signals"],
   ["attention", "Attention"],
+  ["journal", "Journal"],
   ["adaptive", "Adaptive"],
   ["docs", "Docs"],
   ["method", "Method"],
@@ -720,6 +721,118 @@ export default function Page() {
       </Section>
 
 
+
+
+      {/* Trade journal */}
+      <Section
+        id="journal"
+        eyebrow="Feedback"
+        title="Learning from mistakes — only where a mistake can be identified"
+        lede="Every closed trade is decomposed into signal error, cost drag, and noise. The distinction matters: cost drag is arithmetic and can be acted on immediately, while a loss inside the noise floor is not a mistake at all, and 'learning' from it means fitting randomness."
+      >
+        {(() => {
+          const j = data.journal;
+          const a = j.attribution;
+          const sep = j.bandit.separation;
+          const cats = Object.entries(a.categories ?? {});
+          return (
+            <>
+              <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                <Stat label="Closed trades" value={String(a.n_trades)}
+                  sub={`noise floor ${fmtPct(a.noise_floor, 1)}`} />
+                <Stat label="Hit rate" value={fmtPct(a.hit_rate, 0)}
+                  sub={`binomial p = ${a.hit_rate_pvalue.toFixed(3)}`}
+                  tone={a.hit_rate_is_significant ? "good" : "warn"} />
+                <Stat label="Cost drag" value={fmtPct(Math.abs(a.cost_return_sum), 2)}
+                  sub={`${a.actionable.cost_drag_trades} trades right but fee-eaten`}
+                  tone="bad" />
+                <Stat label="Inside noise floor" value={String(a.not_actionable.noise_trades)}
+                  sub="carry no directional information" tone="neutral" />
+              </div>
+
+              <div className="mb-5">
+                <Callout tone={a.hit_rate_is_significant ? "good" : "warn"}
+                  title="Is this evidence of learning?">
+                  {a.verdict}
+                </Callout>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Panel title="Where the P&L actually came from"
+                  subtitle="categories are assigned by size of move relative to the noise floor, not by profit alone">
+                  <div className="space-y-2">
+                    {cats.map(([k, v]) => (
+                      <div key={k} className="flex items-center gap-3">
+                        <span className="w-28 shrink-0 text-xs text-muted">
+                          {k.replace(/_/g, " ")}
+                        </span>
+                        <div className="h-2 flex-1 overflow-hidden rounded-full bg-edge">
+                          <div
+                            className={`h-full rounded-full ${
+                              k === "win" ? "bg-accent"
+                              : k === "signal_error" ? "bg-danger"
+                              : k === "cost_drag" ? "bg-warn" : "bg-muted"
+                            }`}
+                            style={{ width: `${(v / a.n_trades) * 100}%` }}
+                          />
+                        </div>
+                        <span className="tag w-6 text-right text-xs text-white">{v}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-4 text-[11px] leading-relaxed text-muted">
+                    {a.actionable.note}
+                  </p>
+                </Panel>
+
+                <Panel title="Bandit over the published strategy rules"
+                  badge="Thompson sampling"
+                  subtitle="Reinforcement learning sized to the data: it allocates between fixed, already-validated rules rather than learning a policy, because policy learning needs ~1,000,000 decisions and this book has made a few dozen.">
+                  {sep ? (
+                    <>
+                      <div className="space-y-1.5">
+                        {Object.entries(sep.p_best)
+                          .sort((x, y) => y[1] - x[1])
+                          .map(([arm, p]) => (
+                            <div key={arm} className="flex items-center gap-3">
+                              <span className="w-32 shrink-0 truncate text-xs text-muted">{arm}</span>
+                              <div className="h-2 flex-1 overflow-hidden rounded-full bg-edge">
+                                <div className="h-full rounded-full bg-accent2"
+                                  style={{ width: `${p * 100}%` }} />
+                              </div>
+                              <span className="tag w-10 text-right text-xs text-white">
+                                {(p * 100).toFixed(0)}%
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                      <p className="mt-4 text-[11px] leading-relaxed text-muted">
+                        P(arm is best) from the posteriors. Coin-flip baseline is{" "}
+                        {(sep.uniform_baseline * 100).toFixed(0)}%. {sep.verdict}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-xs text-muted">{j.bandit.skipped}</p>
+                  )}
+                </Panel>
+              </div>
+
+              <div className="mt-4">
+                <Panel title={j.commentary.headline}
+                  badge={j.commentary.source === "llm"
+                    ? `${j.commentary.provider} · ${j.commentary.model}` : "deterministic"}
+                  subtitle="Commentary explains realised history only — it is never shown a forward prediction, so it cannot give trading advice.">
+                  <p className="text-sm leading-relaxed text-muted">{j.commentary.what_happened}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{j.commentary.what_it_means}</p>
+                  <ul className="mt-3 list-inside list-disc space-y-1 text-xs text-muted">
+                    {j.commentary.caveats.map((c, i) => <li key={i}>{c}</li>)}
+                  </ul>
+                </Panel>
+              </div>
+            </>
+          );
+        })()}
+      </Section>
 
       {/* Adaptive retraining */}
       <Section

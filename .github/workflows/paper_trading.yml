@@ -45,6 +45,11 @@ jobs:
           TF_CPP_MIN_LOG_LEVEL: "2"
         run: python -m Source.Insights.build
 
+      - name: Trade journal + attribution
+        env:
+          TF_CPP_MIN_LOG_LEVEL: "2"
+        run: python -m Source.Journal.run
+
       # audit only: monitors drift and simulates the decision layer. It never
       # trains - the quarterly backbone refit is run deliberately, not on a cron.
       - name: Adaptive audit (drift + provenance)
@@ -59,7 +64,7 @@ jobs:
         run: |
           git config user.name "paper-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add frontend/public/data/paper_trading.json frontend/public/data/predictions.json frontend/public/data/adaptive.json Data/Adaptive/model_versions.json Data/Paper/state.json "Data/Raw_Data/^NSEI_daily.csv"
+          git add frontend/public/data/paper_trading.json frontend/public/data/predictions.json frontend/public/data/adaptive.json frontend/public/data/journal.json Data/Adaptive/model_versions.json Data/Paper/state.json "Data/Raw_Data/^NSEI_daily.csv"
           if git diff --cached --quiet; then
             echo "no change today"
           else

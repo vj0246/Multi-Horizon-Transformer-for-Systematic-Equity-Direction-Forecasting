@@ -308,3 +308,13 @@ adaptive:
     promote_z: 1.96             # gain must also exceed this many standard errors
     min_effective_n: 30         # refuse to judge on fewer independent observations
     promote_requires_dsr: true  # ...and survive the deflated-Sharpe trial count
+
+# Optional LLM commentary (Source/Advisor/). OFF by default and never required:
+# without an API key the journal writes deterministic template text instead, so
+# CI needs no secret and the site is never blocked on a paid service.
+# The layer is an EXPLAINER, not an advisor - build_journal filters the payload
+# so the model is never shown a forward prediction and structurally cannot emit
+# a trade call.
+advisor:
+  provider: groq              # groq | anthropic
+  model: null                 # null = provider default

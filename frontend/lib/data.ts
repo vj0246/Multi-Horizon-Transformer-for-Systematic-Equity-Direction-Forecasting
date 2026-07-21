@@ -17,6 +17,7 @@ import stockSignals from "@/public/data/stock_signals.json";
 import paperTrading from "@/public/data/paper_trading.json";
 import predictions from "@/public/data/predictions.json";
 import adaptive from "@/public/data/adaptive.json";
+import journal from "@/public/data/journal.json";
 
 export interface Summary {
   ticker: string;
@@ -163,6 +164,7 @@ export const data = {
   paperTrading: paperTrading as unknown as PaperTrading,
   predictions: predictions as unknown as Predictions,
   adaptive: adaptive as unknown as Adaptive,
+  journal: journal as unknown as Journal,
 };
 
 export interface PaperTrading {
@@ -286,6 +288,42 @@ export interface Adaptive {
     champion: string | null; champion_cutoff: string | null;
     note: string;
   };
+}
+
+export interface Journal {
+  as_of: string | null;
+  attribution: {
+    n_trades: number;
+    hit_rate: number;
+    hit_rate_pvalue: number;
+    hit_rate_is_significant: boolean;
+    gross_return_sum: number;
+    cost_return_sum: number;
+    categories: Record<string, number>;
+    noise_floor: number;
+    actionable: { cost_drag_trades: number; cost_drag_cost: number; note: string };
+    not_actionable: { noise_trades: number; note: string };
+    verdict: string;
+  };
+  trades: {
+    entry_date: string; exit_date: string; gross_return: number;
+    cost_return: number; net_return: number; direction_correct: boolean;
+    category?: string; open?: boolean;
+  }[];
+  bandit: {
+    arms?: { arm: string; pulls: number; mean: number; ci95: number[] }[];
+    separation?: { p_best: Record<string, number>; top_arm: string;
+                   p_top_is_best: number; uniform_baseline: number;
+                   separated: boolean; verdict: string };
+    note?: string;
+    skipped?: string;
+  };
+  commentary: {
+    source: string; headline: string; what_happened: string;
+    what_it_means: string; caveats: string[];
+    provider?: string; model?: string; prompt_version?: string;
+  };
+  disclaimer: string;
 }
 
 export const fmtPct = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;
