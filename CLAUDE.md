@@ -1,34 +1,50 @@
-# CLAUDE.md — Multi-Horizon Transformer (Nifty 50 Direction)
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Purpose
-Deep-learning system predicting Nifty 50 (`^NSEI`) directional movement across 20 forward horizons (1–20 days) with a multi-output Transformer encoder. Research-grade. A static Next.js site showcases the real backtested results.
+Multi-Horizon Transformer (Nifty 50 direction). Deep-learning system predicting Nifty 50 (`^NSEI`) directional movement across 20 forward horizons (1–20 days) with a multi-output Transformer encoder. Research-grade. A static Next.js site showcases the real backtested results.
+
+**The headline finding is negative and that is the deliverable:** mean OOS AUC ~0.51 against a 0.50 coin flip, 0/20 horizons significant after multiple-testing correction, and the paper book underperforms buy-and-hold. The contribution is the measurement apparatus (leakage audits, overlap-corrected error bars, deflated Sharpe, trial counting), not alpha. Never tune, retry, or reframe to make these numbers look better.
 
 ## Stack
-- **Model/pipeline:** Python 3.10, TensorFlow 2.21 (Keras), scikit-learn, pandas, numpy, scipy, PyYAML.
-- **Data:** yfinance OHLCV for `^NSEI`, 2007→2026 (~4,520 trading days).
+- **Model/pipeline:** Python 3.10+, TensorFlow 2.21 (Keras), scikit-learn, pandas, numpy, scipy, PyYAML.
+- **Data:** yfinance OHLCV for `^NSEI`, 2007→2026 (~4,600 raw rows; 4,343 after feature warmup drops).
 - **Frontend:** Next.js 14 (App Router, static export), TypeScript, Tailwind, Recharts. No backend — reads precomputed JSON.
 - **Deploy:** Vercel (static `out/`).
 
 ## Run / Build / Test
 ```bash
+pip install -r requirements.txt   # 15 packages, derived from actual imports
+
 # 1. (optional) refresh data
 python -m Source.Ingestion.Fetch_Market_Data
+python -m Source.Ingestion.fetch_macro           # VIX, USDINR, crude, S&P
 
 # 2. train + full backtest -> writes frontend/public/data/*.json
-python -m Source.Backtest.run
+python -m Source.Backtest.run                    # REUSE=1 rebuilds JSON from cache, no retrain
 
-# 2b. cross-sectional track (37 NSE large caps, real quantile L/S)
+# 2b. cross-sectional track (~85 NSE large caps, real quantile L/S)
 python -m Source.Ingestion.fetch_universe        # one-time data download
 python -m Source.Backtest.run_cross_section      # -> cross_section.json
 
-# 3. frontend
-cd frontend && npm install && npm run dev      # local
-npm run build                                   # static export -> frontend/out
+# 3. live layers (all read the FROZEN paper model; none of them train)
+python -m Source.Paper.run --refresh             # -> paper_trading.json
+python -m Source.Insights.build                  # -> predictions.json
+python -m Source.Adaptive.run                    # -> adaptive.json (audit; --retrain to gate a challenger)
 
-# tests: data-integrity, leakage audits, cost/strategy math, artifact validation
+# 4. frontend
+cd frontend && npm install && npm run dev        # local
+npm run build                                    # static export -> frontend/out
+
+# tests: leakage audits, cost/strategy/metric math, drift detectors,
+# champion-challenger gate, artifact validation
 python -m pytest tests/test_rigorous.py -q
+python -m pytest tests/test_rigorous.py -q -k drift        # single test / subset
 ```
-Everything is driven by `config.yaml` (hyperparams, windows, split, costs).
+Everything is driven by `config.yaml` (hyperparams, windows, split, costs, adaptive cadences).
+
+Artifact order matters: `Backtest.run` → `save_paper_model.py` → `Paper.run` → `Insights.build` → `Adaptive.run`. Later steps consume earlier outputs.
 
 ### GPU training (WSL2 + CUDA)
 Native-Windows TF ≥2.11 is CPU-only. Train on the RTX 2050 through WSL2:
@@ -39,7 +55,35 @@ wsl -d Ubuntu bash -lc 'python3 -m venv ~/venvs/mht && ~/venvs/mht/bin/pip insta
 # run training on GPU (repo is on the Windows drive, visible at /mnt/c)
 wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/vivaa/OneDrive/Desktop/Personal Projects/Multi-Horizon-Transformer-for-Systematic-Equity-Direction-Forecasting" && python -m Source.Backtest.run_cross_section'
 ```
-`Source/device.py` logs the device and, with `training.require_gpu: true`, aborts rather than silently using CPU. `config.yaml` `training.require_gpu` enforces GPU-only runs.
+`Source/device.py` logs the device and, with `training.require_gpu: true` in config.yaml, aborts rather than silently falling back to CPU.
+
+**WSL trap:** the pip GPU wheel does not put `nvidia-*-cu12` libs on `LD_LIBRARY_PATH`, so TF reports "Cannot dlopen some GPU libraries" and silently uses CPU. `scripts/wsl_gpu_env.sh` fixes it — source it before any training command. From Git Bash, call WSL with `MSYS_NO_PATHCONV=1` and an embedded `bash -c "source ...; cd ...; python -m ..."` (standalone /mnt paths get mangled).
+
+## Architecture — the three things that require reading several files
+
+**1. There are TWO model lineages. Never mix their numbers.**
+
+| | Backtest model | Frozen paper model |
+|---|---|---|
+| Trained on | train split only | train + val |
+| Built by | `Source/Backtest/run.py` | `scripts/save_paper_model.py` |
+| Lives in | run cache (`Data/Processed_Data/run_cache_*.npz`) | `Data/Processed_Data/paper_model/` |
+| Produces | `summary.json`, `horizons.json`, `strategies.json`, `calibration.json`, … | `paper_trading.json`, `predictions.json`, `adaptive.json` |
+| Cutoff | the train/val boundary | `oos_cutoff` in its `meta.json`, frozen forever |
+
+These are different fits with different weights. Attaching one's error bars to the other's predictions is a bug that already shipped once — `predictions.json` paired frozen-model probabilities with backtest-model AUCs, describing a predictor that was never measured. Anything reporting skill for the frozen model must compute it from that model's own logits over its own OOS period.
+
+**2. Effective sample size is the binding constraint on every claim.**
+
+An h-day forward label sampled daily overlaps its neighbour h-fold, so independent observations ≈ `n / h` — about **33 at h=20** on the test set. Consequences that recur throughout the codebase:
+- AUC standard errors use effective n, never raw n (`suite._auc_se(..., overlap=h)`). Using raw n shrinks intervals ~4.5x and manufactures significance — this is the single easiest way to fake an edge here.
+- Strategy returns are non-overlapping 20-day blocks, never overlapping daily.
+- `Source/Adaptive` sizes each retraining layer by parameter count against the independent observations its cadence delivers.
+- A realistic edge (AUC 0.52–0.55) is *below what this sample can resolve*; ~0.70 would be needed for single-horizon significance. Treat any large AUC as a leak to hunt, not a win.
+
+**3. Dataflow is one-way: Python writes JSON, the site reads it.**
+
+`Source/**` → `frontend/public/data/*.json` → typed static imports in `frontend/lib/data.ts` → `app/page.tsx`. There is no backend and no fetch at runtime (`Source/Api/main.py` is an optional read-only convenience, not part of the site). To change a number on the site, regenerate the artifact and rebuild — never hand-edit the JSON.
 
 ## Directory Map
 - `Documentation/` — full project docs (overview, getting started, data + leakage rules, architecture diagrams, per-file reference, metric definitions, results, instrument choice, research gaps). Update these when behaviour changes; they are the onboarding path for anyone new.
@@ -60,10 +104,8 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 - `Source/Pipeline/cross_section.py` — panel builder (date-based split, no cross-stock leakage); relative/absolute/regression targets + cross-sectional features (universe/sector-relative, per-date ranks)
 - Cross-section objective: `cross_section.objective: regression` trains on continuous excess log-return (Huber loss); `classification` uses binary beat-median labels. Head stays linear Dense(20) - architecture unchanged. `compile_model(..., objective=)` switches the loss.
 - `Source/Models/ensemble.py` — seed-ensemble (`training.n_seeds`): trains N models, averages predictions. Collapses GPU run-to-run nondeterminism + improves generalization. Both run scripts set `TF_DETERMINISTIC_OPS`/`TF_CUDNN_DETERMINISM` before importing TF.
-- Universe is ~85 NSE names (price data only; no point-in-time fundamentals - would be look-ahead leakage). `Source/Ingestion/fetch_universe.py`.
+- `Source/Ingestion/fetch_universe.py` — NSE universe downloader (~85 names -> `Data/Raw_Data/Universe/`, gitignored). Price data ONLY; no point-in-time fundamentals, which would be look-ahead leakage. Writes a simple single-header CSV, unlike the multi-header `^NSEI` export.
 - Pipeline is quiet (no per-epoch/headline prints; `verbose=0`); read results from the JSON artifacts, not stdout.
-- `Source/Ingestion/fetch_universe.py` — NSE universe downloader (Data/Raw_Data/Universe/, gitignored)
-- `Source/Ingestion/` — yfinance downloader
 - `Source/News/build_sentiment.py` — NewsAPI + FinBERT sentiment, self-contained (parallel track, not fused; OFF by default)
 - `Notebooks/Notebooks/Eda.ipynb` — original research notebook (source of truth for logic)
 - `frontend/` — Next.js showcase site; `frontend/public/data/*.json` = generated artifacts
@@ -76,7 +118,8 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 - Kept OFF: NewsAPI only serves ~30 days, so historical sentiment can't be backfilled. Never train the historical backtest on fabricated/all-zero sentiment.
 
 ## Costs
-- Per-side cost = `transaction_cost_bps` (fees) + `slippage_bps`, via `metrics.total_cost_bps(cfg)`. Charged round-trip on every trade.
+- `metrics.total_cost_bps(cfg)` is the single entry point. With `backtest.cost_model: india` (the active setting) it dispatches to `Source/Backtest/costs.py::india_cost_breakdown`, the itemized stack: brokerage, exchange txn, SEBI, STT (sell-side for futures/intraday), stamp duty (buy-side), 18% GST, slippage, DP charges on delivery sells. The flat `transaction_cost_bps + slippage_bps` path is legacy fallback only.
+- Round-trip by instrument: **futures 9.58bps** (what the index track uses), intraday 10.47, options 25.53, delivery 28.22. Charged round-trip on every trade.
 
 ## Env Vars (names only)
 - `NEWSAPI_KEY` — only for the optional Source/News sentiment pipeline. Not needed for the model or site.
@@ -91,5 +134,7 @@ wsl -d Ubuntu bash -lc 'source ~/venvs/mht/bin/activate && cd "/mnt/c/Users/viva
 - Results are honest research output; daily index direction is hard — expect near-coin-flip AUC and modest IC. Report as-is.
 
 ## Do Not
-- Do not fabricate metrics. The site shows whatever `run.py` produces.
+- Do not fabricate metrics. The site shows whatever the pipeline produces.
+- Do not hardcode a metric into frontend prose. The daily cron regenerates the artifacts, so a hardcoded figure silently drifts out of sync with the table beside it — derive it from the artifact instead.
+- Do not retry/loop a model until a metric clears a threshold. That manufactures a false positive rather than finding an edge, and every attempt must be counted as a trial in `deflated_sharpe(n_trials=...)`.
 - Do not commit `Data/Raw_Data/*.csv`, model artifacts, or `frontend/node_modules`.
