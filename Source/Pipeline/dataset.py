@@ -40,7 +40,7 @@ def _merge_sentiment(df: pd.DataFrame, cfg: dict) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(
             f"use_sentiment=true but {path} not found. "
-            f"Generate it: python -m Source.News.build_sentiment"
+            f"Generate it: python -m Source.News.gdelt --days 730"
         )
     sent = pd.read_csv(path)
     sent["date"] = pd.to_datetime(sent["date"])

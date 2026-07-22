@@ -3,9 +3,8 @@
 WHAT THIS IS AND IS NOT
 -----------------------
 NSE serves only TODAY's values: P/E, sector P/E, market cap, 52-week range,
-delivery %, annualised volatility. Like the yfinance snapshot in
-fetch_fundamentals.py, these are a genuine live view and are **look-ahead
-leakage if used as historical features** - feeding today's P/E into a 2015
+delivery %, annualised volatility. These are a genuine live view but are **look-ahead leakage if used as historical
+features** - feeding today's P/E into a 2015
 training window tells the model the future.
 
 The project has documented "no free point-in-time NSE fundamentals" as a hard

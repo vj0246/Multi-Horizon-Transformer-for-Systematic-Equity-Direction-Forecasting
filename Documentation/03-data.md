@@ -116,7 +116,7 @@ would learn that day's market move and "predict" it for other stocks.
 
 ### 8. No point-in-time fundamentals
 
-`fetch_fundamentals.py` retrieves a **current** snapshot, used for display only.
+`nse.py` and `screener.py` cover fundamentals now: NSE serves today's values (archived forward), Screener serves real history behind a disclosure lag.
 Applying today's P/E to 2015 rows would be look-ahead leakage of the worst kind.
 Free survivorship-clean NSE fundamentals back to 2007 do not exist, so
 fundamental factors remain unimplemented rather than implemented wrongly.
@@ -134,8 +134,7 @@ fundamental factors remain unimplemented rather than implemented wrongly.
 ## Sentiment (optional, off)
 
 ```bash
-export NEWSAPI_KEY=...
-python -m Source.News.build_sentiment --query "Nifty OR Sensex OR NSE"
+python -m Source.News.gdelt --days 730     # free, no API key
 # then set features.use_sentiment: true in config.yaml
 ```
 

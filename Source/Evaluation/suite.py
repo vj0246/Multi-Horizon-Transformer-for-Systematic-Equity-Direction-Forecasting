@@ -78,12 +78,35 @@ def _auc_se(auc: float, y: np.ndarray, overlap: int = 1) -> float:
     return float(np.sqrt(max(var, 0)))
 
 
-def auc_pvalue(auc: float, y: np.ndarray, overlap: int = 1) -> float:
-    """One-sided p-value for H0: AUC == 0.5, using the overlap-corrected SE."""
+def auc_pvalue(auc: float, y: np.ndarray, overlap: int = 1,
+               two_sided: bool = True) -> float:
+    """p-value for H0: AUC == 0.5, using the overlap-corrected SE.
+
+    TWO-SIDED by default. The one-sided version (H1: AUC > 0.5) was the original
+    default and is structurally blind to anti-skill: a model that ranks
+    *backwards* is detecting real structure, and a one-sided test reports it as
+    p ~ 1.0 - maximally insignificant - which reads as "no information" when the
+    truth is "information, wrong sign".
+
+    That blindness hid a genuine observation: at h=1 the frozen model scores AUC
+    0.443, which is 2.6 SE BELOW chance. It is not a usable edge (see below), but
+    a test that cannot see it is answering the wrong question.
+
+    Two-sided is also the honest default because the sign of any apparent edge is
+    only learned FROM the test set. Deciding after the fact that you would have
+    inverted the signal is look-ahead bias, so both tails must count against the
+    multiple-testing budget.
+
+    Pass two_sided=False only where a directional prior genuinely exists and the
+    opposite result would never be acted on.
+    """
     se = _auc_se(auc, y, overlap)
     if np.isnan(auc) or np.isnan(se) or se == 0:
         return float("nan")
-    return float(1 - stats.norm.cdf((auc - 0.5) / se))
+    z = (auc - 0.5) / se
+    if two_sided:
+        return float(2 * (1 - stats.norm.cdf(abs(z))))
+    return float(1 - stats.norm.cdf(z))
 
 
 # ------------------------------------------------------------ error metrics

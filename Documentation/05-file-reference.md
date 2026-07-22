@@ -102,7 +102,6 @@ flowchart TD
 | `screener.py` | 325 | **Point-in-time fundamentals** — 11y annual, 13q quarterly, FII/DII. Every row lag-stamped |
 | `nse.py` | 232 | Authoritative NSE fundamentals + `delivery_pct`. Archives dated snapshots |
 | `quotes.py` | 174 | Live quote routing: NSE for spot, yfinance for price. **Execution-side only** |
-| `fetch_fundamentals.py` | 55 | yfinance current snapshot. Display only — superseded by `screener.py` |
 
 Two traps encoded here, both from real failures:
 
@@ -217,7 +216,6 @@ model never sees a forward prediction, so it cannot emit a trade call.
 | File | Lines | Contents |
 |------|-------|----------|
 | `gdelt.py` | 239 | Free, keyless, 2017+. Resumable with partial saves |
-| `build_sentiment.py` | 90 | NewsAPI + FinBERT. **Off** — ~30-day history cannot be backfilled |
 
 ## Remaining modules
 

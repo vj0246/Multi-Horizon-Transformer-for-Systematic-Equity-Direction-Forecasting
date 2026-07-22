@@ -31,8 +31,5 @@ curl_cffi
 groq
 # anthropic               # uncomment to use provider: anthropic
 
-# ---- optional: news sentiment track, OFF by default (Source/News/) ----
-# NewsAPI only serves ~30 days, so this cannot be backfilled - see Documentation/03
+# ---- news sentiment: GDELT, free and keyless (Source/News/gdelt.py) ----
 requests
-transformers              # FinBERT
-torch                     # FinBERT backend

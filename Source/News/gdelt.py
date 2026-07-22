@@ -1,10 +1,10 @@
 """Historical news sentiment from GDELT - free, no key, and actually backfillable.
 
-The existing NewsAPI path (build_sentiment.py) is stuck off by default for a
-reason that cannot be engineered around: the free tier serves ~30 days, so a
-sentiment feature built from it exists for 30 of ~4,600 training days. Training
-on that means zero-filling 99% of history, which invents a feature rather than
-adding one.
+A NewsAPI + FinBERT path used to live beside this one and was removed: its free
+tier serves ~30 days, so a feature built from it exists for 30 of ~4,600 training
+days. Training on that zero-fills 99% of history, which invents a feature rather
+than adding one. GDELT is strictly better on every axis that matters here, so
+keeping both was just another decision for a reader to get wrong.
 
 GDELT DOC 2.0 solves exactly that gap:
   - free, no API key

@@ -982,6 +982,48 @@ def test_screener_panel_artifact_is_lag_stamped():
     assert (avail - end).dt.days.min() >= 21     # shortest legal lag (shareholding)
 
 
+def test_auc_pvalue_is_two_sided_and_sees_anti_skill():
+    """A one-sided test reports a model that ranks BACKWARDS as p~1.0, i.e.
+    maximally insignificant - which reads as 'no information' when the truth is
+    'information, wrong sign'. That blindness hid the h=1 observation."""
+    import numpy as np
+    from Source.Evaluation.suite import auc_pvalue
+
+    y = np.zeros(600, dtype=int); y[:300] = 1
+
+    # a strongly ANTI-predictive AUC must be flagged, not dismissed
+    p_two = auc_pvalue(0.40, y, overlap=1)
+    p_one = auc_pvalue(0.40, y, overlap=1, two_sided=False)
+    assert p_two < 0.01, "two-sided test failed to detect anti-skill"
+    assert p_one > 0.99, "one-sided test should be blind to anti-skill (by construction)"
+
+    # symmetry: equal deviations either side of 0.5 get equal two-sided p
+    assert auc_pvalue(0.60, y) == pytest.approx(auc_pvalue(0.40, y), rel=1e-6)
+
+    # and chance is still chance
+    assert auc_pvalue(0.50, y) == pytest.approx(1.0, abs=1e-9)
+
+
+def test_h1_anti_signal_does_not_survive_correction():
+    """Regression guard on a tempting false positive.
+
+    At h=1 the frozen model scores AUC ~0.44 with two-sided p ~0.01 - the
+    smallest p-value in the family, and h=1 is the ONLY zero-overlap horizon, so
+    it is tempting to treat as a single pre-registered test. It is not: it was
+    selected BECAUSE it had the smallest p, it fails Bonferroni and BH within the
+    family of 20, and its effect halves across sub-periods (p=0.002 -> p=0.41).
+    The shipped artifact must keep reporting 0 actionable horizons."""
+    import json
+    p = ROOT / "frontend" / "public" / "data" / "predictions.json"
+    if not p.exists():
+        pytest.skip("predictions.json not generated")
+    d = json.loads(p.read_text(encoding="utf-8"))
+    assert d["verdict"]["n_actionable"] == 0,         "a horizon was promoted to actionable - verify it survives BH, not just a bare p-value"
+    for r in d["horizons"]:
+        if r["actionable"]:
+            assert r["auc_ci95"][0] > 0.5
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

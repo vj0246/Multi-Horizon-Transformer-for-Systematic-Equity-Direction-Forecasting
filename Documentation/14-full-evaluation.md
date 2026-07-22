@@ -233,6 +233,54 @@ A fourth, caught by the design itself: the champion/challenger gate promoted a
 challenger on +0.0786 mean AUC — against a 0.25 standard error, i.e. **0.3σ**,
 with the challenger actually *worse* on the traded horizon.
 
+## The h=1 anti-signal: a false positive, investigated and rejected
+
+Worth recording in full, because it is the most tempting result the project has
+produced and every step of the temptation is instructive.
+
+**The observation.** At h=1 the frozen model scores **AUC 0.4430** — 2.6 standard
+errors *below* chance, two-sided **p = 0.0102** on 675 OOS days. And h=1 is the
+**only horizon with zero forward-label overlap**, so its effective n is 675
+rather than ~33. Clean statistics, large sample, nominally significant.
+
+**Why the original test could not see it.** `auc_pvalue` was **one-sided**
+(H1: AUC > 0.5). Under it, h=1 reports **p = 0.9949** — maximally insignificant.
+A one-sided test is structurally blind to anti-skill: a model ranking *backwards*
+is detecting real structure, and reporting that as "no information" answers the
+wrong question. **This has been fixed — the test is now two-sided by default.**
+
+**Why it is still not a finding.** Four independent reasons, any one sufficient:
+
+| Check | Result |
+|-------|--------|
+| Multiple testing within the family of 20 | **0 survive** Bonferroni (threshold 0.0025) or BH |
+| Sub-period stability | first half p = **0.0021**, second half p = **0.4054** |
+| By year | 2024 p=0.073, 2025 p=0.392, 2026 p=0.331 — decays to noise |
+| Effect magnitude | 5.7pp AUC deviation on a deep, continuously-arbitraged index future is implausibly large |
+
+The "h=1 is a single pre-registered test" argument is **post-hoc**. It is true
+that h=1 is structurally special, but it was never designated as the primary
+hypothesis before the result appeared — and large effective n mechanically
+produces the smallest p-value in a family, which is precisely what makes
+selecting it after the fact illegitimate.
+
+**Two errors in the first analysis of it**, both caught in review and both
+instances of the exact bug classes this project exists to prevent:
+
+1. **Look-ahead in the threshold.** The paired trading result used the
+   *full-sample median* of the OOS window as the live decision threshold. Under
+   defensible causal rules the Sharpe ranges from **−0.61** (sign of the logit)
+   to **+1.46** (rolling 60-day median). A headline number that moves that much
+   on an undisclosed choice is not a number.
+2. **Effective-n mismatch in the Sharpe.** The position flips only **41 times in
+   675 days**, so there are ~42 independent bets, not 675. Annualising daily
+   overlapping returns inflated it. Corrected, the deflated Sharpe falls to
+   **0.06–0.26** against this project's real trial count.
+
+**Verdict: artifact.** The shipped artifacts continue to report **0 of 20
+actionable**, and a regression test now asserts that any horizon promoted to
+actionable must have a confidence interval strictly above 0.50.
+
 ## What would count as real
 
 | Requirement | Threshold |
