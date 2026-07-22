@@ -11,7 +11,7 @@ favourably or omitted.
 | Split | 2,984 / 639 / 640 | train / validation / test |
 | Features | 19 | 11 price+volume, 8 macro |
 | **Mean AUC (backtest model, test)** | **0.5033** | Coin flip is 0.50 |
-| **Mean AUC (frozen model, its own 673 OOS days)** | **0.5123** | Also indistinguishable |
+| **Mean AUC (frozen model, its own 675 OOS days)** | **0.5132** | Also indistinguishable |
 | Mean IC (Spearman) | +0.021 | Near zero |
 | **Horizons significant after correction** | **0 of 20** | None |
 
@@ -66,20 +66,20 @@ Four configurations are published, none cherry-picked: `cross_section.json`
 
 ## Paper trading (live, forward)
 
-674 out-of-sample days from 2023-10-19, scored by a model frozen before that date.
+676 out-of-sample days from 2023-10-19, scored by a model frozen before that date.
 
 | Metric | Value |
 |--------|-------|
-| Paper return | **+19.2%** |
-| Buy & hold | **+24.5%** |
-| Excess | **−5.3%** |
-| Sharpe | 0.72 |
+| Paper return | **+18.5%** |
+| Buy & hold | **+23.8%** |
+| Excess | **−5.2%** |
+| Sharpe | 0.69 |
 | Max drawdown | −11.4% |
 | Round trips | 13 |
 | Time in market | 40.1% |
 | Current position | LONG |
 
-The Sharpe of 0.72 is **the index's own bull-run beta, not alpha** — the strategy
+The Sharpe of 0.69 is **the index's own bull-run beta, not alpha** — the strategy
 is in the market 40% of the time during a rising market. Excess return is
 negative. This is exactly what the no-edge finding predicts, demonstrated forward
 on real prices with real costs.

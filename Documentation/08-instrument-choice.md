@@ -58,9 +58,9 @@ direction model on free daily Indian data, there is no better option available.
 A good instrument does not create an edge. On this well-chosen instrument, with
 every leakage control in place:
 
-- Mean OOS AUC **0.5123**, coin flip is 0.50
+- Mean OOS AUC **0.5132**, coin flip is 0.50
 - **0 of 20** horizons significant after multiple-testing correction
-- Paper trading **+19.2%** vs buy-and-hold **+24.5%** over 674 forward days
+- Paper trading **+18.5%** vs buy-and-hold **+23.8%** over 676 forward days
 
 **The model does not beat holding the index.** Choosing the right instrument was
 necessary, not sufficient.
@@ -73,8 +73,8 @@ model, no GPU, and pays no transaction costs beyond one entry.
 
 Any long/flat timing strategy that is in the market part of the time inherits a
 *fraction* of that drift and pays costs on every switch. That is exactly what the
-paper book shows: Sharpe 0.72 looks respectable, but it is 40%-of-the-time
-exposure to a rising market, and excess return is **−5.3%**.
+paper book shows: Sharpe 0.69 looks respectable, but it is 40%-of-the-time
+exposure to a rising market, and excess return is **−5.2%**.
 
 **When you see a positive Sharpe on a long/flat strategy in a bull market, the
 default assumption should be beta, not alpha.** Check the excess return.
@@ -135,7 +135,7 @@ suggests the opposite.
 | Question | Answer |
 |----------|--------|
 | Is `^NSEI` a good instrument? | **Yes — the best available here.** Lowest vol, strongest drift, cheapest, most liquid, no blowup risk |
-| Does that make the model tradable? | **No.** AUC 0.5123, 0/20 significant, loses to buy-and-hold |
+| Does that make the model tradable? | **No.** AUC 0.5132, 0/20 significant, loses to buy-and-hold |
 | Should you switch to a single stock? | **No.** Higher vol, higher cost, event risk, and the model ranks stocks backwards |
 | Should you trade any of this? | **No.** There is no validated edge to trade |
 | What does the 60.1% drift mean? | Buy and hold captures it. A model is not needed and here subtracts value |

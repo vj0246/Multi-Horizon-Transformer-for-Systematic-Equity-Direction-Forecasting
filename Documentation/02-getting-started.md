@@ -24,7 +24,7 @@ are optional and marked as such in the file.
 ## The five-minute path
 
 ```bash
-# 1. Verify everything is correct (39 tests: leakage, costs, metrics, drift, gate)
+# 1. Verify everything is correct (58 tests: leakage, costs, metrics, drift, gate)
 python -m pytest tests/test_rigorous.py -q
 
 # 2. Look at the results without retraining anything
@@ -62,6 +62,20 @@ python -m Source.Insights.build
 
 # Adaptive audit: drift detection + provenance (trains nothing)
 python -m Source.Adaptive.run
+
+# Trade journal + P&L attribution
+python -m Source.Journal.run
+
+# Hourly track (free; 730d is Yahoo's cap for 1h bars)
+python -m Source.Intraday.fetch --interval 1h
+python -m Source.Intraday.run --interval 1h --horizons 20
+
+# Point-in-time fundamentals + news tone (both free, keyless)
+python -m Source.Ingestion.screener --limit 85
+python -m Source.News.gdelt --days 730        # rate-limited; re-run to fill gaps
+
+# Live quotes (execution-side; never feeds the model)
+python -m Source.Ingestion.quotes --indices
 
 # Rebuild the static site
 cd frontend && npm run build      # -> frontend/out

@@ -228,7 +228,7 @@ adaptive:
   answer, not a bug: the system refuses to make a decision it cannot support.
   Promotion needs ~600 days of evaluation, which is years of daily data.
 - **Adaptation cannot create an edge.** Every layer here adapts a model whose
-  mean AUC is 0.5123 with 0/20 horizons significant. Adapting no-edge faster
+  mean AUC is 0.5132 with 0/20 horizons significant. Adapting no-edge faster
   produces no edge faster.
 - **The drift alarms are descriptive, not actionable.** They say the signal's
   level moves. They do not say a retrain would help.

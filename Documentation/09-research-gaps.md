@@ -82,7 +82,7 @@ primary reporting frame — the site leads with Sharpe and excess return, not
 accuracy.
 
 The critique that papers minimise loss rather than maximise utility is correct
-and taken seriously here: a model with 0.5123 AUC is reported as **having no
+and taken seriously here: a model with 0.5132 AUC is reported as **having no
 edge**, because the metric that matters is whether it beats buy-and-hold net of
 costs. It does not.
 

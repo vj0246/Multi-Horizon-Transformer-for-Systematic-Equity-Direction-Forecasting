@@ -1,273 +1,280 @@
 # 5. File Reference
 
-Every file in the repository, what it does, and how to run it.
+Every module: what it does, how to run it, and why it exists.
+**51 modules, ~8,100 lines**, plus a 987-line test suite.
+
+## System flow
+
+```mermaid
+flowchart TD
+    subgraph ING["Source/Ingestion — acquisition"]
+        FMD["Fetch_Market_Data<br/>^NSEI daily 2007+"]
+        FMA["fetch_macro<br/>VIX · USDINR · crude · S&P"]
+        FUN["fetch_universe<br/>85 NSE names"]
+        SESS["session<br/>NSE calendar + throttle-proof yfinance"]
+        SCR["screener<br/>11y fundamentals, lag-stamped"]
+        NSEM["nse<br/>live + daily archive"]
+    end
+
+    subgraph PIPE["Pipeline + Features"]
+        DL["data_loader<br/>strip 3 header rows"]
+        FEAT["Returns · Volatility · Macro<br/>11 + 8 features"]
+        DS["dataset<br/>targets → windows → split → scale"]
+        CS["cross_section<br/>panel, date-split"]
+    end
+
+    subgraph MODEL["Models"]
+        TF["transformer<br/>2 blocks · 4 heads · d64"]
+        ENS["ensemble<br/>3 seeds averaged"]
+    end
+
+    subgraph EV["Backtest + Evaluation"]
+        COST["costs<br/>India stack, 9.58bps"]
+        MET["metrics<br/>Sharpe · IC · decile"]
+        SUITE["suite<br/>overlap-corrected SE · DSR"]
+    end
+
+    subgraph LIVE["Forward-looking"]
+        FROZ["Paper/frozen<br/>one shared scorer"]
+        PAP["Paper/run"]
+        INS["Insights/build"]
+        ADP["Adaptive/run"]
+        JRN["Journal/run"]
+    end
+
+    FMD --> DL --> FEAT --> DS --> TF
+    FMA --> FEAT
+    FUN --> CS --> TF
+    SESS -.retries.-> FMD & FUN
+    TF --> ENS --> MET --> SUITE --> ART["frontend/public/data/*.json"]
+    COST --> MET
+    ENS --> FROZ --> PAP & INS & ADP
+    PAP --> JRN
+    PAP & INS & ADP & JRN --> ART
+    ART --> SITE["Next.js static site"]
+    SCR & NSEM -.execution / future use.-> SITE
+
+    style ING fill:#0f3d3a,color:#fff
+    style MODEL fill:#1e3a5f,color:#fff
+    style EV fill:#5f1e1e,color:#fff
+    style LIVE fill:#5f4a1e,color:#fff
+```
 
 ## Repository layout
 
 ```
 .
-├── config.yaml                 # ALL hyperparameters. Nothing is hardcoded elsewhere.
-├── Source/                     # Library code
+├── config.yaml                 # ALL hyperparameters. Nothing hardcoded elsewhere.
+├── Source/
 │   ├── device.py               # GPU/CPU selection, fail-fast on CPU
-│   ├── Ingestion/              # Data downloaders
-│   ├── Features/               # Feature engineering
-│   ├── Pipeline/               # Loading, windowing, splitting, scaling
+│   ├── Ingestion/              # 8 modules: acquisition + live routing
+│   ├── Features/               # Returns, Volatility, Macro
+│   ├── Pipeline/               # loading, windowing, splitting, scaling
 │   ├── Models/                 # Transformer + seed ensemble
-│   ├── Backtest/               # Costs, metrics, orchestrators
-│   ├── Evaluation/             # Metric suite + per-model registry
-│   ├── Paper/                  # Live forward paper trading
-│   ├── Insights/               # Current predictions artifact
-│   ├── Adaptive/               # Drift detection, versioning, gated retraining
+│   ├── Backtest/               # costs, metrics, orchestrators
+│   ├── Evaluation/             # metric suite + registry
+│   ├── Paper/                  # live forward paper trading
+│   ├── Insights/               # current predictions artifact
+│   ├── Adaptive/               # drift, versioning, gated retraining
 │   ├── Journal/                # P&L attribution + Thompson bandit
-│   ├── Advisor/                # Optional LLM commentary (off by default)
-│   ├── Risk/                   # Volatility-targeted sizing
-│   ├── News/                   # Optional sentiment track
-│   └── Api/                    # Read-only FastAPI over artifacts
-├── scripts/                    # Runnable entry points
-├── tests/test_rigorous.py      # 39 tests
-├── Data/                       # Raw + processed data
-├── frontend/                   # Next.js static showcase site
-└── Documentation/              # You are here
+│   ├── Intraday/               # hourly track
+│   ├── Advisor/                # optional LLM commentary (off)
+│   ├── Risk/                   # volatility-targeted sizing
+│   ├── News/                   # GDELT + FinBERT sentiment
+│   └── Api/                    # read-only FastAPI over artifacts
+├── scripts/                    # runnable entry points
+├── tests/test_rigorous.py      # 58 tests
+├── Data/                       # raw + processed
+├── frontend/                   # Next.js static site
+└── Documentation/              # you are here
 ```
 
 ---
 
-## `Source/Ingestion/` — data acquisition
+## `Source/Ingestion/` — acquisition (8 modules, 835 lines)
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| `Fetch_Market_Data.py` | 33 | Downloads `^NSEI` daily OHLCV from yfinance, to the ticker/path set in `config.yaml`. |
-| `fetch_macro.py` | 52 | Downloads India VIX, USDINR, crude, S&P 500 → `Data/Raw_Data/Macro/`. |
-| `fetch_universe.py` | 42 | Downloads 85 NSE large caps → `Data/Raw_Data/Universe/` (gitignored). Writes a **simple single-header CSV**, unlike the `^NSEI` export. |
-| `fetch_fundamentals.py` | 55 | **Current** fundamentals snapshot. Display only — never a model feature (would be look-ahead leakage). |
+| `session.py` | 120 | **NSE trading calendar** (holidays, not just weekends) + `download()`, a throttle-resistant yfinance client |
+| `Fetch_Market_Data.py` | 33 | `^NSEI` daily OHLCV → the multi-header CSV `load_ohlcv` parses |
+| `fetch_macro.py` | 52 | India VIX, USDINR, crude, S&P 500 → `Data/Raw_Data/Macro/` |
+| `fetch_universe.py` | 42 | 85 NSE large caps (gitignored). **Simple single-header CSV**, unlike the `^NSEI` export |
+| `screener.py` | 325 | **Point-in-time fundamentals** — 11y annual, 13q quarterly, FII/DII. Every row lag-stamped |
+| `nse.py` | 232 | Authoritative NSE fundamentals + `delivery_pct`. Archives dated snapshots |
+| `quotes.py` | 174 | Live quote routing: NSE for spot, yfinance for price. **Execution-side only** |
+| `fetch_fundamentals.py` | 55 | yfinance current snapshot. Display only — superseded by `screener.py` |
 
-```bash
-python -m Source.Ingestion.Fetch_Market_Data
-python -m Source.Ingestion.fetch_macro
-python -m Source.Ingestion.fetch_universe
-```
+Two traps encoded here, both from real failures:
 
-## `Source/Features/` — feature engineering
+- **Yahoo returns an empty body when throttled**, and yfinance caches that
+  emptiness on the client, so retrying the same object re-reads nothing.
+  `download()` builds a fresh session per attempt and **raises** rather than
+  returning empty — a silent empty frame becomes a silent gap in a training set.
+- **Screener gives period labels, not announcement dates.** `point_in_time()`
+  filters on `available_from`; filtering on `period` is look-ahead leakage.
+
+Full routing rationale: [Data Sources](13-data-sources.md).
+
+## `Source/Features/` — feature engineering (3 modules, 196 lines)
 
 | File | Lines | Produces |
 |------|-------|----------|
 | `Returns.py` | 47 | `daily_ret`, `roll_mean_ret_{5,10,20}`, `momentum_10`, `ma_diff_10` |
 | `Volatility.py` | 53 | `roll_vol_{5,10,20}`, `log_volume`, `vol_roll_mean_5` |
-| `Macro.py` | 96 | The 8 macro features. **Enforces the strict lag** via `_asof_lagged`. |
+| `Macro.py` | 96 | The 8 macro features. **Enforces the strict lag** via `_asof_lagged` |
 
-Library modules — imported, not run directly.
-
-## `Source/Pipeline/` — data to tensors
+## `Source/Pipeline/` — data to tensors (3 modules, 543 lines)
 
 | File | Lines | Key functions |
 |------|-------|---------------|
-| `data_loader.py` | 53 | `load_ohlcv` — strips the 3 header rows and duplicate adj-close |
-| `dataset.py` | 153 | `build_features`, `make_windows`, `temporal_split_and_scale`, `build_dataset`, `resolve_feature_cols` |
-| `cross_section.py` | 337 | `load_universe`, panel builder, date-based split, cross-sectional features, `latest_windows` |
+| `data_loader.py` | 53 | `load_ohlcv` — strips 3 header rows and the duplicate adj-close |
+| `dataset.py` | 153 | `build_features`, `make_windows`, `temporal_split_and_scale`, `resolve_feature_cols` |
+| `cross_section.py` | 337 | Panel builder, date-based split, cross-sectional features, `latest_windows` |
 
-`resolve_feature_cols(cfg)` derives the active feature list from config and
-**raises if a column appears twice** (macro listed under both `use_macro` and
-`xs_features` was a real bug — duplicate features silently double-weight a
-signal). Covered by a test.
+`resolve_feature_cols(cfg)` **raises if a column appears twice** — macro listed
+under both `use_macro` and `xs_features` silently double-weighted a signal. Tested.
 
-## `Source/Models/` — the network
+## `Source/Models/` (2 modules, 176 lines)
 
 | File | Lines | Contents |
 |------|-------|----------|
 | `transformer.py` | 127 | `AttentionPooling1D`, `positional_encoding`, `_encoder_block`, `build_model`, `compile_model` |
-| `ensemble.py` | 49 | `train_ensemble` — trains `n_seeds` models, averages predictions |
+| `ensemble.py` | 49 | `train_ensemble` — N seeds, averaged predictions |
 
-`build_model(cfg, num_features=None)` returns `(model, attention_model)` sharing
-weights; the second exposes block-2 attention scores for interpretability.
-`num_features` overrides input width for the wider cross-sectional panel.
-
-`compile_model(model, cfg, objective=)` switches loss: BCE-on-logits for
-`classification`, Huber for `regression`. Architecture is identical either way.
-
-## `Source/Backtest/` — costs, metrics, orchestration
+## `Source/Backtest/` (4 modules, 1,161 lines)
 
 | File | Lines | Contents |
 |------|-------|----------|
-| `costs.py` | 105 | India cost model. `INSTRUMENTS` dict, `india_cost_breakdown`, `total_cost_bps` |
-| `metrics.py` | 307 | Sharpe, drawdown, IC, decile attribution, `calibrate_probs`, `per_horizon_*` |
-| `run.py` | 453 | Index-track orchestrator. Trains, backtests, writes ~15 JSON artifacts |
-| `run_cross_section.py` | 296 | Cross-sectional orchestrator. Panel train + quantile spread |
+| `costs.py` | 105 | India cost model — `INSTRUMENTS`, `india_cost_breakdown` |
+| `metrics.py` | 307 | Sharpe, drawdown, IC, decile attribution, `calibrate_probs` |
+| `run.py` | 453 | Index-track orchestrator → ~15 JSON artifacts |
+| `run_cross_section.py` | 296 | Panel train + quantile spread |
 
-```bash
-python -m Source.Backtest.run                 # REUSE=1 to skip retraining
-python -m Source.Backtest.run_cross_section
-```
+Round-trip: **futures 9.58bps** (used), intraday 10.47, options 25.53, delivery 28.22.
 
-### Cost model
-
-Per-side cost = fees + slippage, charged **round-trip on every trade**.
-
-| Instrument | Round-trip (bps) |
-|------------|------------------|
-| Futures | 9.58 |
-| Intraday equity | 10.47 |
-| Options | 25.53 |
-| Delivery equity | 28.22 |
-
-Components: brokerage, exchange transaction charge, SEBI turnover fee, STT
-(sell-side only for futures/intraday), stamp duty (buy-side only), GST at 18% on
-brokerage plus exchange plus SEBI, slippage, and DP charges on delivery sells.
-The index track uses **futures**, the cheapest and the realistic instrument for
-trading an index.
-
-> A 10x error once lived here: futures stamp duty was 2.0 bps instead of 0.2 bps
-> (0.002%). It is now covered by a test asserting the component sum.
-
-## `Source/Evaluation/` — the measurement apparatus
+## `Source/Evaluation/` (2 modules, 296 lines)
 
 | File | Lines | Contents |
 |------|-------|----------|
-| `suite.py` | 233 | `classification_metrics`, `_auc_se`, `auc_pvalue`, `error_metrics`, `financial_metrics`, `diebold_mariano`, `friedman_test`, `deflated_sharpe`, `multiple_testing` (returns per-hypothesis reject flags) |
-| `registry.py` | 63 | Per-model JSON registry in `Data/Evaluation/`, `leaderboard()` ranked by deflated Sharpe |
+| `suite.py` | 233 | `_auc_se` (overlap-corrected), `auc_pvalue`, `deflated_sharpe`, `multiple_testing`, `diebold_mariano`, `friedman_test` |
+| `registry.py` | 63 | Per-model JSON registry, `leaderboard()` by deflated Sharpe |
 
-See [Evaluation](06-evaluation.md) for every formula.
-
-## `Source/Paper/` — live forward paper trading
+## `Source/Paper/` (3 modules, 314 lines)
 
 | File | Lines | Contents |
 |------|-------|----------|
-| `engine.py` | 95 | Long/flat book marked daily. `new_state`, `step`, `summary`. Pure dict state, idempotent per date |
-| `frozen.py` | 65 | **Shared** loader/scorer for the frozen model. Used by both `run.py` and `Insights/build.py` so they can never drift apart |
-| `run.py` | 154 | Scores post-cutoff days with the frozen model, steps the book, writes `paper_trading.json` |
+| `engine.py` | 95 | Long/flat book marked daily. Pure dict state, idempotent per date |
+| `frozen.py` | 65 | **Shared** loader/scorer so the book and predictions cannot drift apart |
+| `run.py` | 154 | Scores post-cutoff days → `paper_trading.json` |
 
-```bash
-python -m Source.Paper.run              # score with current data
-python -m Source.Paper.run --refresh    # re-download data first (what the cron does)
-```
+The cutoff is **stored in model metadata**, so paper trading can never trade an
+in-sample day and the curve's left edge cannot drift.
 
-The frozen model was trained only through the validation cutoff, and that cutoff
-is **stored in the model metadata**. Paper trading therefore can never trade an
-in-sample day, and the curve's left edge cannot drift as data grows.
+## `Source/Adaptive/` (5 modules, 850 lines)
 
-Daily cron: `.github/workflows/paper_trading.yml` (weekdays 11:30 UTC) refetches
-data, steps the book, rebuilds predictions, and commits. The push triggers the
-Vercel deploy. The commit step runs with `if: always()` so a failure in the
-predictions step cannot discard a computed paper book.
+| File | Lines | Layer | Params touched |
+|------|-------|-------|----------------|
+| `drift.py` | 178 | daily | **0** — ADWIN + Page-Hinkley, monitor only |
+| `recalibrate.py` | 79 | monthly | ~40 — Platt on a lag-embargoed trailing window |
+| `retrain.py` | 179 | quarterly | 69,589 — purged refit behind a gate |
+| `versioning.py` | 139 | — | provenance, cumulative trial count |
+| `run.py` | 275 | — | orchestrator → `adaptive.json` |
 
-## `Source/Insights/build.py` — current predictions
+See [Adaptive Retraining](10-adaptive-retraining.md).
 
-216 lines. Scores the latest window and writes `predictions.json`: per-horizon
-calibrated P(up) beside that horizon's out-of-sample AUC, overlap-corrected 95%
-CI, effective n, and multiple-testing verdict.
-
-```bash
-python -m Source.Insights.build
-```
-
-**Two rules encoded here:**
-
-1. Skill is measured on the **frozen model's own** OOS period, never read from
-   `horizons.json` — that artifact belongs to the backtest model, a different
-   fit, so its error bars would describe a predictor that was never measured.
-2. Never reuse `horizons.json`'s `p_value` for significance. That is a Spearman
-   IC p-value over raw overlapping labels. Test AUC against 0.5 with the
-   effective-n standard error instead.
-
-## `Source/Adaptive/` — layered retraining
+## `Source/Journal/` (3 modules, 492 lines)
 
 | File | Lines | Contents |
 |------|-------|----------|
-| `drift.py` | 178 | `ADWIN`, `PageHinkley`, `scan()`. Monitor-only, 0 fitted parameters |
-| `versioning.py` | 139 | Version registry, `assert_out_of_sample`, cumulative trial count |
-| `recalibrate.py` | 79 | Platt refit on a label-embargoed trailing window (~40 params) |
-| `retrain.py` | 179 | `purged_indices`, `evaluate_block`, `gate` (fails closed) |
-| `run.py` | 275 | Runs all four layers -> `adaptive.json` |
+| `attribution.py` | 162 | win / signal_error / cost_drag / **noise**; exact binomial test |
+| `bandit.py` | 144 | Thompson sampling + `overlap()` separation check |
+| `run.py` | 186 | Orchestrator → `journal.json` |
 
-```bash
-python -m Source.Adaptive.run              # audit; trains nothing
-python -m Source.Adaptive.run --retrain    # train a challenger, run the gate
-```
+See [Journal & Advisor](11-journal-and-advisor.md).
 
-Layers are sized by **parameter count against independent observations**, not by
-clock alone. See [Adaptive Retraining](10-adaptive-retraining.md) for the full
-rationale and the gate bug it caught in its own first run.
+## `Source/Intraday/` (3 modules, 408 lines)
 
-## `Source/Risk/sizing.py`
+| File | Lines | Contents |
+|------|-------|----------|
+| `fetch.py` | 114 | Source-agnostic bar ingestion (`SOURCES` dict) |
+| `features.py` | 91 | Gap, session position, VWAP deviation, time-of-day volume |
+| `run.py` | 203 | Train + evaluate → `intraday.json` |
 
-52 lines. Volatility-targeted position sizing using **lagged** trailing
-volatility (no look-ahead). `run.py` emits a `risk_targeted` strategy variant.
-Config: `risk.target_vol_annual: 0.15`, `lookback: 6`, `max_leverage: 2.0`.
+See [Intraday & Sentiment](12-intraday-and-sentiment.md).
 
-## `Source/Api/main.py`
+## `Source/Advisor/` (2 modules, 215 lines)
 
-80 lines. Read-only FastAPI over the generated artifacts. **Never trains.**
+| File | Lines | Contents |
+|------|-------|----------|
+| `client.py` | 161 | Provider abstraction (groq \| anthropic), screening, schema validation, backoff |
+| `prompts.py` | 54 | Versioned prompts — never inlined |
 
-```bash
-uvicorn Source.Api.main:app --reload
-```
+**Off by default.** The guardrail is structural: the payload filter means the
+model never sees a forward prediction, so it cannot emit a trade call.
 
-## `Source/News/` — optional sentiment track
+## `Source/News/` (2 modules, 329 lines)
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `build_sentiment.py` | 90 | Self-contained: NewsAPI fetch → FinBERT scoring → daily aggregate in `daily_sentiment.csv` |
+| File | Lines | Contents |
+|------|-------|----------|
+| `gdelt.py` | 239 | Free, keyless, 2017+. Resumable with partial saves |
+| `build_sentiment.py` | 90 | NewsAPI + FinBERT. **Off** — ~30-day history cannot be backfilled |
 
-Off by default — see [Data](03-data.md#sentiment-optional-off).
+## Remaining modules
 
-## `scripts/` — entry points
+| File | Lines | Contents |
+|------|-------|----------|
+| `Source/device.py` | 47 | GPU/CPU selection, fail-fast when `require_gpu` |
+| `Source/Risk/sizing.py` | 52 | Volatility-targeted sizing on **lagged** trailing vol |
+| `Source/Insights/build.py` | 216 | Forward predictions with overlap-corrected intervals |
+| `Source/Api/main.py` | 80 | Read-only FastAPI over artifacts. Never trains |
+
+## `scripts/` — entry points (6 modules, 674 lines)
 
 | Script | Lines | Purpose |
 |--------|-------|---------|
-| `select_model.py` | 87 | Hyperparameter grid on **validation only** |
-| `save_paper_model.py` | 110 | Trains and FREEZES the 3-seed paper model, stores scaler, signal stats, Platt coefficients, and the OOS cutoff |
-| `evaluate_models.py` | 134 | Runs the full metric suite over every model, writes the registry |
-| `conviction_strategy.py` | 145 | Trades only when the model is confident — high-conviction gating |
-| `gbdt_baseline.py` | 108 | LightGBM baseline, purged/embargoed CV |
-| `gbdt_cross_section.py` | 90 | LightGBM on the panel — the tool the literature favours |
+| `save_paper_model.py` | 110 | Train and **freeze** the paper model + Platt coefficients |
+| `conviction_strategy.py` | 145 | Trade only on high confidence |
+| `evaluate_models.py` | 134 | Full metric suite → registry |
+| `gbdt_baseline.py` | 108 | LightGBM + purged/embargoed CV |
+| `gbdt_cross_section.py` | 90 | LightGBM on the panel |
+| `select_model.py` | 87 | Hyperparameter grid, **validation only** |
 | `wsl_gpu_env.sh` | — | Fixes `LD_LIBRARY_PATH` for CUDA in WSL |
 | `train_gpu.sh` | — | Wrapper: source env, run a module on GPU |
 
-## `tests/test_rigorous.py`
-
-533 lines, 32 tests. Groups:
+## `tests/test_rigorous.py` — 987 lines, 58 tests
 
 | Group | Covers |
 |-------|--------|
-| Feature correctness | Formula-by-formula verification |
-| Leakage audits | Forward targets, no-lookahead windows, macro strict lag, disjoint splits, scaler-on-train-only |
-| Cross-section | Date-split no-leakage, no NaN, no duplicate features |
-| Cost math | India component sum, round-trip application |
-| Metric math | Sharpe, drawdown, non-overlap, net = gross − cost |
-| Statistical | Overlap-corrected SE, deflated Sharpe, multiple-testing reject flags including ties |
-| Calibration | Platt rank-preservation |
-| Paper engine | Cost/marking correctness, flat-earns-nothing |
-| Serialization | Full save/load round-trip **with optimizer state** |
-| Artifacts | Schema and range validity of shipped JSON |
+| Leakage | Forward targets, no-lookahead windows, macro strict lag, disjoint splits, scaler-on-train-only |
+| Point-in-time | Reporting lag; `point_in_time` hides unannounced quarters |
+| Intraday | Causality — perturbing a **future** bar must not move earlier rows |
+| Sentiment | Tone spike lands on the *following* bar |
+| Costs | India component sum, round-trip application |
+| Statistical | Overlap-corrected SE, deflated Sharpe, multiple-testing ties |
+| Adaptive | Gate fails closed, purge/embargo, drift FP/TP rates |
+| Journal | Exact binomial, noise-floor classification, bandit separation |
+| Serialization | Save/load round-trip **with optimizer state** |
+| Infrastructure | NSE calendar, throttled download raises |
 
 ```bash
 python -m pytest tests/test_rigorous.py -q
+python -m pytest tests/test_rigorous.py -q -k drift     # one group
 ```
-
-## `frontend/`
-
-| Path | Purpose |
-|------|---------|
-| `app/page.tsx` | The entire single-page site |
-| `components/charts.tsx` | All Recharts visualisations + `PredictionTable` |
-| `components/ui.tsx` | `Section`, `Panel`, `Stat` primitives |
-| `lib/data.ts` | Typed static imports of every artifact |
-| `public/data/*.json` | **Generated artifacts — never hand-edit** |
-
-Static export (`output: export`), no backend. Regenerate JSON with the Python
-pipeline, then rebuild.
 
 ## Generated artifacts
 
 | File | Written by | Contents |
 |------|-----------|----------|
 | `summary.json` | `Backtest/run.py` | Headline metrics, split sizes, costs |
-| `horizons.json` | `Backtest/run.py` | Per-horizon AUC, accuracy, IC (backtest model) |
-| `strategies.json` | `Backtest/run.py` | Every strategy variant with equity curves |
-| `calibration.json` | `Backtest/run.py` | Reliability bins, pre and post Platt |
-| `decile.json`, `threshold_sweep.json`, `yearly.json`, `walkforward.json`, `attention.json`, `training.json`, `price.json`, `features.json` | `Backtest/run.py` | Supporting charts |
-| `cross_section*.json` | `run_cross_section.py` | Four published configs, none cherry-picked |
-| `stock_signals.json` | `run_cross_section.py` | Per-stock forward signal + risk profiles |
+| `horizons.json` | `Backtest/run.py` | Per-horizon AUC/IC — **backtest model** |
+| `strategies.json` | `Backtest/run.py` | Strategy variants + equity curves |
 | `paper_trading.json` | `Paper/run.py` | Live paper book |
-| `predictions.json` | `Insights/build.py` | Current forward predictions with error bars |
+| `predictions.json` | `Insights/build.py` | Forward predictions — **frozen model** |
+| `adaptive.json` | `Adaptive/run.py` | Drift, recalibration, gate verdict |
+| `journal.json` | `Journal/run.py` | Trade attribution, bandit, commentary |
+| `intraday.json` | `Intraday/run.py` | Hourly-track skill + economics |
+| `cross_section*.json` | `run_cross_section.py` | Four configs, none cherry-picked |
+
+**Never hand-edit these.** Regenerate, then rebuild the site.
 
 Continue to [Evaluation](06-evaluation.md).

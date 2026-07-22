@@ -20,6 +20,8 @@ Read in order if you are new:
 | 10 | [Adaptive Retraining](10-adaptive-retraining.md) | Drift detection, versioning, and the champion/challenger gate |
 | 11 | [Journal & Advisor](11-journal-and-advisor.md) | P&L attribution, why not RL, the bandit, and the LLM guardrails |
 | 12 | [Intraday & Sentiment](12-intraday-and-sentiment.md) | Why hourly not 5-min, the cost/power tradeoff, GDELT news tone |
+| 13 | [Data Sources](13-data-sources.md) | Five free sources, what each is authoritative for, and the routing rule |
+| 14 | [Full Evaluation](14-full-evaluation.md) | Every track, every number, and the four bugs that faked skill |
 
 ## The one-paragraph summary
 
@@ -27,7 +29,7 @@ A Transformer encoder predicts whether the Nifty 50 index will close higher over
 each of 20 forward horizons (1 to 20 days). It is trained on ~4,500 trading days
 of engineered price, volume, and macro features with a strict temporal split.
 **The model has no statistically detectable edge.** Mean out-of-sample AUC is
-0.5123 against a 0.50 coin-flip baseline, and zero of 20 horizons survive
+0.5132 against a 0.50 coin-flip baseline, and zero of 20 horizons survive
 multiple-testing correction. The system is published as an honest negative
 result, with a live paper-trading book that demonstrates the same conclusion
 forward on real prices. Nothing here should be traded.

@@ -24,6 +24,8 @@ question.
 | [Adaptive Retraining](Documentation/10-adaptive-retraining.md) | Drift detection, model versioning, champion/challenger gate |
 | [Journal & Advisor](Documentation/11-journal-and-advisor.md) | P&L attribution, why not RL, the bandit, LLM guardrails |
 | [Intraday & Sentiment](Documentation/12-intraday-and-sentiment.md) | Why hourly not 5-min, cost vs power, GDELT news tone |
+| [Data Sources](Documentation/13-data-sources.md) | Five free sources and the routing rule |
+| [Full Evaluation](Documentation/14-full-evaluation.md) | Every track, every number, four bugs that faked skill |
 
 ---
 

@@ -16,7 +16,7 @@ Two problems, and the second is the one that matters.
 | DQN | ~1,000,000 | 13 round trips | **77,000×** |
 | PPO | ~1,000,000 | 13 round trips | **77,000×** |
 
-674 out-of-sample days, 13 round trips. That is the entire training set for a
+676 out-of-sample days, 13 round trips. That is the entire training set for a
 policy learner.
 
 ### 2. The premise is wrong
