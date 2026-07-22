@@ -926,6 +926,62 @@ def test_download_raises_rather_than_returning_empty(monkeypatch):
     assert calls["n"] == 3, "did not retry the throttled response"
 
 
+# ------------------------------------------------- point-in-time fundamentals
+def test_screener_reporting_lag_prevents_lookahead():
+    """A quarter ENDING 31 Mar is not ANNOUNCED until ~45 days later. Filtering
+    on the period label instead of the disclosure date would hand the model
+    results the market had not seen - the easiest way to fake alpha from
+    fundamentals."""
+    from datetime import date
+    from Source.Ingestion.screener import (LAG_ANNUAL, LAG_QUARTERLY,
+                                           LAG_SHAREHOLDING, _period_end)
+
+    assert _period_end("Mar 2026") == date(2026, 3, 31)
+    assert _period_end("Dec 2025") == date(2025, 12, 31)
+    assert _period_end("Feb 2024") == date(2024, 2, 29)        # leap year
+    assert _period_end("TTM") is None                          # no period end -> dropped
+    assert _period_end("garbage") is None
+
+    # SEBI LODR deadlines, taken at the limit rather than the typical case
+    assert LAG_QUARTERLY == 45 and LAG_ANNUAL == 60 and LAG_SHAREHOLDING == 21
+
+
+def test_point_in_time_filters_on_disclosure_not_period():
+    import pandas as pd
+    from Source.Ingestion.screener import point_in_time
+
+    panel = pd.DataFrame([
+        {"symbol": "AAA", "statement": "quarterly", "period": "Dec 2025",
+         "period_end": "2025-12-31", "available_from": "2026-02-14", "revenue_cr": 100},
+        {"symbol": "AAA", "statement": "quarterly", "period": "Mar 2026",
+         "period_end": "2026-03-31", "available_from": "2026-05-15", "revenue_cr": 200},
+    ])
+
+    # the day after the quarter ended, its numbers are NOT public yet
+    v = point_in_time(panel, "2026-04-01")
+    assert len(v) == 1 and v.iloc[0]["period"] == "Dec 2025",         "a quarter was visible before its announcement date"
+
+    # after the deadline it becomes visible
+    v = point_in_time(panel, "2026-05-20")
+    assert v.iloc[0]["period"] == "Mar 2026"
+
+    # and nothing at all is visible before the earliest disclosure
+    assert point_in_time(panel, "2026-01-01").empty
+
+
+def test_screener_panel_artifact_is_lag_stamped():
+    import pandas as pd
+    p = ROOT / "Data" / "Raw_Data" / "Fundamentals" / "screener_panel.csv"
+    if not p.exists():
+        pytest.skip("screener panel not built")
+    df = pd.read_csv(p)
+    assert {"period_end", "available_from", "statement"} <= set(df.columns)
+    end = pd.to_datetime(df["period_end"])
+    avail = pd.to_datetime(df["available_from"])
+    assert (avail > end).all(), "a row claims to be public on or before its period end"
+    assert (avail - end).dt.days.min() >= 21     # shortest legal lag (shareholding)
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

@@ -23,6 +23,8 @@ env/
 Data/Processed_Data/*
 !Data/Processed_Data/.gitkeep
 Data/Raw_Data/Universe/
+# screener panel is regenerable and grows; keep the repo lean
+Data/Raw_Data/Fundamentals/
 # NB: the frozen paper model (Data/Processed_Data/paper_model/) is force-added
 # and tracked despite the *.h5/*.pkl rules - the daily CI job needs it. It never
 # changes, so tracking it is safe.
