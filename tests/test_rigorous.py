@@ -877,6 +877,55 @@ def test_nse_market_hours_window():
     assert not _market_open(datetime(2026, 7, 19, 11, 0, tzinfo=IST))  # Sunday
 
 
+def test_nse_calendar_excludes_holidays_not_just_weekends():
+    """Counting trading days by weekday alone overstates October 2026 by four
+    days (Gandhi Jayanti, Dussehra, both Diwali sessions) - an 18% error in any
+    per-trading-day annualisation."""
+    import datetime as dt
+    from Source.Ingestion.session import (IST, is_trading_day, market_open,
+                                          trading_days, calendar_covers)
+
+    assert not is_trading_day(dt.date(2026, 10, 29))     # Diwali Laxmi Pujan
+    assert not is_trading_day(dt.date(2026, 1, 26))      # Republic Day
+    assert not is_trading_day(dt.date(2026, 7, 19))      # Sunday
+    assert is_trading_day(dt.date(2026, 7, 22))          # ordinary Wednesday
+
+    assert not market_open(dt.datetime(2026, 10, 29, 11, 0, tzinfo=IST))
+    assert market_open(dt.datetime(2026, 7, 22, 11, 0, tzinfo=IST))
+    assert not market_open(dt.datetime(2026, 7, 22, 8, 0, tzinfo=IST))    # pre-open
+    assert not market_open(dt.datetime(2026, 7, 22, 16, 0, tzinfo=IST))   # post-close
+
+    assert trading_days(dt.date(2026, 10, 1), dt.date(2026, 10, 31)) == 18
+
+    # the calendar must admit when it does not cover a range rather than
+    # silently degrading to weekends-only
+    assert calendar_covers(dt.date(2026, 1, 1), dt.date(2026, 12, 31))
+    assert not calendar_covers(dt.date(2030, 1, 1), dt.date(2030, 12, 31))
+
+
+def test_download_raises_rather_than_returning_empty(monkeypatch):
+    """Yahoo answers a throttled request with an EMPTY body, not an error. A
+    silent empty frame becomes a silent gap in a training set, so the helper must
+    raise - and must retry on a FRESH session, because yfinance caches emptiness
+    on the client."""
+    import pandas as pd
+    from Source.Ingestion import session
+
+    calls = {"n": 0}
+
+    def fake_download(*a, **kw):
+        calls["n"] += 1
+        return pd.DataFrame()                    # always throttled
+
+    monkeypatch.setattr(session.time, "sleep", lambda *_: None)
+    import yfinance as yf
+    monkeypatch.setattr(yf, "download", fake_download)
+
+    with pytest.raises(RuntimeError, match="throttl|attempts"):
+        session.download("^NSEI", tries=3, period="5d")
+    assert calls["n"] == 3, "did not retry the throttled response"
+
+
 if __name__ == "__main__":
     import sys
     sys.exit(pytest.main([__file__, "-q"]))

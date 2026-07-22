@@ -36,8 +36,10 @@ waiting on timeouts once NSE has refused us.
 from __future__ import annotations
 
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 from pathlib import Path
+
+from Source.Ingestion.session import IST, market_open as _market_open
 
 ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE = ROOT / "Data" / "Raw_Data" / "NSE_Fundamentals" / "snapshots.csv"
@@ -57,17 +59,6 @@ _TTL_MARKET = 300          # 5 min during market hours
 _TTL_OFFHOURS = 86400      # 24 h outside them
 _DOWN_UNTIL = 0.0          # circuit breaker: skip NSE until this time after a failure
 _COOLDOWN = 300
-
-IST = timezone(timedelta(hours=5, minutes=30))
-
-
-def _market_open(now: datetime | None = None) -> bool:
-    """NSE cash session: Mon-Fri 09:15-15:30 IST. Ignores trading holidays."""
-    now = (now or datetime.now(IST)).astimezone(IST)
-    if now.weekday() > 4:
-        return False
-    return (now.hour, now.minute) >= (9, 15) and (now.hour, now.minute) <= (15, 30)
-
 
 def _get_ttl() -> int:
     return _TTL_MARKET if _market_open() else _TTL_OFFHOURS

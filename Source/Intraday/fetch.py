@@ -56,11 +56,11 @@ def _normalise(df: pd.DataFrame, tz: str = "Asia/Kolkata") -> pd.DataFrame:
 def from_yfinance(ticker: str = "^NSEI", interval: str = "1h",
                   period: str = "730d") -> pd.DataFrame:
     """Free intraday bars. Yahoo caps history by interval: 1h -> 730d, 5m -> 60d."""
-    import yfinance as yf
-    df = yf.download(ticker, interval=interval, period=period,
-                     auto_adjust=False, progress=False)
-    if df.empty:
-        raise RuntimeError(f"yfinance returned nothing for {ticker} {interval}/{period}")
+    from Source.Ingestion.session import download
+    # retries on a fresh impersonating session each attempt: Yahoo answers a
+    # throttled request with an EMPTY body, and yfinance caches that emptiness on
+    # the client, so reusing one would re-read the same nothing.
+    df = download(ticker, interval=interval, period=period, auto_adjust=False)
     return _normalise(df)
 
 
