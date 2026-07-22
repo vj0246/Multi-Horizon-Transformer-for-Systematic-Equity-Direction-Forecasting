@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-21T16:27:43+00:00",
-  "as_of": "2026-07-21",
+  "generated_at": "2026-07-22T12:59:48+00:00",
+  "as_of": "2026-07-22",
   "attribution": {
     "n_trades": 6,
     "hit_rate": 0.6666666666666666,
@@ -14,7 +14,7 @@
       "noise": 1,
       "signal_error": 1
     },
-    "noise_floor": 0.0383196584875678,
+    "noise_floor": 0.03831762863812974,
     "actionable": {
       "cost_drag_trades": 0,
       "cost_drag_cost": 0.0,
@@ -107,13 +107,13 @@
     },
     {
       "entry_date": "2026-06-05",
-      "exit_date": "2026-07-21",
+      "exit_date": "2026-07-22",
       "entry_price": 119.0678,
-      "exit_price": 123.2513,
-      "days_held": 31,
-      "gross_return": 0.035135443839560354,
+      "exit_price": 122.2758,
+      "days_held": 32,
+      "gross_return": 0.026942632684907153,
       "cost_return": -0.0009575799999999999,
-      "net_return": 0.034177863839560355,
+      "net_return": 0.025985052684907153,
       "direction_correct": true,
       "open": true
     }
