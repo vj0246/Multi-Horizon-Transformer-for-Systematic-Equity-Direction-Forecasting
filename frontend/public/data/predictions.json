@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-07-22",
-  "last_close": 23996.25,
+  "as_of": "2026-07-23",
+  "last_close": 23869.599609375,
   "model": {
     "frozen_through": "2023-10-19",
     "n_seeds": 3,
@@ -8,425 +8,425 @@
     "calibration": "per-horizon Platt, fit on held-out data only"
   },
   "position": {
-    "signal_z": 1.3028322206484875,
-    "threshold_z": 0.1995871949082796,
-    "percentile_of_trailing": 96.8,
+    "signal_z": 1.2075500673322699,
+    "threshold_z": 0.24392905748568858,
+    "percentile_of_trailing": 92.0,
     "window_days": 250,
     "quantile_rule": 70,
     "stance": "LONG",
-    "rationale": "today's ensemble signal (+1.30) sits at the 97th percentile of the trailing 250 days; the rule goes long above the 70th"
+    "rationale": "today's ensemble signal (+1.21) sits at the 92th percentile of the trailing 250 days; the rule goes long above the 70th"
   },
   "horizons": [
     {
       "horizon": 1,
-      "auc": 0.44165795277804626,
-      "ic": -0.058136827885720055,
-      "auc_se": 0.022133196230681433,
+      "auc": 0.44027785077346226,
+      "ic": -0.06056222802208023,
+      "auc_se": 0.022105666322259028,
       "auc_ci95": [
-        0.39827688816591067,
-        0.48503901739018185
+        0.39695074478183456,
+        0.48360495676508997
       ],
-      "n_labelled": 676,
-      "eff_n": 676.0,
-      "p_value": 0.008390155049674997,
+      "n_labelled": 677,
+      "eff_n": 677.0,
+      "p_value": 0.006899282286526809,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.4683030843734741,
+      "prob_up": 0.470440536737442,
       "direction": "down",
-      "edge_pp": -3.169691562652588,
+      "edge_pp": -2.9559463262557983,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.398, 0.485] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.397, 0.484] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 2,
-      "auc": 0.4802204585537919,
-      "ic": -0.04235133453120215,
-      "auc_se": 0.03154116612785963,
+      "auc": 0.47921061884669475,
+      "ic": -0.044564710930913166,
+      "auc_se": 0.03151203728202373,
       "auc_ci95": [
-        0.41839977294318703,
-        0.5420411441643967
+        0.4174470257739282,
+        0.5409742119194613
       ],
-      "n_labelled": 675,
-      "eff_n": 337.5,
-      "p_value": 0.530592104299074,
+      "n_labelled": 676,
+      "eff_n": 338.0,
+      "p_value": 0.5094282356124782,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5726219415664673,
+      "prob_up": 0.5730671286582947,
       "direction": "up",
-      "edge_pp": 7.2621941566467285,
+      "edge_pp": 7.306712865829468,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.418, 0.542] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.417, 0.541] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 3,
-      "auc": 0.4961970590590057,
-      "ic": 0.017300119683971608,
-      "auc_se": 0.038810686183910884,
+      "auc": 0.49529188537381186,
+      "ic": 0.015356990266828205,
+      "auc_se": 0.038776829418128184,
       "auc_ci95": [
-        0.42012811413854034,
-        0.572266003979471
+        0.41928929971428064,
+        0.5712944710333431
       ],
-      "n_labelled": 674,
-      "eff_n": 224.66666666666666,
-      "p_value": 0.9219426523197105,
+      "n_labelled": 675,
+      "eff_n": 225.0,
+      "p_value": 0.9033618078397614,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5638770461082458,
+      "prob_up": 0.5589659214019775,
       "direction": "up",
-      "edge_pp": 6.387704610824585,
+      "edge_pp": 5.896592140197754,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.420, 0.572] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.419, 0.571] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 4,
-      "auc": 0.4618498659517426,
-      "ic": -0.05476071849015532,
-      "auc_se": 0.044870875949172516,
+      "auc": 0.46031548101502584,
+      "ic": -0.05814230683874115,
+      "auc_se": 0.044819249127501806,
       "auc_ci95": [
-        0.37390294909136446,
-        0.5497967828121207
+        0.3724697527251223,
+        0.5481612093049294
       ],
-      "n_labelled": 673,
-      "eff_n": 168.25,
-      "p_value": 0.39520256260020714,
+      "n_labelled": 674,
+      "eff_n": 168.5,
+      "p_value": 0.37592221715920626,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5990122556686401,
+      "prob_up": 0.5938147902488708,
       "direction": "up",
-      "edge_pp": 9.901225566864014,
+      "edge_pp": 9.381479024887085,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.374, 0.550] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.372, 0.548] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 5,
-      "auc": 0.535081439054949,
-      "ic": 0.0332394598556633,
-      "auc_se": 0.04997536163910792,
+      "auc": 0.5338417625546339,
+      "ic": 0.03162983660313919,
+      "auc_se": 0.04994611642061695,
       "auc_ci95": [
-        0.43712973024229745,
-        0.6330331478676006
+        0.4359473743702247,
+        0.6317361507390431
       ],
-      "n_labelled": 672,
-      "eff_n": 134.4,
-      "p_value": 0.4826949469796027,
+      "n_labelled": 673,
+      "eff_n": 134.6,
+      "p_value": 0.49804726233339736,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5871231555938721,
+      "prob_up": 0.5859086513519287,
       "direction": "up",
-      "edge_pp": 8.712315559387207,
+      "edge_pp": 8.590865135192871,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.437, 0.633] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.436, 0.632] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 6,
-      "auc": 0.45778077268643314,
-      "ic": -0.0937613799217665,
-      "auc_se": 0.05507109627051239,
+      "auc": 0.456662875769,
+      "ic": -0.09503517151253005,
+      "auc_se": 0.0550089676887736,
       "auc_ci95": [
-        0.34984142399622886,
-        0.5657201213766374
+        0.34884529909900375,
+        0.5644804524389962
       ],
-      "n_labelled": 671,
-      "eff_n": 111.83333333333333,
-      "p_value": 0.4433007474863595,
+      "n_labelled": 672,
+      "eff_n": 112.0,
+      "p_value": 0.4308024334943985,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.526743471622467,
+      "prob_up": 0.528995156288147,
       "direction": "up",
-      "edge_pp": 2.674347162246704,
+      "edge_pp": 2.8995156288146973,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.350, 0.566] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.349, 0.564] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 7,
-      "auc": 0.46971202485908364,
-      "ic": -0.0457866714890791,
-      "auc_se": 0.059732444979545156,
+      "auc": 0.46820252435225695,
+      "ic": -0.04728697104217046,
+      "auc_se": 0.05966702233635302,
       "auc_ci95": [
-        0.3526364326991751,
-        0.5867876170189922
+        0.35125516057300504,
+        0.5851498881315089
       ],
-      "n_labelled": 670,
-      "eff_n": 95.71428571428571,
-      "p_value": 0.6121122314904888,
+      "n_labelled": 671,
+      "eff_n": 95.85714285714286,
+      "p_value": 0.5940921377101402,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6861839890480042,
+      "prob_up": 0.6768747568130493,
       "direction": "up",
-      "edge_pp": 18.618398904800415,
+      "edge_pp": 17.68747568130493,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.353, 0.587] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.351, 0.585] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 8,
-      "auc": 0.4414483821263483,
-      "ic": -0.044876514289538844,
-      "auc_se": 0.06371495188948037,
+      "auc": 0.43996603555427083,
+      "ic": -0.047217355976727535,
+      "auc_se": 0.06362986581609152,
       "auc_ci95": [
-        0.3165670764229668,
-        0.5663296878297298
+        0.31525149855473145,
+        0.5646805725538102
       ],
-      "n_labelled": 669,
-      "eff_n": 83.625,
-      "p_value": 0.3581154628972434,
+      "n_labelled": 670,
+      "eff_n": 83.75,
+      "p_value": 0.34543175530046644,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5957366824150085,
+      "prob_up": 0.5947338342666626,
       "direction": "up",
-      "edge_pp": 9.573668241500854,
+      "edge_pp": 9.47338342666626,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.317, 0.566] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.315, 0.565] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 9,
-      "auc": 0.5579770073158541,
-      "ic": 0.11685714834374117,
-      "auc_se": 0.06707244755941894,
+      "auc": 0.5560919498587059,
+      "ic": 0.11426725559656406,
+      "auc_se": 0.0670579690604894,
       "auc_ci95": [
-        0.42651501009939297,
-        0.6894390045323152
+        0.4246583305001467,
+        0.6875255692172652
       ],
-      "n_labelled": 668,
-      "eff_n": 74.22222222222223,
-      "p_value": 0.3873716017552238,
+      "n_labelled": 669,
+      "eff_n": 74.33333333333333,
+      "p_value": 0.4028907945769995,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6869789958000183,
+      "prob_up": 0.6728298664093018,
       "direction": "up",
-      "edge_pp": 18.69789958000183,
+      "edge_pp": 17.282986640930176,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.427, 0.689] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.425, 0.688] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 10,
-      "auc": 0.4812868798717855,
-      "ic": -0.04510372261676251,
-      "auc_se": 0.07171360808838309,
+      "auc": 0.4797208382114042,
+      "ic": -0.045916651244475234,
+      "auc_se": 0.07164170030845793,
       "auc_ci95": [
-        0.34072820801855463,
-        0.6218455517250163
+        0.33930310560682664,
+        0.6201385708159818
       ],
-      "n_labelled": 667,
-      "eff_n": 66.7,
-      "p_value": 0.7941369361936048,
+      "n_labelled": 668,
+      "eff_n": 66.8,
+      "p_value": 0.7771280390880106,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6932342052459717,
+      "prob_up": 0.6886022090911865,
       "direction": "up",
-      "edge_pp": 19.323420524597168,
+      "edge_pp": 18.860220909118652,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.341, 0.622] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.339, 0.620] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 11,
-      "auc": 0.43588039867109635,
-      "ic": -0.1262571924767143,
-      "auc_se": 0.07470837123969058,
+      "auc": 0.43447337385466744,
+      "ic": -0.1264853897699152,
+      "auc_se": 0.07460756796021434,
       "auc_ci95": [
-        0.2894519910413028,
-        0.5823088063008899
+        0.2882425406526473,
+        0.5807042070566876
       ],
-      "n_labelled": 666,
-      "eff_n": 60.54545454545455,
-      "p_value": 0.3907459953928447,
+      "n_labelled": 667,
+      "eff_n": 60.63636363636363,
+      "p_value": 0.37978966792548374,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5920535326004028,
+      "prob_up": 0.5898258090019226,
       "direction": "up",
-      "edge_pp": 9.205353260040283,
+      "edge_pp": 8.98258090019226,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.289, 0.582] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.288, 0.581] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 12,
-      "auc": 0.4745940040368128,
-      "ic": -0.035061848695329995,
-      "auc_se": 0.07924767551760088,
+      "auc": 0.4731845482475159,
+      "ic": -0.037819517390258336,
+      "auc_se": 0.07916048013596645,
       "auc_ci95": [
-        0.3192685600223151,
-        0.6299194480513105
+        0.31803000718102165,
+        0.6283390893140102
       ],
-      "n_labelled": 665,
-      "eff_n": 55.416666666666664,
-      "p_value": 0.7485212729650157,
+      "n_labelled": 666,
+      "eff_n": 55.5,
+      "p_value": 0.7347996019235983,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5892173051834106,
+      "prob_up": 0.5891132354736328,
       "direction": "up",
-      "edge_pp": 8.921730518341064,
+      "edge_pp": 8.911323547363281,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.319, 0.630] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.318, 0.628] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 13,
-      "auc": 0.5838557993730408,
-      "ic": 0.1290585538151654,
-      "auc_se": 0.08025961836030324,
+      "auc": 0.5820148115478619,
+      "ic": 0.1254816053484411,
+      "auc_se": 0.08026164790086317,
       "auc_ci95": [
-        0.4265469473868464,
-        0.7411646513592351
+        0.4247019816621701,
+        0.7393276414335538
       ],
-      "n_labelled": 664,
-      "eff_n": 51.07692307692308,
-      "p_value": 0.2961122464200965,
+      "n_labelled": 665,
+      "eff_n": 51.15384615384615,
+      "p_value": 0.3068551639468444,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.597344160079956,
+      "prob_up": 0.5966890454292297,
       "direction": "up",
-      "edge_pp": 9.734416007995605,
+      "edge_pp": 9.668904542922974,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.427, 0.741] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.425, 0.739] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 14,
-      "auc": 0.5917704435881684,
-      "ic": 0.16692337009450495,
-      "auc_se": 0.08322234856088077,
+      "auc": 0.5897257542453836,
+      "ic": 0.1637852467946839,
+      "auc_se": 0.08323946639277523,
       "auc_ci95": [
-        0.42865464040884216,
-        0.7548862467674947
+        0.4265764001155442,
+        0.7528751083752231
       ],
-      "n_labelled": 663,
-      "eff_n": 47.357142857142854,
-      "p_value": 0.2701514126643336,
+      "n_labelled": 664,
+      "eff_n": 47.42857142857143,
+      "p_value": 0.2810680188681931,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6006276607513428,
+      "prob_up": 0.596526563167572,
       "direction": "up",
-      "edge_pp": 10.062766075134277,
+      "edge_pp": 9.652656316757202,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.429, 0.755] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.427, 0.753] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 15,
-      "auc": 0.5781048428863339,
-      "ic": 0.17377680482733465,
-      "auc_se": 0.08715316255034133,
+      "auc": 0.5759949711969677,
+      "ic": 0.1710049587147101,
+      "auc_se": 0.08715775578140049,
       "auc_ci95": [
-        0.40728464428766487,
-        0.7489250414850029
+        0.4051657698654228,
+        0.7468241725285127
       ],
-      "n_labelled": 662,
-      "eff_n": 44.13333333333333,
-      "p_value": 0.3701571155209704,
+      "n_labelled": 663,
+      "eff_n": 44.2,
+      "p_value": 0.38324963857510097,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6044136881828308,
+      "prob_up": 0.6044621467590332,
       "direction": "up",
-      "edge_pp": 10.441368818283081,
+      "edge_pp": 10.44621467590332,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.407, 0.749] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.405, 0.747] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 16,
-      "auc": 0.575632183908046,
-      "ic": 0.14915675025688693,
-      "auc_se": 0.09073597522310452,
+      "auc": 0.5734637404580153,
+      "ic": 0.1471124191724862,
+      "auc_se": 0.09073786365268087,
       "auc_ci95": [
-        0.3977896724707612,
-        0.7534746953453308
+        0.3956175276987608,
+        0.7513099532172698
       ],
-      "n_labelled": 661,
-      "eff_n": 41.3125,
-      "p_value": 0.4045395083115544,
+      "n_labelled": 662,
+      "eff_n": 41.375,
+      "p_value": 0.41815511676826755,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6115764379501343,
+      "prob_up": 0.6127436757087708,
       "direction": "up",
-      "edge_pp": 11.157643795013428,
+      "edge_pp": 11.274367570877075,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.398, 0.753] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.396, 0.751] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 17,
-      "auc": 0.5238150568869524,
-      "ic": 0.0025682920634470113,
-      "auc_se": 0.09589630460699866,
+      "auc": 0.5249879262049648,
+      "ic": 0.0017206125729785297,
+      "auc_se": 0.0958169781331278,
       "auc_ci95": [
-        0.33585829985723503,
-        0.7117718139166698
+        0.33718664906403434,
+        0.7127892033458954
       ],
-      "n_labelled": 660,
-      "eff_n": 38.8235294117647,
-      "p_value": 0.8038699923952475,
+      "n_labelled": 661,
+      "eff_n": 38.88235294117647,
+      "p_value": 0.7942559336438637,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5590890645980835,
+      "prob_up": 0.560088038444519,
       "direction": "up",
-      "edge_pp": 5.90890645980835,
+      "edge_pp": 6.008803844451904,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.336, 0.712] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.337, 0.713] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 18,
-      "auc": 0.5579304989322462,
-      "ic": 0.07147616210348266,
-      "auc_se": 0.09763545029672359,
+      "auc": 0.555751082920792,
+      "ic": 0.06992369337186474,
+      "auc_se": 0.0976141963689081,
       "auc_ci95": [
-        0.36656501635066796,
-        0.7492959815138245
+        0.3644272580377321,
+        0.7470749078038519
       ],
-      "n_labelled": 659,
-      "eff_n": 36.611111111111114,
-      "p_value": 0.5529571921069398,
+      "n_labelled": 660,
+      "eff_n": 36.666666666666664,
+      "p_value": 0.5679067540704428,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5555169582366943,
+      "prob_up": 0.5562581419944763,
       "direction": "up",
-      "edge_pp": 5.551695823669434,
+      "edge_pp": 5.625814199447632,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.367, 0.749] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.364, 0.747] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 19,
-      "auc": 0.5442601702654137,
-      "ic": 0.10614393880375873,
-      "auc_se": 0.10139268173872115,
+      "auc": 0.542083129584352,
+      "ic": 0.10380113219683167,
+      "auc_se": 0.10135128066431695,
       "auc_ci95": [
-        0.3455305140575203,
-        0.7429898264733072
+        0.3434346194822908,
+        0.7407316396864132
       ],
-      "n_labelled": 658,
-      "eff_n": 34.63157894736842,
-      "p_value": 0.6624577973290107,
+      "n_labelled": 659,
+      "eff_n": 34.68421052631579,
+      "p_value": 0.6779804919715702,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.5451430082321167,
+      "prob_up": 0.5459510684013367,
       "direction": "up",
-      "edge_pp": 4.51430082321167,
+      "edge_pp": 4.595106840133667,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.346, 0.743] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.343, 0.741] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     },
     {
       "horizon": 20,
-      "auc": 0.5566228714325409,
-      "ic": 0.11951722204901608,
-      "auc_se": 0.10399968909774931,
+      "auc": 0.5544398873350793,
+      "ic": 0.11738445931771183,
+      "auc_se": 0.10397113292819962,
       "auc_ci95": [
-        0.35278348080095223,
-        0.7604622620641295
+        0.3506564667958081,
+        0.7582233078743505
       ],
-      "n_labelled": 657,
-      "eff_n": 32.85,
-      "p_value": 0.5861302543484928,
+      "n_labelled": 658,
+      "eff_n": 32.9,
+      "p_value": 0.6005527526029821,
       "significant_bonferroni": false,
       "significant_bh": false,
-      "prob_up": 0.6328842043876648,
+      "prob_up": 0.6253830194473267,
       "direction": "up",
-      "edge_pp": 13.28842043876648,
+      "edge_pp": 12.538301944732666,
       "actionable": false,
-      "interpretation": "AUC 95% CI [0.353, 0.760] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
+      "interpretation": "AUC 95% CI [0.351, 0.758] contains 0.50 - this probability is not statistically distinguishable from a coin flip"
     }
   ],
   "verdict": {
     "n_actionable": 0,
     "n_horizons": 20,
-    "mean_auc": 0.5122839056118846,
-    "oos_days_scored": 676,
+    "mean_auc": 0.5107850523952433,
+    "oos_days_scored": 677,
     "multiple_testing": {
       "n_tests": 20,
       "alpha": 0.05,
-      "min_p": 0.008390155049674997,
+      "min_p": 0.006899282286526809,
       "bonferroni_threshold": 0.0025,
       "n_significant_bonferroni": 0,
       "n_significant_bh": 0,
