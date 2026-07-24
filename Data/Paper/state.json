@@ -1,9 +1,9 @@
 {
   "start_equity": 100.0,
-  "equity": 116.96084974216849,
-  "bh_equity": 121.63039720154939,
+  "equity": 116.4603136341266,
+  "bh_equity": 121.10987767925575,
   "position": 1,
-  "days_held": 13,
+  "days_held": 14,
   "history": [
     {
       "date": "2023-10-20",
@@ -4750,6 +4750,13 @@
       "position": 1,
       "equity": 116.9608,
       "bh_equity": 121.6304
+    },
+    {
+      "date": "2026-07-24",
+      "close": 23767.45,
+      "position": 1,
+      "equity": 116.4603,
+      "bh_equity": 121.1099
     }
   ],
   "trades": [
@@ -4832,7 +4839,7 @@
       "equity": 114.4966
     }
   ],
-  "last_date": "2026-07-23",
+  "last_date": "2026-07-24",
   "meta": {
     "strategy": "timing_rolling (primary)",
     "horizon": 20,
